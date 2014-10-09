@@ -117,12 +117,17 @@ class ONGR_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Standa
             $phpcsFile->addError($error, $commentStart, 'ContentAfterOpen');
         }
 
+        $memberProps = $phpcsFile->getMemberProperties($stackPtr);
+        $isPrivate = $memberProps['scope'] === 'private';
+
         // Check for a comment description.
         $short = $comment->getShortComment();
         $long  = '';
         if (trim($short) === '') {
-            $error = 'Missing short description in variable doc comment';
-            $phpcsFile->addError($error, $commentStart, 'MissingShort');
+            if (!$isPrivate) {
+                $error = 'Missing short description in variable doc comment';
+                $phpcsFile->addError($error, $commentStart, 'MissingShort');
+            }
             $newlineCount = 1;
         } else {
             // No extra newline before short description.
@@ -175,7 +180,7 @@ class ONGR_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Standa
 
         // Exactly one blank line before tags.
         $tags = $this->commentParser->getTagOrders();
-        if (count($tags) > 1) {
+        if (!$isPrivate && count($tags) > 1) {
             $newlineSpan = $comment->getNewlineAfter();
             if ($newlineSpan !== 2) {
                 $error = 'There must be exactly one blank line before the tags in variable comment';
