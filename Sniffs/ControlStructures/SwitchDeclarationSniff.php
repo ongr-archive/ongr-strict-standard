@@ -142,7 +142,7 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
                     // Only need to check a couple of things once, even if the
                     // break is shared between multiple case statements, or even
                     // the default case.
-                    if ($tokens[$nextBreak]['column'] !== $caseAlignment) {
+                    if ($tokens[$nextBreak]['column'] !== $caseAlignment + $this->indent) {
                         $error = 'Case breaking statement must be indented '.$this->indent.' spaces from SWITCH keyword';
                         $phpcsFile->addError($error, $nextBreak, 'BreakIndent');
                     }
@@ -174,7 +174,7 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
                     if ($type === 'Case') {
                         // Ensure the BREAK statement is followed by
                         // a single blank line, or the end switch brace.
-                        if ($nextLine !== ($breakLine + 2) && $i !== $tokens[$stackPtr]['scope_closer']) {
+                        if ($nextLine !== ($breakLine + 1) && $i !== $tokens[$stackPtr]['scope_closer']) {
                             $error = 'Case breaking statements must be followed by a single blank line';
                             $phpcsFile->addError($error, $nextBreak, 'SpacingAfterBreak');
                         }
