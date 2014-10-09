@@ -476,8 +476,38 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
                     }
                 }//end if
             } else {
-                $error = 'Missing @return tag in function comment';
-                $this->currentFile->addError($error, $commentEnd, 'MissingReturn');
+//                $error = 'Missing @return tag in function comment';
+//                $this->currentFile->addError($error, $commentEnd, 'MissingReturn');
+
+                $tokens = $this->currentFile->getTokens();
+
+                if (isset($tokens[$this->_functionToken]['scope_closer']) === true) {
+                    $endToken = $tokens[$this->_functionToken]['scope_closer'];
+
+                    $tokens = $this->currentFile->getTokens();
+                    for ($returnToken = $this->_functionToken; $returnToken < $endToken; $returnToken++) {
+                        if ($tokens[$returnToken]['code'] === T_CLOSURE) {
+                            $returnToken = $tokens[$returnToken]['scope_closer'];
+                            continue;
+                        }
+
+                        if ($tokens[$returnToken]['code'] === T_RETURN) {
+                            break;
+                        }
+                    }
+
+                    if ($returnToken !== $endToken) {
+                        // If the function is not returning anything, just
+                        // exiting, then there is no problem.
+                        $semicolon = $this->currentFile->findNext(T_WHITESPACE, ($returnToken + 1), null, true);
+                        if ($tokens[$semicolon]['code'] !== T_SEMICOLON) {
+                            $error = 'Function contains return statement, but no @return tag defined';
+                            $this->currentFile->addError($error, $returnToken, 'InvalidReturnVoid');
+                        }
+                    }
+                }
+
+
             }//end if
 
         } else {
@@ -515,23 +545,24 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
             if (empty($exception) === true) {
                 $error = 'Exception type and comment missing for @throws tag in function comment';
                 $this->currentFile->addError($error, $errorPos, 'InvalidThrows');
-            } else if (empty($content) === true) {
-                $error = 'Comment missing for @throws tag in function comment';
-                $this->currentFile->addError($error, $errorPos, 'EmptyThrows');
-            } else {
-                // Starts with a capital letter and ends with a fullstop.
-                $firstChar = $content{0};
-                if (strtoupper($firstChar) !== $firstChar) {
-                    $error = '@throws tag comment must start with a capital letter';
-                    $this->currentFile->addError($error, $errorPos, 'ThrowsNotCapital');
-                }
-
-                $lastChar = $content[(strlen($content) - 1)];
-                if ($lastChar !== '.') {
-                    $error = '@throws tag comment must end with a full stop';
-                    $this->currentFile->addError($error, $errorPos, 'ThrowsNoFullStop');
-                }
             }
+//            } else if (empty($content) === true) {
+//                $error = 'Comment missing for @throws tag in function comment';
+//                $this->currentFile->addError($error, $errorPos, 'EmptyThrows');
+//            } else {
+//                // Starts with a capital letter and ends with a fullstop.
+//                $firstChar = $content{0};
+//                if (strtoupper($firstChar) !== $firstChar) {
+//                    $error = '@throws tag comment must start with a capital letter';
+//                    $this->currentFile->addError($error, $errorPos, 'ThrowsNotCapital');
+//                }
+//
+//                $lastChar = $content[(strlen($content) - 1)];
+//                if ($lastChar !== '.') {
+//                    $error = '@throws tag comment must end with a full stop';
+//                    $this->currentFile->addError($error, $errorPos, 'ThrowsNoFullStop');
+//                }
+//            }
 
             $since = array_keys($tagOrder, 'since');
             if (count($since) === 1 && $this->_tagIndex !== 0) {
