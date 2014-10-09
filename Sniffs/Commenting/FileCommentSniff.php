@@ -260,7 +260,7 @@ class ONGR_Sniffs_Commenting_FileCommentSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, ($commentStart + 1), 'ShortNotCapital');
             }
 
-            if ($lastChar === '.') {
+            if ($lastChar !== '.') {
                 $error = 'File comment short description must end with a full stop';
                 $phpcsFile->addError($error, ($commentStart + 1), 'ShortFullStop');
             }

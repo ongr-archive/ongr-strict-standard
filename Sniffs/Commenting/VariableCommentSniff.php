@@ -167,7 +167,7 @@ class ONGR_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Standa
                 $phpcsFile->addError($error, ($commentStart + 1), 'ShortNotCapital');
             }
 
-            if ($lastChar === '.') {
+            if ($lastChar !== '.') {
                 $error = 'Variable comment short description must end with a full stop';
                 $phpcsFile->addError($error, ($commentStart + 1), 'ShortFullStop');
             }

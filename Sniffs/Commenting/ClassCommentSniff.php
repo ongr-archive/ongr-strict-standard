@@ -216,8 +216,8 @@ class ONGR_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sniff
 //            $phpcsFile->addError($error, ($commentStart + 1), 'ShortFullStop');
 //        }
 
-        if ($lastChar === '.') {
-            $error = 'Class comment short description must not end with a full stop';
+        if ($lastChar !== '.') {
+            $error = 'Class comment short description must end with a full stop';
             $phpcsFile->addError($error, ($commentStart + 1), 'ShortFullStop');
         }
 
