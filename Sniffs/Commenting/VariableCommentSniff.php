@@ -251,6 +251,11 @@ class ONGR_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Standa
                 return;
             } else {
                 $suggestedType = PHP_CodeSniffer::suggestType($content);
+                if ($suggestedType === 'boolean') {
+                    $suggestedType = 'bool';
+                } elseif ($suggestedType === 'integer') {
+                    $suggestedType = 'int';
+                }
                 if ($content !== $suggestedType) {
                     $error = 'Expected "%s"; found "%s" for @var tag in variable comment';
                     $data  = array(

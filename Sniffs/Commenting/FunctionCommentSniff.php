@@ -406,6 +406,11 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
                     $suggestedNames = array();
                     foreach ($typeNames as $i => $typeName) {
                         $suggestedName = PHP_CodeSniffer::suggestType($typeName);
+                        if ($suggestedName === 'boolean') {
+                            $suggestedName = 'bool';
+                        } elseif ($suggestedName === 'integer') {
+                            $suggestedName = 'int';
+                        }
                         if (in_array($suggestedName, $suggestedNames) === false) {
                             $suggestedNames[] = $suggestedName;
                         }
@@ -673,6 +678,11 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
                 $typeNames = explode('|', $param->getType());
                 foreach ($typeNames as $typeName) {
                     $suggestedName = PHP_CodeSniffer::suggestType($typeName);
+                    if ($suggestedName === 'boolean') {
+                        $suggestedName = 'bool';
+                    } elseif ($suggestedName === 'integer') {
+                        $suggestedName = 'int';
+                    }
                     if ($typeName !== $suggestedName) {
                         $error = 'Expected "%s"; found "%s" for %s at position %s';
                         $data  = array(
