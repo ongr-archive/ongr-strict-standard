@@ -86,33 +86,33 @@ class ONGR_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
             }
         }
 
-        if (is_null($nextLineToken) === true) {
-            // Never found the next line, which means
-            // there are 0 blank lines after the function.
-            $foundLines = 0;
-        } else {
-            $nextContent = $phpcsFile->findNext(array(T_WHITESPACE), ($nextLineToken + 1), null, true);
-            if ($nextContent === false) {
-                // We are at the end of the file.
-                $foundLines = 0;
-            } else {
-                $foundLines = ($tokens[$nextContent]['line'] - $tokens[$nextLineToken]['line']);
-            }
-        }
-
-        if ($foundLines !== $this->spacing) {
-            $error = 'Expected %s blank line';
-            if ($this->spacing !== 1) {
-                $error .= 's';
-            }
-
-            $error .= ' after function; %s found';
-            $data   = array(
-                       $this->spacing,
-                       $foundLines,
-                      );
-            $phpcsFile->addError($error, $closer, 'After', $data);
-        }
+//        if (is_null($nextLineToken) === true) {
+//            // Never found the next line, which means
+//            // there are 0 blank lines after the function.
+//            $foundLines = 0;
+//        } else {
+//            $nextContent = $phpcsFile->findNext(array(T_WHITESPACE), ($nextLineToken + 1), null, true);
+//            if ($nextContent === false) {
+//                // We are at the end of the file.
+//                $foundLines = 0;
+//            } else {
+//                $foundLines = ($tokens[$nextContent]['line'] - $tokens[$nextLineToken]['line']);
+//            }
+//        }
+//
+//        if ($foundLines !== $this->spacing) {
+//            $error = 'Expected %s blank line';
+//            if ($this->spacing !== 1) {
+//                $error .= 's';
+//            }
+//
+//            $error .= ' after function; %s found';
+//            $data   = array(
+//                       $this->spacing,
+//                       $foundLines,
+//                      );
+//            $phpcsFile->addError($error, $closer, 'After', $data);
+//        }
 
         /*
             Check the number of blank lines
