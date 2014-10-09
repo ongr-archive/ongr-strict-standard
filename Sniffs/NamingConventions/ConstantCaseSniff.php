@@ -53,7 +53,7 @@ class ONGR_Sniffs_NamingConventions_ConstantCaseSniff extends Generic_Sniffs_PHP
         if ($phpcsFile->tokenizerType === 'JS') {
             parent::process($phpcsFile, $stackPtr);
         } else {
-            $sniff = new Generic_Sniffs_PHP_UpperCaseConstantSniff;
+            $sniff = new Generic_Sniffs_PHP_LowerCaseConstantSniff();
             $sniff->process($phpcsFile, $stackPtr);
         }
 
