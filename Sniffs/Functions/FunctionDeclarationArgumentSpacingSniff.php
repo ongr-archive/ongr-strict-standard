@@ -35,7 +35,7 @@ class ONGR_Sniffs_Functions_FunctionDeclarationArgumentSpacingSniff implements P
      *
      * @var int
      */
-    public $equalsSpacing = 0;
+    public $equalsSpacing = 1;
 
     /**
      * How many spaces should follow the opening bracket.
