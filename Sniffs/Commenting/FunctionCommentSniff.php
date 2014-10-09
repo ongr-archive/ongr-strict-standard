@@ -665,13 +665,13 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
                         if ($suggestedTypeHint !== '' && isset($realParams[($pos - 1)]) === true) {
                             $typeHint = $realParams[($pos - 1)]['type_hint'];
                             if ($typeHint === '') {
-                                $error = 'Type hint "%s" missing for %s at position %s';
-                                $data  = array(
-                                          $suggestedTypeHint,
-                                          $paramName,
-                                          $pos,
-                                         );
-                                $this->currentFile->addError($error, ($commentEnd + 2), 'TypeHintMissing', $data);
+//                                $error = 'Type hint "%s" missing for %s at position %s';
+//                                $data  = array(
+//                                          $suggestedTypeHint,
+//                                          $paramName,
+//                                          $pos,
+//                                         );
+//                                $this->currentFile->addError($error, ($commentEnd + 2), 'TypeHintMissing', $data);
                             } else if ($typeHint !== $suggestedTypeHint) {
                                 $error = 'Expected type hint "%s"; found "%s" for %s at position %s';
                                 $data  = array(
