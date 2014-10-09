@@ -140,7 +140,7 @@ class ONGR_Sniffs_Classes_ClassDeclarationSniff extends PSR2_Sniffs_Classes_Clas
             // That means there was no closing tag either.
             $error = 'Closing brace of a %s must be followed by a blank line and then a closing PHP tag';
             $data  = array($tokens[$stackPtr]['content']);
-            $phpcsFile->addError($error, $closeBrace, 'EndFileAfterCloseBrace', $data);
+//            $phpcsFile->addError($error, $closeBrace, 'EndFileAfterCloseBrace', $data);
         } else {
             $nextLine  = $tokens[$nextContent]['line'];
             $braceLine = $tokens[$closeBrace]['line'];
