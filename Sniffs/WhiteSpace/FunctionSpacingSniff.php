@@ -35,7 +35,7 @@ class ONGR_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
      *
      * @var int
      */
-    public $spacing = 2;
+    public $spacing = 1;
 
 
     /**
