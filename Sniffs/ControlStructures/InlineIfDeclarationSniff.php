@@ -78,21 +78,21 @@ class ONGR_Sniffs_ControlStructures_InlineIfDeclarationSniff implements PHP_Code
             $statementEnd = $tokens[$i]['parenthesis_closer'];
         }
 
-        // Make sure it's all on the same line.
-        if ($tokens[$statementEnd]['line'] !== $tokens[$stackPtr]['line']) {
-            $error = 'Inline shorthand IF statement must be declared on a single line';
-            $phpcsFile->addError($error, $stackPtr, 'NotSingleLine');
-            return;
-        }
+//        // Make sure it's all on the same line.
+//        if ($tokens[$statementEnd]['line'] !== $tokens[$stackPtr]['line']) {
+//            $error = 'Inline shorthand IF statement must be declared on a single line';
+//            $phpcsFile->addError($error, $stackPtr, 'NotSingleLine');
+//            return;
+//        }
 
         // Make sure there are spaces around the question mark.
         $contentBefore = $phpcsFile->findPrevious(T_WHITESPACE, ($stackPtr - 1), null, true);
         $contentAfter  = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), null, true);
-        if ($tokens[$contentBefore]['code'] !== T_CLOSE_PARENTHESIS) {
-            $error = 'Inline shorthand IF statement requires brackets around comparison';
-            $phpcsFile->addError($error, $stackPtr, 'NoBrackets');
-            return;
-        }
+//        if ($tokens[$contentBefore]['code'] !== T_CLOSE_PARENTHESIS) {
+//            $error = 'Inline shorthand IF statement requires brackets around comparison';
+//            $phpcsFile->addError($error, $stackPtr, 'NoBrackets');
+//            return;
+//        }
 
         $spaceBefore = ($tokens[$stackPtr]['column'] - ($tokens[$contentBefore]['column'] + strlen($tokens[$contentBefore]['content'])));
         if ($spaceBefore !== 1) {
