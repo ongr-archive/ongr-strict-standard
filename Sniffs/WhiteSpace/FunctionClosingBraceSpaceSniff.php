@@ -101,8 +101,8 @@ class ONGR_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff implements PHP_CodeS
                 $phpcsFile->addError($error, $closeBrace, 'SpacingBeforeNestedClose', $data);
             }
         } else {
-            if ($found !== 1) {
-                $error = 'Expected 1 blank line before closing function brace; %s found';
+            if ($found !== 0) {
+                $error = 'Expected 0 blank lines before closing function brace; %s found';
                 $data  = array($found);
                 $phpcsFile->addError($error, $closeBrace, 'SpacingBeforeClose', $data);
             }
