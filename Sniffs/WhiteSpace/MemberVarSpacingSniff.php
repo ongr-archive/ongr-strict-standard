@@ -72,7 +72,7 @@ class ONGR_Sniffs_WhiteSpace_MemberVarSpacingSniff extends PHP_CodeSniffer_Stand
             // there are 0 blank lines before the member var.
             $foundLines = 0;
         } else {
-            $prevContent = $phpcsFile->findPrevious(array(T_WHITESPACE, T_DOC_COMMENT), $prevLineToken, null, true);
+            $prevContent = $phpcsFile->findPrevious(array(T_WHITESPACE, T_DOC_COMMENT, T_OPEN_CURLY_BRACKET), $prevLineToken, null, true);
             $foundLines  = ($tokens[$prevLineToken]['line'] - $tokens[$prevContent]['line']);
         }//end if
 
