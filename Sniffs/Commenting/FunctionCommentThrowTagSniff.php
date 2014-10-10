@@ -90,6 +90,10 @@ class ONGR_Sniffs_Commenting_FunctionCommentThrowTagSniff extends PHP_CodeSniffe
         $commentStart = ($phpcsFile->findPrevious(T_DOC_COMMENT, ($commentEnd - 1), null, true) + 1);
         $comment      = $phpcsFile->getTokensAsString($commentStart, ($commentEnd - $commentStart + 1));
 
+        if (preg_match('#{@inheritdoc}#i', $comment) === 1) {
+            return;
+        }
+
         try {
             $this->commentParser = new PHP_CodeSniffer_CommentParser_FunctionCommentParser($comment, $phpcsFile);
             $this->commentParser->parse();
