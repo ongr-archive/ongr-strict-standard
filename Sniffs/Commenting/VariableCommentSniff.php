@@ -193,14 +193,14 @@ class ONGR_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Standa
             }
         }
 
-        // Check for unknown/deprecated tags.
-        $unknownTags = $this->commentParser->getUnknown();
-        foreach ($unknownTags as $errorTag) {
-            // Unknown tags are not parsed, do not process further.
-            $error = '@%s tag is not allowed in variable comment';
-            $data  = array($errorTag['tag']);
-            $phpcsFile->addWarning($error, ($commentStart + $errorTag['line']), 'TagNotAllowed', $data);
-        }
+//        // Check for unknown/deprecated tags.
+//        $unknownTags = $this->commentParser->getUnknown();
+//        foreach ($unknownTags as $errorTag) {
+//            // Unknown tags are not parsed, do not process further.
+//            $error = '@%s tag is not allowed in variable comment';
+//            $data  = array($errorTag['tag']);
+//            $phpcsFile->addWarning($error, ($commentStart + $errorTag['line']), 'TagNotAllowed', $data);
+//        }
 
         // Check each tag.
         $this->processVar($commentStart, $commentEnd);

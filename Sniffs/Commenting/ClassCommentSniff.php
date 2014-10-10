@@ -222,13 +222,13 @@ class ONGR_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sniff
         }
 
 
-        // No tags are allowed in the class comment.
-        $tags = $this->commentParser->getTags();
-        foreach ($tags as $errorTag) {
-            $error = '@%s tag is not allowed in class comment';
-            $data  = array($errorTag['tag']);
-            $phpcsFile->addWarning($error, ($commentStart + $errorTag['line']), 'TagNotAllowed', $data);
-        }
+//        // No tags are allowed in the class comment.
+//        $tags = $this->commentParser->getTags();
+//        foreach ($tags as $errorTag) {
+//            $error = '@%s tag is not allowed in class comment';
+//            $data  = array($errorTag['tag']);
+//            $phpcsFile->addWarning($error, ($commentStart + $errorTag['line']), 'TagNotAllowed', $data);
+//        }
 
         // The last content should be a newline and the content before
         // that should not be blank. If there is more blank space
