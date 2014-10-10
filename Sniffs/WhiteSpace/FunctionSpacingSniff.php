@@ -86,33 +86,33 @@ class ONGR_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
             }
         }
 
-//        if (is_null($nextLineToken) === true) {
-//            // Never found the next line, which means
-//            // there are 0 blank lines after the function.
-//            $foundLines = 0;
-//        } else {
-//            $nextContent = $phpcsFile->findNext(array(T_WHITESPACE), ($nextLineToken + 1), null, true);
-//            if ($nextContent === false) {
-//                // We are at the end of the file.
-//                $foundLines = 0;
-//            } else {
-//                $foundLines = ($tokens[$nextContent]['line'] - $tokens[$nextLineToken]['line']);
-//            }
-//        }
-//
-//        if ($foundLines !== $this->spacing) {
-//            $error = 'Expected %s blank line';
-//            if ($this->spacing !== 1) {
-//                $error .= 's';
-//            }
-//
-//            $error .= ' after function; %s found';
-//            $data   = array(
-//                       $this->spacing,
-//                       $foundLines,
-//                      );
-//            $phpcsFile->addError($error, $closer, 'After', $data);
-//        }
+        if (is_null($nextLineToken) === true) {
+            // Never found the next line, which means
+            // there are 0 blank lines after the function.
+            $foundLines = 0;
+        } else {
+            $nextContent = $phpcsFile->findNext(array(T_WHITESPACE, T_CLOSE_CURLY_BRACKET), ($nextLineToken + 1), null, true);
+            if ($nextContent === false) {
+                // We are at the end of the file.
+                $foundLines = 1;
+            } else {
+                $foundLines = ($tokens[$nextContent]['line'] - $tokens[$nextLineToken]['line']);
+            }
+        }
+
+        if ($foundLines !== $this->spacing) {
+            $error = 'Expected %s blank line';
+            if ($this->spacing !== 1) {
+                $error .= 's';
+            }
+
+            $error .= ' after function; %s found';
+            $data   = array(
+                $this->spacing,
+                $foundLines,
+            );
+            $phpcsFile->addError($error, $closer, 'After', $data);
+        }
 
         /*
             Check the number of blank lines
@@ -134,7 +134,7 @@ class ONGR_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
             // there are 0 blank lines before the function.
             $foundLines = 0;
         } else {
-            $prevContent = $phpcsFile->findPrevious(array(T_WHITESPACE, T_DOC_COMMENT), $prevLineToken, null, true);
+            $prevContent = $phpcsFile->findPrevious(array(T_WHITESPACE, T_DOC_COMMENT, T_OPEN_CURLY_BRACKET), $prevLineToken, null, true);
 
             // Before we throw an error, check that we are not throwing an error
             // for another function. We don't want to error for no blank lines after
@@ -144,6 +144,10 @@ class ONGR_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
             $i           = ($stackPtr - 1);
             $foundLines  = 0;
             while ($currentLine != $prevLine && $currentLine > 1 && $i > 0) {
+                if ($tokens[$i]['code'] === T_OPEN_CURLY_BRACKET && $tokens[$i + 1]['code'] === T_WHITESPACE) {
+                    return;
+                }
+
                 if (isset($tokens[$i]['scope_condition']) === true) {
                     $scopeCondition = $tokens[$i]['scope_condition'];
                     if ($tokens[$scopeCondition]['code'] === T_FUNCTION) {
