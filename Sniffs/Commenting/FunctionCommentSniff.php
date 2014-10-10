@@ -231,7 +231,7 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
 
         // Check for a comment description.
         if (trim($short) === '') {
-            if (preg_match('/^(set|get|has|add|is)[A-Z]/', $this->_methodName) !== 1) {
+            if (preg_match('/^(set|get|has|add|is)[A-Z]|__construct/', $this->_methodName) !== 1) {
                 $error = 'Missing short description in function doc comment';
                 $phpcsFile->addError($error, $commentStart, 'MissingShort');
             }
