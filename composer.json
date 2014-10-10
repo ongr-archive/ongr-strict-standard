@@ -1,0 +1,21 @@
+{
+    "name": "ongr/psr2-strict-standard",
+    "description": "Strict PHPCS standard for PSR-2 code based on Squiz standards",
+    "type": "library",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "ONGR team",
+            "homepage": "http://www.nfq.com"
+        }
+    ],
+    "repositories": [
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "~1"
+    },
+    "target-dir": "ONGR/PSR2StrictStandard"
+}
