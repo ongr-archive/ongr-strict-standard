@@ -69,6 +69,11 @@ class ONGR_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sniff
     {
         $this->currentFile = $phpcsFile;
 
+        $className = $phpcsFile->getDeclarationName($stackPtr);
+        if (preg_match('/Test$/', $className) === 1) {
+            return;
+        }
+
         $tokens = $phpcsFile->getTokens();
         $find   = array(
                    T_ABSTRACT,
