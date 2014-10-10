@@ -213,13 +213,23 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
             $phpcsFile->addError($error, $commentStart, 'ContentAfterOpen');
         }
 
-        $this->processParams($commentStart, $commentEnd);
-        $this->processSees($commentStart);
-        $this->processReturn($commentStart, $commentEnd);
-        $this->processThrows($commentStart);
+        $short = $comment->getShortComment();
+
+        // Ignore doc tag rules if it contains only {@inheritdoc}.
+        $inheritdocMatches = array();
+        if (preg_match('#{@inheritdoc}#i', trim($short), $inheritdocMatches) !== 1) {
+            $this->processParams($commentStart, $commentEnd);
+            $this->processSees($commentStart);
+            $this->processReturn($commentStart, $commentEnd);
+            $this->processThrows($commentStart);
+        } else {
+            if ($inheritdocMatches[0] !== '{@inheritdoc}') {
+                $error = '{@inheritdoc} must be spelled lowercase';
+                $phpcsFile->addError($error, ($commentStart + 1), 'InheritdocMisspell');
+            }
+        }
 
         // Check for a comment description.
-        $short = $comment->getShortComment();
         if (trim($short) === '') {
             if (preg_match('/^(set|get|has|add|is)[A-Z]/', $this->_methodName) !== 1) {
                 $error = 'Missing short description in function doc comment';
@@ -252,7 +262,7 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
             $newlineCount += $newlineBetween;
 
             $testLong = trim($long);
-            if (preg_match('|\p{Lu}|u', $testLong[0]) === 0) {
+            if (preg_match('#\p{Lu}||{@inheritdoc}#u', $testLong[0]) === 0) {
                 $error = 'Function comment long description must start with a capital letter';
                 $phpcsFile->addError($error, ($commentStart + $newlineCount), 'LongNotCapital');
             }
@@ -281,12 +291,12 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
             $phpcsFile->addError($error, ($commentStart + 1), 'ShortSingleLine');
         }
 
-        if (preg_match('|\p{Lu}|u', $testShort[0]) === 0) {
+        if (preg_match('#^(\p{Lu}|{@inheritdoc})#u', $testShort) === 0) {
             $error = 'Function comment short description must start with a capital letter';
             $phpcsFile->addError($error, ($commentStart + 1), 'ShortNotCapital');
         }
 
-        if ($lastChar !== '.') {
+        if (preg_match('#{@inheritdoc}$#u', $testShort) === 0 && $lastChar !== '.') {
             $error = 'Function comment short description must end with a full stop';
             $phpcsFile->addError($error, ($commentStart + 1), 'ShortFullStop');
         }
