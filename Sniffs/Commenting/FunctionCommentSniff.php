@@ -352,8 +352,8 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
                 }
 
                 $spacing = substr_count($see->getWhitespaceBeforeContent(), ' ');
-                if ($spacing !== 4) {
-                    $error = '@see tag indented incorrectly; expected 4 spaces but found %s';
+                if ($spacing !== 1) {
+                    $error = '@see tag indented incorrectly; expected 1 space but found %s';
                     $data  = array($spacing);
                     $this->currentFile->addError($error, $errorPos, 'SeeIndent', $data);
                 }
