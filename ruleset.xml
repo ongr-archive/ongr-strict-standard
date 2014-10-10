@@ -20,6 +20,7 @@
  <rule ref="PEAR.Files.IncludingFile"/>
  <rule ref="PEAR.Formatting.MultiLineAssignment"/>
  <rule ref="Zend.Debug.CodeAnalyzer"/>
+ <rule ref="PSR2"/>
 
  <!-- Lines can be 120 chars long, but never show errors -->
  <rule ref="Generic.Files.LineLength">
