@@ -1,6 +1,13 @@
 {
     "name": "ongr/psr2-strict-standard",
     "description": "Strict PHPCS standard for PSR-2 code based on Squiz standards",
+    "keywords": [
+        "phpcs",
+        "coding",
+        "standard",
+        "psr",
+        "symfony"
+    ],
     "type": "library",
     "license": "proprietary",
     "authors": [
