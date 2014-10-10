@@ -9,8 +9,6 @@
             "homepage": "http://www.nfq.com"
         }
     ],
-    "repositories": [
-    ],
     "require": {
         "php": ">=5.3"
     },
