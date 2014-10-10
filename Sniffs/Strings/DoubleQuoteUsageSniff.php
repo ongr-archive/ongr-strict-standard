@@ -82,20 +82,6 @@ class ONGR_Sniffs_Strings_DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
             return;
         }
 
-        // The use of variables in double quoted strings is not allowed.
-        if ($tokens[$stackPtr]['code'] === T_DOUBLE_QUOTED_STRING) {
-            $stringTokens = token_get_all('<?php '.$workingString);
-            foreach ($stringTokens as $token) {
-                if (is_array($token) === true && $token[0] === T_VARIABLE) {
-                    $error = 'Variable "%s" not allowed in double quoted string; use concatenation instead';
-                    $data  = array($token[1]);
-                    $phpcsFile->addError($error, $stackPtr, 'ContainsVar', $data);
-                }
-            }
-
-            return;
-        }//end if
-
         // Work through the following tokens, in case this string is stretched
         // over multiple Lines.
         for ($i = ($stackPtr + 1); $i < $phpcsFile->numTokens; $i++) {
@@ -116,6 +102,7 @@ class ONGR_Sniffs_Strings_DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
                          '\x',
                          '\b',
                          '\'',
+                         '$',
                         );
 
         foreach ($allowedChars as $testChar) {
