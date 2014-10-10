@@ -16,7 +16,7 @@
 /**
  * ONGR_Sniffs_Strings_ConcatenationSpacingSniff.
  *
- * Makes sure there are no spaces between the concatenation operator (.) and
+ * Makes sure there are spaces between the concatenation operator (.) and
  * the strings being concatenated.
  *
  * @category  PHP
