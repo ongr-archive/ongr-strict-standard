@@ -14,5 +14,6 @@
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "~1"
-    }
+    },
+    "target-dir": "ONGR"
 }
