@@ -150,7 +150,7 @@ class ONGR_Sniffs_Commenting_BlockCommentSniff implements PHP_CodeSniffer_Sniff
             $content      = $tokens[$commentLines[1]]['content'];
             $commentText  = ltrim($content);
             $leadingSpace = (strlen($content) - strlen($commentText));
-            if ($leadingSpace !== $starColumn) {
+            if ($leadingSpace !== $starColumn && trim($content)[0] !== '*') {
                 $expected  = $starColumn;
                 $expected .= ($starColumn === 1) ? ' space' : ' spaces';
                 $data      = array(
@@ -162,7 +162,7 @@ class ONGR_Sniffs_Commenting_BlockCommentSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $commentLines[1], 'FirstLineIndent', $data);
             }
 
-            if (preg_match('|\p{Lu}|u', $commentText[0]) === 0) {
+            if (preg_match('#\p{Lu}|\*#u', $commentText[0]) === 0) {
                 $error = 'Block comments must start with a capital letter';
                 $phpcsFile->addError($error, $commentLines[1], 'NoCapital');
             }
@@ -186,7 +186,7 @@ class ONGR_Sniffs_Commenting_BlockCommentSniff implements PHP_CodeSniffer_Sniff
                 continue;
             }
 
-            if ($leadingSpace < $starColumn) {
+            if ($leadingSpace < $starColumn && trim($tokens[$line]['content'])[0] !== '*') {
                 $expected  = $starColumn;
                 $expected .= ($starColumn === 1) ? ' space' : ' spaces';
                 $data      = array(
@@ -209,7 +209,7 @@ class ONGR_Sniffs_Commenting_BlockCommentSniff implements PHP_CodeSniffer_Sniff
             $content      = $tokens[$commentLines[$lastIndex]]['content'];
             $commentText  = ltrim($content);
             $leadingSpace = (strlen($content) - strlen($commentText));
-            if ($leadingSpace !== ($tokens[$stackPtr]['column'] - 1)) {
+            if ($leadingSpace !== ($tokens[$stackPtr]['column'] - 1) && trim($content)[0] !== '*') {
                 $expected  = ($tokens[$stackPtr]['column'] - 1);
                 $expected .= ($expected === 1) ? ' space' : ' spaces';
                 $data      = array(
