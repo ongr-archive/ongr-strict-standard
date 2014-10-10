@@ -214,10 +214,11 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
         }
 
         $short = $comment->getShortComment();
+        $allComments = trim($short . ' ' . $comment->getLongComment());
 
         // Ignore doc tag rules if it contains only {@inheritdoc}.
         $inheritdocMatches = array();
-        if (preg_match('#{@inheritdoc}#i', trim($short), $inheritdocMatches) !== 1) {
+        if (preg_match('#{@inheritdoc}#i', $allComments, $inheritdocMatches) !== 1) {
             $this->processParams($commentStart, $commentEnd);
             $this->processSees($commentStart);
             $this->processReturn($commentStart, $commentEnd);
