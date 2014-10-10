@@ -68,6 +68,12 @@ class ONGR_Sniffs_NamingConventions_ValidFunctionNameSniff extends PEAR_Sniffs_N
 
     }//end processTokenOutsideScope()
 
+    protected function processTokenWithinScope(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $currScope)
+    {
+        // Disabling.
+        return;
+    }
+
 
 }//end class
 
