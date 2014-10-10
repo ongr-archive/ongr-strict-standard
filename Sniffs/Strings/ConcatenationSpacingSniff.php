@@ -56,11 +56,11 @@ class ONGR_Sniffs_Strings_ConcatenationSpacingSniff implements PHP_CodeSniffer_S
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        if ($tokens[($stackPtr - 1)]['code'] === T_WHITESPACE
-            || $tokens[($stackPtr + 1)]['code'] === T_WHITESPACE
+        if ($tokens[($stackPtr - 1)]['code'] !== T_WHITESPACE
+            || $tokens[($stackPtr + 1)]['code'] !== T_WHITESPACE
         ) {
-            $message = 'Concat operator must not be surrounded by spaces';
-            $phpcsFile->addError($message, $stackPtr, 'Missing');
+            $message = 'Concat operator must be surrounded by spaces';
+            $phpcsFile->addError($message, $stackPtr, 'MustExist');
         }
 
     }//end process()
