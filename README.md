@@ -15,7 +15,7 @@ Add to your `composer.json`:
         }
     ],
     "require-dev": {
-        "ongr/psr2-strict-standard": "~1.0"
+        "ongr/psr2-strict-standard": "~1.0-alpha"
     }
 }
 ```
