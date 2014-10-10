@@ -118,8 +118,8 @@ class ONGR_Sniffs_Commenting_BlockCommentSniff implements PHP_CodeSniffer_Sniff
         if (count($commentLines) <= 2) {
             // Small comment. Can't be right.
             if (count($commentLines) === 1) {
-                $error = 'Single line block comment not allowed; use inline ("// text") comment instead';
-                $phpcsFile->addError($error, $stackPtr, 'SingleLine');
+//                $error = 'Single line block comment not allowed; use inline ("// text") comment instead';
+//                $phpcsFile->addError($error, $stackPtr, 'SingleLine');
                 return;
             }
 

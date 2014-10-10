@@ -122,11 +122,11 @@ class ONGR_Sniffs_Commenting_InlineCommentSniff implements PHP_CodeSniffer_Sniff
                     return;
                 }
 
-                // Only error once per comment.
-                if (substr($tokens[$stackPtr]['content'], 0, 3) === '/**') {
-                    $error = 'Inline doc block comments are not allowed; use "/* Comment */" or "// Comment" instead';
-                    $phpcsFile->addError($error, $stackPtr, 'DocBlock');
-                }
+//                // Only error once per comment.
+//                if (substr($tokens[$stackPtr]['content'], 0, 3) === '/**') {
+//                    $error = 'Inline doc block comments are not allowed; use "/* Comment */" or "// Comment" instead';
+//                    $phpcsFile->addError($error, $stackPtr, 'DocBlock');
+//                }
             }//end if
         }//end if
 
