@@ -4,7 +4,7 @@ Strict PHPCS standard for PSR-2 code based on Squiz standards.
 
 ## Installation
 
-Add to your `composer.json`:
+Add to your global `~/.composer/composer.json`:
 
 ```json
 {
@@ -22,10 +22,10 @@ Add to your `composer.json`:
 
 ## Running
 
-After `composer update`, run:
+After `composer global update`, run:
 
 ```sh
-vendor/bin/phpcs -p --standard=vendor/ongr/psr2-strict-standard/ONGR --ignore=vendor/,Tests/app/,Resources/public/ ./
+vendor/bin/phpcs -p --standard=~/.composer/vendor/ongr/psr2-strict-standard/ONGR --ignore=vendor/,Tests/app/,Resources/public/ ./
 ```
 
 ## PHPStorm helper
