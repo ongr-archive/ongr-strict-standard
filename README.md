@@ -14,8 +14,9 @@ Add to your global `~/.composer/composer.json`:
             "url": "git@github.com:ongr-io/psr2-strict-standard.git"
         }
     ],
-    "require-dev": {
-        "ongr/psr2-strict-standard": "~1.0-alpha"
+    "require": {
+        "ongr/psr2-strict-standard": "~1.0-alpha",
+        "squizlabs/php_codesniffer": "~1"
     }
 }
 ```
