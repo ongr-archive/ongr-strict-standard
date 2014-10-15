@@ -793,12 +793,12 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
                 }
 
                 if ($paramComment === '') {
-                    $error = 'Missing comment for param "%s" at position %s';
-                    $data  = array(
-                              $paramName,
-                              $pos,
-                             );
-                    $this->currentFile->addError($error, $errorPos, 'MissingParamComment', $data);
+//                    $error = 'Missing comment for param "%s" at position %s';
+//                    $data  = array(
+//                              $paramName,
+//                              $pos,
+//                             );
+//                    $this->currentFile->addError($error, $errorPos, 'MissingParamComment', $data);
                 } else {
                     // Param comments must start with a capital letter and
                     // end with the full stop.
