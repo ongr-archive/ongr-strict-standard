@@ -4,6 +4,13 @@ Strict PHPCS standard for PSR-2 code based on Squiz standards.
 
 ## Installation
 
+Run command:
+````bash
+composer global require "ongr/psr2-strict-standard=*"
+````
+
+OR
+
 Add to your global `~/.composer/composer.json`:
 
 ```json
