@@ -28,13 +28,17 @@ Add to your global `~/.composer/composer.json`:
 }
 ```
 
-## Running
-
 After `composer global update`, run:
 
+## Running
+
 ```sh
-vendor/bin/phpcs -p --standard=~/.composer/vendor/ongr/psr2-strict-standard/ONGR --ignore=vendor/,Tests/app/,Resources/public/ ./
+vendor/bin/phpcs -p --standard=/home/<user>/.composer/vendor/ongr/psr2-strict-standard/ONGR --ignore=vendor/,Tests/app/,Resources/public/ ./
 ```
+
+Note: do not use ~ for HOME parameter, as PHPCS will not expand it.
+
+IDEs also support running Code Sniffer and adding error annotations directly on editor's source code (e.g. PHPStorm). Please see your IDE's documentation on how to add standard from custom directory.
 
 ## PHPStorm helper
 
