@@ -70,9 +70,7 @@ class ONGR_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sniff
         $this->currentFile = $phpcsFile;
 
         $className = $phpcsFile->getDeclarationName($stackPtr);
-        if (preg_match('/Test$/', $className) === 1) {
-            return;
-        }
+        $isTestClass = preg_match('/Test$/', $className) === 1;
 
         $tokens = $phpcsFile->getTokens();
         $find   = array(
@@ -88,7 +86,10 @@ class ONGR_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sniff
             $phpcsFile->addError('You must use "/**" style comments for a class comment', $stackPtr, 'WrongStyle');
             return;
         } else if ($commentEnd === false || $tokens[$commentEnd]['code'] !== T_DOC_COMMENT) {
-            $phpcsFile->addError('Missing class doc comment', $stackPtr, 'Missing');
+            if (!$isTestClass) {
+                // Test classes can omit doc comment
+                $phpcsFile->addError('Missing class doc comment', $stackPtr, 'Missing');
+            }
             return;
         }
 
@@ -110,7 +111,11 @@ class ONGR_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sniff
                         if ($newlineToken !== false) {
                             // Blank line between the class and the doc block.
                             // The doc block is most likely a file comment.
-                            $phpcsFile->addError('Missing class doc comment', ($stackPtr + 1), 'Missing');
+                            if (!$isTestClass) {
+                                // Test classes can omit doc comment
+                                $phpcsFile->addError('Missing class doc comment', ($stackPtr + 1), 'Missing');
+                            }
+
                             return;
                         }
                     }//end if
