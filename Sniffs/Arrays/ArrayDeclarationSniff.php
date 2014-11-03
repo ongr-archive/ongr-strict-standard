@@ -36,7 +36,10 @@ class ONGR_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_ARRAY);
+        return array(
+            T_ARRAY,
+            T_OPEN_SHORT_ARRAY,
+        );
 
     }//end register()
 
@@ -52,24 +55,30 @@ class ONGR_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        if (version_compare(phpversion(),'5.4','>=')) {
+        $tokens = $phpcsFile->getTokens();
+
+        if ($tokens[$stackPtr]['code'] !== T_OPEN_SHORT_ARRAY && version_compare(phpversion(),'5.4','>=')) {
             $phpcsFile->addError("Must use short array syntax for arrays", $stackPtr, 'LongArray');
             return;
         }
-        $tokens = $phpcsFile->getTokens();
 
         // Array keyword should be lower case.
-        if (strtolower($tokens[$stackPtr]['content']) !== $tokens[$stackPtr]['content']) {
+        if ($tokens[$stackPtr]['code'] === T_ARRAY && strtolower($tokens[$stackPtr]['content']) !== $tokens[$stackPtr]['content']) {
             $error = 'Array keyword should be lower case; expected "array" but found "%s"';
             $data  = array($tokens[$stackPtr]['content']);
             $phpcsFile->addError($error, $stackPtr, 'NotLowerCase', $data);
         }
 
-        $arrayStart   = $tokens[$stackPtr]['parenthesis_opener'];
-        $arrayEnd     = $tokens[$arrayStart]['parenthesis_closer'];
+        if ($tokens[$stackPtr]['code'] === T_ARRAY) {
+            $arrayStart = $tokens[$stackPtr]['parenthesis_opener'];
+            $arrayEnd = $tokens[$arrayStart]['parenthesis_closer'];
+        } else {
+            $arrayStart = $tokens[$stackPtr]['bracket_opener'];
+            $arrayEnd = $tokens[$arrayStart]['bracket_closer'];
+        }
         $keywordStart = $tokens[$stackPtr]['column'];
 
-        if ($arrayStart != ($stackPtr + 1)) {
+        if ($tokens[$stackPtr]['code'] === T_ARRAY && $arrayStart != ($stackPtr + 1)) {
             $error = 'There must be no space between the Array keyword and the opening parenthesis';
             $phpcsFile->addError($error, $stackPtr, 'SpaceAfterKeyword');
         }
@@ -231,7 +240,7 @@ class ONGR_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
         while (($nextToken = $phpcsFile->findNext(array(T_DOUBLE_ARROW, T_COMMA, T_ARRAY), ($nextToken + 1), $arrayEnd)) !== false) {
             $currentEntry = array();
 
-            if ($tokens[$nextToken]['code'] === T_ARRAY) {
+            if ($tokens[$nextToken]['code'] === T_ARRAY || $tokens[$nextToken]['code'] === T_OPEN_SHORT_ARRAY) {
                 // Let subsequent calls of this test handle nested arrays.
                 $indices[] = array('value' => $nextToken);
                 $nextToken = $tokens[$tokens[$nextToken]['parenthesis_opener']]['parenthesis_closer'];
@@ -244,7 +253,12 @@ class ONGR_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                     $stackPtrCount = count($tokens[$stackPtr]['nested_parenthesis']);
                 }
 
-                if (count($tokens[$nextToken]['nested_parenthesis']) > ($stackPtrCount + 1)) {
+                $nextPtrCount = 0;
+                if (isset($tokens[$nextToken]['nested_parenthesis'])){
+                    $nextPtrCount = count($tokens[$nextToken]['nested_parenthesis']);
+                }
+
+                if ($nextPtrCount > ($stackPtrCount + 1)) {
                     // This comma is inside more parenthesis than the ARRAY keyword,
                     // then there it is actually a comma used to separate arguments
                     // in a function call.
