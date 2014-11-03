@@ -52,6 +52,10 @@ class ONGR_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
+        if (version_compare(phpversion(),'5.4','>=')) {
+            $phpcsFile->addError("Must use short array syntax for arrays", $stackPtr, 'LongArray');
+            return;
+        }
         $tokens = $phpcsFile->getTokens();
 
         // Array keyword should be lower case.
