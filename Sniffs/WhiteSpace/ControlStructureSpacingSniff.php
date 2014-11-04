@@ -183,7 +183,8 @@ class ONGR_Sniffs_WhiteSpace_ControlStructureSpacingSniff implements PHP_CodeSni
                 return;
             }
 
-            if ($tokens[$trailingContent]['line'] !== ($tokens[$scopeCloser]['line'] + 1)) {
+            if ($tokens[$trailingContent]['code'] !== T_RETURN && $tokens[$trailingContent]['line'] !== ($tokens[$scopeCloser]['line'] + 1)) {
+                // Return statements must have blank line before them otherwise there should be no blank lines.
                 $error = 'Blank line found after control structure';
                 $phpcsFile->addError($error, $scopeCloser, 'LineAfterClose');
             }
