@@ -156,7 +156,8 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
                         }
                     }
 
-                    if ($prevLine !== ($breakLine - 1)) {
+                    if ($tokens[$nextBreak]['code'] !== T_RETURN && $prevLine !== ($breakLine - 1)) {
+                        // Return statements must have blank line before them otherwise there should be no blank lines.
                         $error = 'Blank lines are not allowed before case breaking statements';
                         $phpcsFile->addError($error, $nextBreak, 'SpacingBeforeBreak');
                     }
@@ -164,6 +165,7 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
                     $breakLine = $tokens[$nextBreak]['line'];
                     $nextLine  = $tokens[$tokens[$stackPtr]['scope_closer']]['line'];
                     $semicolon = $phpcsFile->findNext(T_SEMICOLON, $nextBreak);
+                    $breakStatementEnd = $tokens[$semicolon]['line'];
                     for ($i = ($semicolon + 1); $i < $tokens[$stackPtr]['scope_closer']; $i++) {
                         if ($tokens[$i]['type'] !== 'T_WHITESPACE') {
                             $nextLine = $tokens[$i]['line'];
@@ -173,14 +175,14 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
 
                     if ($type === 'Case') {
                         // Ensure the BREAK statement is followed by
-                        // a single blank line, or the end switch brace.
-                        if ($nextLine !== ($breakLine + 1) && $i !== $tokens[$stackPtr]['scope_closer']) {
-                            $error = 'Case breaking statements must be followed by a single blank line';
+                        // by another case, or the end switch brace.
+                        if ($nextLine !== ($breakStatementEnd + 1) && $i !== $tokens[$stackPtr]['scope_closer']) {
+                            $error = 'Case breaking statements must be followed by another case or end switch brace';
                             $phpcsFile->addError($error, $nextBreak, 'SpacingAfterBreak');
                         }
                     } else {
                         // Ensure the BREAK statement is not followed by a blank line.
-                        if ($nextLine !== ($breakLine + 1)) {
+                        if ($nextLine !== ($breakStatementEnd + 1)) {
                             $error = 'Blank lines are not allowed after the DEFAULT case\'s breaking statement';
                             $phpcsFile->addError($error, $nextBreak, 'SpacingAfterDefaultBreak');
                         }
