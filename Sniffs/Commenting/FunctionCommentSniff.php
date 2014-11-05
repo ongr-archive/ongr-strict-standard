@@ -120,6 +120,10 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
 
         $tokens = $phpcsFile->getTokens();
 
+        if ($this->isFunctionIgnored($tokens[$phpcsFile->findNext(T_STRING, $stackPtr)]['content'])) {
+            return;
+        }
+
         $find = array(
                  T_COMMENT,
                  T_DOC_COMMENT,
@@ -865,6 +869,19 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
     {
 
     }//end processUnknownTags
+
+    /**
+     * @param string $content
+     * @return bool
+     */
+    private static function isFunctionIgnored($content)
+    {
+        static $ignored = [
+            '__toString',
+            // Left for future.
+        ];
+        return in_array($content, $ignored, true);
+    }
 
 
 }//end class
