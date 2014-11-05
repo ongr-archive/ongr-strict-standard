@@ -519,7 +519,7 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
                         // If the function is not returning anything, just
                         // exiting, then there is no problem.
                         $semicolon = $this->currentFile->findNext(T_WHITESPACE, ($returnToken + 1), null, true);
-                        if ($tokens[$semicolon]['code'] !== T_SEMICOLON) {
+                        if ($tokens[$semicolon]['code'] !== T_SEMICOLON && $tokens[$semicolon]['code'] !== T_NULL) {
                             $error = 'Function contains return statement, but no @return tag defined';
                             $this->currentFile->addError($error, $returnToken, 'InvalidReturnVoid');
                         }
