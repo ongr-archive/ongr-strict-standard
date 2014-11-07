@@ -168,14 +168,6 @@ class ONGR_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
             }//end while
 
             if ($valueCount > 0) {
-                $conditionCheck = $phpcsFile->findPrevious(array(T_OPEN_PARENTHESIS, T_SEMICOLON), ($stackPtr - 1), null, false);
-
-                if (($conditionCheck === false) || ($tokens[$conditionCheck]['line'] !== $tokens[$stackPtr]['line'])) {
-                    $error = 'Array with multiple values cannot be declared on a single line';
-                    $phpcsFile->addError($error, $stackPtr, 'SingleLineNotAllowed');
-                    return;
-                }
-
                 // We have a multiple value array that is inside a condition or
                 // function. Check its spacing is correct.
                 foreach ($commas as $comma) {
@@ -364,14 +356,6 @@ class ONGR_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
             if ($nextContent === false) {
                 $singleValue = true;
             }
-        }
-
-        if ($singleValue === true) {
-            // Array cannot be empty, so this is a multi-line array with
-            // a single value. It should be defined on single line.
-            $error = 'Multi-line array contains a single value; use single-line array instead';
-            $phpcsFile->addError($error, $stackPtr, 'MultiLineNotAllowed');
-            return;
         }
 
         /*
