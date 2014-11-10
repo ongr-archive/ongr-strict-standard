@@ -1,9 +1,10 @@
 <?php
 
+/**
+ * Class to validate right amount of whitespaces after namespace declaration.
+ */
 class ONGR_Sniffs_WhiteSpace_NamespaceSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -26,12 +27,16 @@ class ONGR_Sniffs_WhiteSpace_NamespaceSpacingSniff implements PHP_CodeSniffer_Sn
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
+
+        if (isset($tokens[$stackPtr]['scope_opener'])) {
+            // Skip bracketed namespaces.
+            return;
+        }
         $content = $phpcsFile->findNext(T_SEMICOLON, $stackPtr) + 1;
 
         while ($tokens[$content]['code'] == T_WHITESPACE) {
             ++$content;
         }
-        var_dump($tokens[$content], $tokens[$stackPtr]);
         if (($tokens[$content]['line'] - $tokens[$stackPtr]['line']) > 2) {
             // Case for minimum lines is written somewhere else.
             $phpcsFile->addError(
