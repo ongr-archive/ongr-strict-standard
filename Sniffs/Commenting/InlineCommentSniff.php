@@ -236,28 +236,31 @@ class ONGR_Sniffs_Commenting_InlineCommentSniff implements PHP_CodeSniffer_Sniff
             return;
         }
 
-        if (preg_match('|\p{Lu}|u', $commentText[0]) === 0) {
-            $error = 'Inline comments must start with a capital letter';
-            $phpcsFile->addError($error, $topComment, 'NotCapital');
-        }
-
-        $commentCloser   = $commentText[(strlen($commentText) - 1)];
-        $acceptedClosers = array(
-                            'full-stops'        => '.',
-                            'exclamation marks' => '!',
-                            'or question marks' => '?',
-                           );
-
-        if (in_array($commentCloser, $acceptedClosers) === false) {
-            $error = 'Inline comments must end in %s';
-            $ender = '';
-            foreach ($acceptedClosers as $closerName => $symbol) {
-                $ender .= ' '.$closerName.',';
+        // Check onfy if this is not a meta tag comment.
+        if ($commentText[0] !== '@') {
+            if (preg_match('|\p{Lu}|u', $commentText[0]) === 0) {
+                $error = 'Inline comments must start with a capital letter';
+                $phpcsFile->addError($error, $topComment, 'NotCapital');
             }
 
-            $ender = rtrim($ender, ',');
-            $data  = array($ender);
-            $phpcsFile->addError($error, $stackPtr, 'InvalidEndChar', $data);
+            $commentCloser   = $commentText[(strlen($commentText) - 1)];
+            $acceptedClosers = array(
+                                'full-stops'        => '.',
+                                'exclamation marks' => '!',
+                                'or question marks' => '?',
+                               );
+
+            if (in_array($commentCloser, $acceptedClosers) === false) {
+                $error = 'Inline comments must end in %s';
+                $ender = '';
+                foreach ($acceptedClosers as $closerName => $symbol) {
+                    $ender .= ' '.$closerName.',';
+                }
+
+                $ender = rtrim($ender, ',');
+                $data  = array($ender);
+                $phpcsFile->addError($error, $stackPtr, 'InvalidEndChar', $data);
+            }
         }
 
 //        // Finally, the line below the last comment cannot be empty if this inline
