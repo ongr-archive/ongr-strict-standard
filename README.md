@@ -1,6 +1,26 @@
-# PSR2 strict standard
+# ONGR Strict Coding Standard
 
-Strict PHPCS standard for PSR-2 code based on Squiz standards.
+This package solves the problem: 
+
+> "Why did you forget to add 1 space before and after assignment operator?."
+> "Because, I don't like it."
+
+This standard provides automated PSR-2 and Symfony 2 compatible code style checking with added strict rules for whitespace, commenting style and PHPDoc.
+
+## Features
+
+- Required class short description everywhere except for PHPUnit testing classes.
+- Required method short descriptions except for setters / getters and some magic methods.
+- Comments start with capital letter and ends with appropriate punctuation.
+- Line spacing between methods, spaces around operators, indentation of statements and arrays are mostly strictly defined.
+- PHP >= 5.4 short array syntax is required.
+- Require type hinting in PHPDoc for all parameters. Require @return and @throws tags where necessary.
+- Code must not be aligned in assignments and array definitions.
+- Strings should be "double quoted" only with a reason ($variable interpolation inside, etc.)
+
+## Acknowledgement
+
+Our work is based solely on Squiz Labs [Squiz coding standard](https://github.com/squizlabs/PHP_CodeSniffer) and [opensky Symfony2 coding standard](https://github.com/escapestudios/Symfony2-coding-standard).
 
 ## Installation
 
