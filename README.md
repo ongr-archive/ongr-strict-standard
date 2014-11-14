@@ -2,7 +2,7 @@
 
 This package solves the problem: 
 
-> "Why did you forget to add 1 space before and after assignment operator?."
+> "Why did you forget to add 1 space before and after assignment operator?"
 >
 > "Because, I don't like it."
 
