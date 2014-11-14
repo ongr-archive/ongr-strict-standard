@@ -3,6 +3,7 @@
 This package solves the problem: 
 
 > "Why did you forget to add 1 space before and after assignment operator?."
+>
 > "Because, I don't like it."
 
 This standard provides automated PSR-2 and Symfony 2 compatible code style checking with added strict rules for whitespace, commenting style and PHPDoc.
@@ -24,36 +25,31 @@ Our work is based solely on Squiz Labs [Squiz coding standard](https://github.co
 
 ## Installation
 
-Run command:
-````bash
-composer global require "ongr/psr2-strict-standard=*"
-````
-
-OR
-
-Add to your global `~/.composer/composer.json`:
+Composer:
 
 ```json
 {
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:ongr-io/psr2-strict-standard.git"
+            "url": "git@github.com:ongr-io/ongr-strict-standard.git"
         }
     ],
     "require": {
-        "ongr/psr2-strict-standard": "~1.0-alpha",
+        "ongr/ongr-strict-standard": "~1.0-beta",
         "squizlabs/php_codesniffer": "~1"
     }
 }
 ```
 
-After `composer global update`, run:
+Or optionally you can install globally to all projects at `~/.composer/composer.json`.
+
+Then: `composer global update`.
 
 ## Running
 
 ```sh
-vendor/bin/phpcs -p --standard=/home/<user>/.composer/vendor/ongr/psr2-strict-standard/ONGR --ignore=vendor/,Tests/app/,Resources/public/ ./
+vendor/bin/phpcs -p --standard=/home/<user>/.composer/vendor/ongr/ongr-strict-standard/ONGR --ignore=vendor/,Tests/app/,Resources/public/ ./
 ```
 
 Note: do not use ~ for HOME parameter, as PHPCS will not expand it.
@@ -69,7 +65,7 @@ Configure this standard:
 1. Go to Settings > Inspections > PHP > PHP Code Sniffer Validation.
 1. Mark checkbox ON for "PHP Code Sniffer Validation".
 1. Select Custom standard.
-1. Locate `vendor/ongr/psr2-strict-standard/ONGR` standard directory, press OK.
+1. Locate `vendor/ongr/ongr-strict-standard/ONGR` standard directory, press OK.
 
 Code should be validated automatically on each PHP file edit.
 

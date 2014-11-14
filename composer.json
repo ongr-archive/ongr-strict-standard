@@ -1,5 +1,5 @@
 {
-    "name": "ongr/psr2-strict-standard",
+    "name": "ongr/ongr-strict-standard",
     "description": "Strict PHPCS standard for PSR-2 code based on Squiz standards",
     "keywords": [
         "phpcs",
