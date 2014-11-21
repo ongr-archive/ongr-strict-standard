@@ -29,12 +29,6 @@ Composer:
 
 ```json
 {
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:ongr-io/ongr-strict-standard.git"
-        }
-    ],
     "require": {
         "ongr/ongr-strict-standard": "~1.0-beta",
         "squizlabs/php_codesniffer": "~1"
