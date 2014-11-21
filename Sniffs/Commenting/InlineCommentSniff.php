@@ -243,6 +243,11 @@ class ONGR_Sniffs_Commenting_InlineCommentSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $topComment, 'NotCapital');
             }
 
+            // Remove all annotations at the end of comment.
+            while (preg_match('/\@[a-zA-Z]+$/i', $commentText, $matches)) {
+                $commentText = str_replace($matches[0], '', $commentText);
+            }
+
             $commentCloser   = $commentText[(strlen($commentText) - 1)];
             $acceptedClosers = array(
                                 'full-stops'        => '.',

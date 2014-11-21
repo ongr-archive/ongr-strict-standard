@@ -117,10 +117,16 @@ class ONGR_Sniffs_Commenting_DocCommentAlignmentSniff implements PHP_CodeSniffer
                         $phpcsFile->addError($error, $commentPointer, 'NoSpaceBeforeTag');
                     } else {
                         $length = strlen($matches[2]);
-                        if ($length !== 1) {
+                        if ($length < 1) {
                             $error = 'Expected 1 space between asterisk and tag; %s found';
                             $data  = array($length);
                             $phpcsFile->addError($error, $commentPointer, 'SpaceBeforeTag', $data);
+                        } else {
+                            $length -= 1;
+                            if ($length > 0 && $length % 4 !== 0) {
+                                $error = 'Space between asterisk and tag must be dividable by 4';
+                                $phpcsFile->addError($error, $commentPointer, 'SpaceBeforeTag');
+                            }
                         }
                     }
                 }
