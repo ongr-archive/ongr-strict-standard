@@ -122,9 +122,9 @@ class ONGR_Sniffs_Commenting_DocCommentAlignmentSniff implements PHP_CodeSniffer
                             $data  = array($length);
                             $phpcsFile->addError($error, $commentPointer, 'SpaceBeforeTag', $data);
                         } else {
-                            $length -= 1;
-                            if ($length > 0 && $length % 4 !== 0) {
-                                $error = 'Space between asterisk and tag must be dividable by 4';
+                            $remainingSpaces = $length - 1;
+                            if ($remainingSpaces > 0 && $remainingSpaces % 4 !== 0) {
+                                $error = 'Space between asterisk and tag must be divisible by 4';
                                 $phpcsFile->addError($error, $commentPointer, 'SpaceBeforeTag');
                             }
                         }
