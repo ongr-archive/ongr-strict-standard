@@ -29,7 +29,7 @@ Composer:
 
 ```json
 {
-    "require": {
+    "require-dev": {
         "ongr/ongr-strict-standard": "~1.0-beta",
         "squizlabs/php_codesniffer": "~1"
     }
