@@ -157,6 +157,10 @@ class ONGR_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Standa
                     $error = 'Variable comment long description must start with a capital letter';
                     $phpcsFile->addError($error, ($commentStart + $newlineCount), 'LongNotCapital');
                 }
+            } else {
+                // There is no long comment.
+                $error = 'Multiline variable comment should have both long and short comments';
+                $phpcsFile->addError($error, ($commentStart + $newlineCount), 'BadMultilineVariable');
             }//end if
 
             // Short description must be single line and end with a full stop.

@@ -160,10 +160,23 @@ class ONGR_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
         // Ignore the first part of FOR loops as we are allowed to
         // assign variables there even though the variable is not the
         // first thing on the line. Also ignore WHILE loops.
-        if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS && isset($tokens[$i]['parenthesis_owner']) === true) {
-            $owner = $tokens[$i]['parenthesis_owner'];
-            if ($tokens[$owner]['code'] === T_FOR || $tokens[$owner]['code'] === T_WHILE) {
-                return;
+        if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS) {
+            if (isset($tokens[$i]['parenthesis_owner']) !== true) {
+                $ownerIndex = $i;
+                // Find owner - there must be one!
+                while (isset($tokens[$ownerIndex]['parenthesis_owner']) === false && $ownerIndex > 0) {
+                    $ownerIndex--;
+                }
+                if ($ownerIndex > 0) {
+                    // Owner index found.
+                    $i = $ownerIndex;
+                }
+            }
+            if (isset($tokens[$i]['parenthesis_owner'])) {
+                $owner = $tokens[$i]['parenthesis_owner'];
+                if ($tokens[$owner]['code'] === T_FOR || $tokens[$owner]['code'] === T_WHILE) {
+                    return;
+                }
             }
         }
 

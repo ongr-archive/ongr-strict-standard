@@ -713,7 +713,7 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
                     } else if (count($typeNames) === 1) {
                         // Check type hint for array and custom type.
                         $suggestedTypeHint = '';
-                        if (strpos($suggestedName, 'array') !== false) {
+                        if (strpos($suggestedName, 'array') !== false || strpos($suggestedName, '[]') !== false ) {
                             $suggestedTypeHint = 'array';
                         } else if (strpos($suggestedName, 'callable') !== false) {
                             $suggestedTypeHint = 'callable';
@@ -823,7 +823,7 @@ class ONGR_Sniffs_Commenting_FunctionCommentSniff implements PHP_CodeSniffer_Sni
 
             }//end foreach
 
-            if ($spaceBeforeVar !== 1 && $spaceBeforeVar !== 10000 && $spaceBeforeComment !== 10000) {
+            if ($spaceBeforeVar !== 1 && $spaceBeforeVar !== 10000) {
                 $error = 'Expected 1 space after the longest type';
                 $this->currentFile->addError($error, $longestType, 'SpacingAfterLongType');
             }
