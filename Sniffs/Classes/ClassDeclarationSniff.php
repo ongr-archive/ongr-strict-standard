@@ -98,6 +98,17 @@ class ONGR_Sniffs_Classes_ClassDeclarationSniff extends PSR2_Sniffs_Classes_Clas
             }
         }//end if
 
+        $curlyBrace = $tokens[$stackPtr]['scope_opener'];
+        $i = 1;
+        while ($tokens[($curlyBrace + $i)]['code'] === T_WHITESPACE && $i < count($tokens)) {
+            $i++;
+        }
+        $blankLineCount = ($tokens[($curlyBrace + $i)]['line'] - $tokens[$curlyBrace]['line']) - 1;
+        if ($blankLineCount > 0) {
+            $data  = [ $blankLineCount ];
+            $error = 'Expected no blank lines after an opening brace, %s found';
+            $phpcsFile->addError($error, $curlyBrace, 'OpenBraceBlankLines', $data);
+        }
     }//end processOpen()
 
 
