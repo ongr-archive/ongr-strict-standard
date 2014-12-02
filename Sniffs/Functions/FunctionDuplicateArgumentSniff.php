@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Functions;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Functions_FunctionDuplicateArgumentSpacingSniff.
  *
@@ -27,10 +32,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Functions_FunctionDuplicateArgumentSniff implements PHP_CodeSniffer_Sniff
+class FunctionDuplicateArgumentSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,10 +41,8 @@ class ONGR_Sniffs_Functions_FunctionDuplicateArgumentSniff implements PHP_CodeSn
      */
     public function register()
     {
-        return array(T_FUNCTION);
-
+        return [T_FUNCTION];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -56,26 +57,21 @@ class ONGR_Sniffs_Functions_FunctionDuplicateArgumentSniff implements PHP_CodeSn
     {
         $tokens = $phpcsFile->getTokens();
 
-        $openBracket  = $tokens[$stackPtr]['parenthesis_opener'];
+        $openBracket = $tokens[$stackPtr]['parenthesis_opener'];
         $closeBracket = $tokens[$stackPtr]['parenthesis_closer'];
 
-        $foundVariables = array();
+        $foundVariables = [];
         for ($i = ($openBracket + 1); $i < $closeBracket; $i++) {
             if ($tokens[$i]['code'] === T_VARIABLE) {
                 $variable = $tokens[$i]['content'];
                 if (in_array($variable, $foundVariables) === true) {
                     $error = 'Variable "%s" appears more than once in function declaration';
-                    $data  = array($variable);
+                    $data = [$variable];
                     $phpcsFile->addError($error, $i, 'Found', $data);
                 } else {
                     $foundVariables[] = $variable;
                 }
             }
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

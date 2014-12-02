@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Commenting;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Commenting_EmptyCatchCommentSniff.
  *
@@ -27,10 +32,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Commenting_EmptyCatchCommentSniff implements PHP_CodeSniffer_Sniff
+class EmptyCatchCommentSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,10 +41,8 @@ class ONGR_Sniffs_Commenting_EmptyCatchCommentSniff implements PHP_CodeSniffer_S
      */
     public function register()
     {
-        return array(T_CATCH);
-
+        return [T_CATCH];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -56,18 +57,12 @@ class ONGR_Sniffs_Commenting_EmptyCatchCommentSniff implements PHP_CodeSniffer_S
     {
         $tokens = $phpcsFile->getTokens();
 
-        $scopeStart   = $tokens[$stackPtr]['scope_opener'];
+        $scopeStart = $tokens[$stackPtr]['scope_opener'];
         $firstContent = $phpcsFile->findNext(T_WHITESPACE, ($scopeStart + 1), $tokens[$stackPtr]['scope_closer'], true);
 
         if ($firstContent === false) {
             $error = 'Empty CATCH statement must have a comment to explain why the exception is not handled';
             $phpcsFile->addError($error, $scopeStart, 'Missing');
         }
-
     }//end process()
-
-
-}//end class
-
-
-?>
+}

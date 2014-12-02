@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_NamedColoursSniff.
  *
@@ -25,16 +30,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_NamedColoursSniff implements PHP_CodeSniffer_Sniff
+class NamedColoursSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
-
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * A list of named colours.
@@ -43,26 +44,25 @@ class ONGR_Sniffs_CSS_NamedColoursSniff implements PHP_CodeSniffer_Sniff
      *
      * @var array
      */
-    public $colourNames = array(
-                           'aqua',
-                           'black',
-                           'blue',
-                           'fuchsia',
-                           'gray',
-                           'green',
-                           'lime',
-                           'maroon',
-                           'navy',
-                           'olive',
-                           'orange',
-                           'purple',
-                           'red',
-                           'silver',
-                           'teal',
-                           'white',
-                           'yellow',
-                           );
-
+    public $colourNames = [
+        'aqua',
+        'black',
+        'blue',
+        'fuchsia',
+        'gray',
+        'green',
+        'lime',
+        'maroon',
+        'navy',
+        'olive',
+        'orange',
+        'purple',
+        'red',
+        'silver',
+        'teal',
+        'white',
+        'yellow',
+    ];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -71,10 +71,8 @@ class ONGR_Sniffs_CSS_NamedColoursSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_STRING);
-
+        return [T_STRING];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -100,8 +98,5 @@ class ONGR_Sniffs_CSS_NamedColoursSniff implements PHP_CodeSniffer_Sniff
             $error = 'Named colours are forbidden; use hex, rgb, or rgba values instead';
             $phpcsFile->addError($error, $stackPtr, 'Forbidden');
         }
-
     }//end process()
-
-}//end class
-?>
+}

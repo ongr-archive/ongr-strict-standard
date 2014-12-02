@@ -13,9 +13,9 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('Generic_Sniffs_PHP_ForbiddenFunctionsSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class Generic_Sniffs_PHP_ForbiddenFunctionsSniff not found');
-}
+namespace ONGR\Sniffs\PHP;
+
+use Generic_Sniffs_PHP_ForbiddenFunctionsSniff;
 
 /**
  * ONGR_Sniffs_PHP_ForbiddenFunctionsSniff.
@@ -32,9 +32,8 @@ if (class_exists('Generic_Sniffs_PHP_ForbiddenFunctionsSniff', true) === false) 
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_PHP_ForbiddenFunctionsSniff extends Generic_Sniffs_PHP_ForbiddenFunctionsSniff
+class ForbiddenFunctionsSniff extends Generic_Sniffs_PHP_ForbiddenFunctionsSniff
 {
-
     /**
      * A list of forbidden functions with their alternatives.
      *
@@ -43,14 +42,13 @@ class ONGR_Sniffs_PHP_ForbiddenFunctionsSniff extends Generic_Sniffs_PHP_Forbidd
      *
      * @var array(string => string|null)
      */
-    protected $forbiddenFunctions = array(
-                                     'sizeof'          => 'count',
-                                     'delete'          => 'unset',
-                                     'print'           => 'echo',
-                                     'is_null'         => null,
-                                     'create_function' => null,
-                                    );
-
+    protected $forbiddenFunctions = [
+        'sizeof' => 'count',
+        'delete' => 'unset',
+        'print' => 'echo',
+        'is_null' => null,
+        'create_function' => null,
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -61,11 +59,7 @@ class ONGR_Sniffs_PHP_ForbiddenFunctionsSniff extends Generic_Sniffs_PHP_Forbidd
     {
         $tokens = parent::register();
         $tokens[] = T_PRINT;
+
         return $tokens;
-
     }//end register()
-
-
-}//end class
-
-?>
+}

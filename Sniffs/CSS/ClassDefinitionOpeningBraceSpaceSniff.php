@@ -12,6 +12,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_CSS_ClassDefinitionOpeningBraceSpaceSniff.
  *
@@ -26,16 +32,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_ClassDefinitionOpeningBraceSpaceSniff implements PHP_CodeSniffer_Sniff
+class ClassDefinitionOpeningBraceSpaceSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
-
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -44,10 +46,8 @@ class ONGR_Sniffs_CSS_ClassDefinitionOpeningBraceSpaceSniff implements PHP_CodeS
      */
     public function register()
     {
-        return array(T_OPEN_CURLY_BRACKET);
-
+        return [T_OPEN_CURLY_BRACKET];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -74,7 +74,7 @@ class ONGR_Sniffs_CSS_ClassDefinitionOpeningBraceSpaceSniff implements PHP_CodeS
                 }
 
                 $error = 'Expected 1 space before opening brace of class definition; %s found';
-                $data  = array($length);
+                $data = [$length];
                 $phpcsFile->addError($error, $stackPtr, 'Before', $data);
             }
         }//end if
@@ -86,7 +86,7 @@ class ONGR_Sniffs_CSS_ClassDefinitionOpeningBraceSpaceSniff implements PHP_CodeS
 
         // Check for nested class definitions.
         $nested = false;
-        $found  = $phpcsFile->findNext(
+        $found = $phpcsFile->findNext(
             T_OPEN_CURLY_BRACKET,
             ($stackPtr + 1),
             $tokens[$stackPtr]['bracket_closer']
@@ -99,20 +99,15 @@ class ONGR_Sniffs_CSS_ClassDefinitionOpeningBraceSpaceSniff implements PHP_CodeS
         if ($nested === true) {
             if ($foundLines !== 1) {
                 $error = 'Expected 1 blank line after opening brace of nesting class definition; %s found';
-                $data  = array($foundLines);
+                $data = [$foundLines];
                 $phpcsFile->addError($error, $stackPtr, 'AfterNesting', $data);
             }
         } else {
             if ($foundLines !== 0) {
                 $error = 'Expected 0 blank lines after opening brace of class definition; %s found';
-                $data  = array($foundLines);
+                $data = [$foundLines];
                 $phpcsFile->addError($error, $stackPtr, 'After', $data);
             }
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

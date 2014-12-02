@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\ControlStructures;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff.
  *
@@ -27,24 +32,17 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_CodeSniffer_Sniff
+class ForEachLoopDeclarationSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
-     * How many spaces should follow the opening bracket.
-     *
-     * @var int
+     * @var int How many spaces should follow the opening bracket.
      */
     public $requiredSpacesAfterOpen = 0;
 
     /**
-     * How many spaces should precede the closing bracket.
-     *
-     * @var int
+     * @var int How many spaces should precede the closing bracket.
      */
     public $requiredSpacesBeforeClose = 0;
-
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -53,10 +51,8 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
      */
     public function register()
     {
-        return array(T_FOREACH);
-
+        return [T_FOREACH];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -69,8 +65,8 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $this->requiredSpacesAfterOpen   = (int) $this->requiredSpacesAfterOpen;
-        $this->requiredSpacesBeforeClose = (int) $this->requiredSpacesBeforeClose;
+        $this->requiredSpacesAfterOpen = (int)$this->requiredSpacesAfterOpen;
+        $this->requiredSpacesBeforeClose = (int)$this->requiredSpacesBeforeClose;
         $tokens = $phpcsFile->getTokens();
 
         $openingBracket = $phpcsFile->findNext(T_OPEN_PARENTHESIS, $stackPtr);
@@ -79,7 +75,7 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
         if ($this->requiredSpacesAfterOpen === 0 && $tokens[($openingBracket + 1)]['code'] === T_WHITESPACE) {
             $error = 'Space found after opening bracket of FOREACH loop';
             $phpcsFile->addError($error, $stackPtr, 'SpaceAfterOpen');
-        } else if ($this->requiredSpacesAfterOpen > 0) {
+        } elseif ($this->requiredSpacesAfterOpen > 0) {
             $spaceAfterOpen = 0;
             if ($tokens[($openingBracket + 1)]['code'] === T_WHITESPACE) {
                 $spaceAfterOpen = strlen($tokens[($openingBracket + 1)]['content']);
@@ -87,10 +83,10 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
 
             if ($spaceAfterOpen !== $this->requiredSpacesAfterOpen) {
                 $error = 'Expected %s spaces after opening bracket; %s found';
-                $data  = array(
-                          $this->requiredSpacesAfterOpen,
-                          $spaceAfterOpen,
-                         );
+                $data = [
+                    $this->requiredSpacesAfterOpen,
+                    $spaceAfterOpen,
+                ];
                 $phpcsFile->addError($error, $stackPtr, 'SpacingAfterOpen', $data);
             }
         }
@@ -98,7 +94,7 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
         if ($this->requiredSpacesBeforeClose === 0 && $tokens[($closingBracket - 1)]['code'] === T_WHITESPACE) {
             $error = 'Space found before closing bracket of FOREACH loop';
             $phpcsFile->addError($error, $stackPtr, 'SpaceBeforeClose');
-        } else if ($this->requiredSpacesBeforeClose > 0) {
+        } elseif ($this->requiredSpacesBeforeClose > 0) {
             $spaceBeforeClose = 0;
             if ($tokens[($closingBracket - 1)]['code'] === T_WHITESPACE) {
                 $spaceBeforeClose = strlen($tokens[($closingBracket - 1)]['content']);
@@ -106,10 +102,10 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
 
             if ($spaceBeforeClose !== $this->requiredSpacesBeforeClose) {
                 $error = 'Expected %s spaces before closing bracket; %s found';
-                $data  = array(
-                          $this->requiredSpacesBeforeClose,
-                          $spaceBeforeClose,
-                         );
+                $data = [
+                    $this->requiredSpacesBeforeClose,
+                    $spaceBeforeClose,
+                ];
                 $phpcsFile->addError($error, $stackPtr, 'SpaceBeforeClose', $data);
             }
         }
@@ -118,11 +114,11 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
         $content = $tokens[$asToken]['content'];
         if ($content !== strtolower($content)) {
             $expected = strtolower($content);
-            $error    = 'AS keyword must be lowercase; expected "%s" but found "%s"';
-            $data     = array(
-                         $expected,
-                         $content,
-                        );
+            $error = 'AS keyword must be lowercase; expected "%s" but found "%s"';
+            $data = [
+                $expected,
+                $content,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'AsNotLower', $data);
         }
 
@@ -135,8 +131,8 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
             } else {
                 if (strlen($tokens[($doubleArrow - 1)]['content']) !== 1) {
                     $spaces = strlen($tokens[($doubleArrow - 1)]['content']);
-                    $error  = 'Expected 1 space before "=>"; %s found';
-                    $data   = array($spaces);
+                    $error = 'Expected 1 space before "=>"; %s found';
+                    $data = [$spaces];
                     $phpcsFile->addError($error, $stackPtr, 'SpacingBeforeArrow', $data);
                 }
             }
@@ -147,8 +143,8 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
             } else {
                 if (strlen($tokens[($doubleArrow + 1)]['content']) !== 1) {
                     $spaces = strlen($tokens[($doubleArrow + 1)]['content']);
-                    $error  = 'Expected 1 space after "=>"; %s found';
-                    $data   = array($spaces);
+                    $error = 'Expected 1 space after "=>"; %s found';
+                    $data = [$spaces];
                     $phpcsFile->addError($error, $stackPtr, 'SpacingAfterArrow', $data);
                 }
             }
@@ -160,8 +156,8 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
         } else {
             if (strlen($tokens[($asToken - 1)]['content']) !== 1) {
                 $spaces = strlen($tokens[($asToken - 1)]['content']);
-                $error  = 'Expected 1 space before "as"; %s found';
-                $data   = array($spaces);
+                $error = 'Expected 1 space before "as"; %s found';
+                $data = [$spaces];
                 $phpcsFile->addError($error, $stackPtr, 'SpacingBeforeAs', $data);
             }
         }
@@ -172,13 +168,10 @@ class ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff implements PHP_C
         } else {
             if (strlen($tokens[($asToken + 1)]['content']) !== 1) {
                 $spaces = strlen($tokens[($asToken + 1)]['content']);
-                $error  = 'Expected 1 space after "as"; %s found';
-                $data   = array($spaces);
+                $error = 'Expected 1 space after "as"; %s found';
+                $data = [$spaces];
                 $phpcsFile->addError($error, $stackPtr, 'SpacingAfterAs', $data);
             }
         }
-
-    }//end process()
-
-
-}//end class
+    }
+}

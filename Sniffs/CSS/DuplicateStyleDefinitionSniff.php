@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_DuplicateStyleDefinitionSniff.
  *
@@ -25,16 +30,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_DuplicateStyleDefinitionSniff implements PHP_CodeSniffer_Sniff
+class DuplicateStyleDefinitionSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
-
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -43,10 +44,8 @@ class ONGR_Sniffs_CSS_DuplicateStyleDefinitionSniff implements PHP_CodeSniffer_S
      */
     public function register()
     {
-        return array(T_OPEN_CURLY_BRACKET);
-
+        return [T_OPEN_CURLY_BRACKET];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -62,21 +61,21 @@ class ONGR_Sniffs_CSS_DuplicateStyleDefinitionSniff implements PHP_CodeSniffer_S
         $tokens = $phpcsFile->getTokens();
 
         // Find the content of each style definition name.
-        $end  = $tokens[$stackPtr]['bracket_closer'];
+        $end = $tokens[$stackPtr]['bracket_closer'];
         $next = $phpcsFile->findNext(T_STYLE, ($stackPtr + 1), $end);
         if ($next === false) {
             // Class definition is empty.
             return;
         }
 
-        $styleNames = array();
+        $styleNames = [];
 
         while ($next !== false) {
             $name = $tokens[$next]['content'];
             if (isset($styleNames[$name]) === true) {
                 $first = $styleNames[$name];
                 $error = 'Duplicate style definition found; first defined on line %s';
-                $data  = array($tokens[$first]['line']);
+                $data = [$tokens[$first]['line']];
                 $phpcsFile->addError($error, $next, 'Found', $data);
             } else {
                 $styleNames[$name] = $next;
@@ -84,10 +83,5 @@ class ONGR_Sniffs_CSS_DuplicateStyleDefinitionSniff implements PHP_CodeSniffer_S
 
             $next = $phpcsFile->findNext(T_STYLE, ($next + 1), $end);
         }//end while
-
     }//end process()
-
-
-}//end class
-
-?>
+}

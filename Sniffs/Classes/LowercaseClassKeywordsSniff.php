@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Classes;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Classes_LowercaseClassKeywordsSniff.
  *
@@ -27,10 +32,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Classes_LowercaseClassKeywordsSniff implements PHP_CodeSniffer_Sniff
+class LowercaseClassKeywordsSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,20 +41,18 @@ class ONGR_Sniffs_Classes_LowercaseClassKeywordsSniff implements PHP_CodeSniffer
      */
     public function register()
     {
-        return array(
-                T_CLASS,
-                T_INTERFACE,
-                T_TRAIT,
-                T_EXTENDS,
-                T_IMPLEMENTS,
-                T_ABSTRACT,
-                T_FINAL,
-                T_VAR,
-                T_CONST,
-               );
-
-    }//end register()
-
+        return [
+            T_CLASS,
+            T_INTERFACE,
+            T_TRAIT,
+            T_EXTENDS,
+            T_IMPLEMENTS,
+            T_ABSTRACT,
+            T_FINAL,
+            T_VAR,
+            T_CONST,
+        ];
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -69,17 +70,12 @@ class ONGR_Sniffs_Classes_LowercaseClassKeywordsSniff implements PHP_CodeSniffer
         $content = $tokens[$stackPtr]['content'];
         if ($content !== strtolower($content)) {
             $error = '%s keyword must be lowercase; expected "%s" but found "%s"';
-            $data  = array(
-                      strtoupper($content),
-                      strtolower($content),
-                      $content,
-                     );
+            $data = [
+                strtoupper($content),
+                strtolower($content),
+                $content,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'FoundUppercase', $data);
         }
-
-    }//end process()
-
-
-}//end class
-
-?>
+    }
+}

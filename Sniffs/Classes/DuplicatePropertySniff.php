@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Classes;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Classes_DuplicatePropertySniff.
  *
@@ -25,16 +30,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Classes_DuplicatePropertySniff implements PHP_CodeSniffer_Sniff
+class DuplicatePropertySniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports
      */
-    public $supportedTokenizers = array('JS');
-
+    public $supportedTokenizers = ['JS'];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -43,10 +44,8 @@ class ONGR_Sniffs_Classes_DuplicatePropertySniff implements PHP_CodeSniffer_Snif
      */
     public function register()
     {
-        return array(T_OBJECT);
-
+        return [T_OBJECT];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -60,14 +59,14 @@ class ONGR_Sniffs_Classes_DuplicatePropertySniff implements PHP_CodeSniffer_Snif
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        $start  = $tokens[$stackPtr]['scope_opener'];
-        $end    = $tokens[$stackPtr]['scope_closer'];
+        $start = $tokens[$stackPtr]['scope_opener'];
+        $end = $tokens[$stackPtr]['scope_closer'];
 
-        $properties   = array();
-        $wantedTokens = array(
-                         T_PROPERTY,
-                         T_OPEN_CURLY_BRACKET,
-                        );
+        $properties = [];
+        $wantedTokens = [
+            T_PROPERTY,
+            T_OPEN_CURLY_BRACKET,
+        ];
 
         $next = $phpcsFile->findNext($wantedTokens, ($start + 1), $end);
         while ($next !== false && $next < $end) {
@@ -78,10 +77,10 @@ class ONGR_Sniffs_Classes_DuplicatePropertySniff implements PHP_CodeSniffer_Snif
                 $propName = $tokens[$next]['content'];
                 if (isset($properties[$propName]) === true) {
                     $error = 'Duplicate property definition found for "%s"; previously defined on line %s';
-                    $data  = array(
-                              $propName,
-                              $tokens[$properties[$propName]]['line'],
-                             );
+                    $data = [
+                        $propName,
+                        $tokens[$properties[$propName]]['line'],
+                    ];
                     $phpcsFile->addError($error, $next, 'Found', $data);
                 }
 
@@ -90,11 +89,5 @@ class ONGR_Sniffs_Classes_DuplicatePropertySniff implements PHP_CodeSniffer_Snif
 
             $next = $phpcsFile->findNext($wantedTokens, ($next + 1), $end);
         }//end while
-
     }//end process()
-
-
-}//end class
-
-
-?>
+}

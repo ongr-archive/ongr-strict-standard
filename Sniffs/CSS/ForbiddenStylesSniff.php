@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_ForbiddenStylesSniff.
  *
@@ -25,15 +30,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
+class ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * A list of forbidden styles with their alternatives.
@@ -43,38 +45,31 @@ class ONGR_Sniffs_CSS_ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
      *
      * @var array(string => string|null)
      */
-    protected $forbiddenStyles = array(
-                                     '-moz-border-radius'             => 'border-radius',
-                                     '-webkit-border-radius'          => 'border-radius',
-                                     '-moz-border-radius-topleft'     => 'border-top-left-radius',
-                                     '-moz-border-radius-topright'    => 'border-top-right-radius',
-                                     '-moz-border-radius-bottomright' => 'border-bottom-right-radius',
-                                     '-moz-border-radius-bottomleft'  => 'border-bottom-left-radius',
-                                     '-moz-box-shadow'                => 'box-shadow',
-                                     '-webkit-box-shadow'             => 'box-shadow',
-                                    );
+    protected $forbiddenStyles = [
+        '-moz-border-radius' => 'border-radius',
+        '-webkit-border-radius' => 'border-radius',
+        '-moz-border-radius-topleft' => 'border-top-left-radius',
+        '-moz-border-radius-topright' => 'border-top-right-radius',
+        '-moz-border-radius-bottomright' => 'border-bottom-right-radius',
+        '-moz-border-radius-bottomleft' => 'border-bottom-left-radius',
+        '-moz-box-shadow' => 'box-shadow',
+        '-webkit-box-shadow' => 'box-shadow',
+    ];
 
     /**
-     * A cache of forbidden style names, for faster lookups.
-     *
-     * @var array(string)
+     * @var string[] A cache of forbidden style names, for faster lookups.
      */
-    protected $forbiddenStyleNames = array();
+    protected $forbiddenStyleNames = [];
 
     /**
-     * If true, forbidden styles will be considered regular expressions.
-     *
-     * @var bool
+     * @var bool If true, forbidden styles will be considered regular expressions.
      */
     protected $patternMatch = false;
 
     /**
-     * If true, an error will be thrown; otherwise a warning.
-     *
-     * @var bool
+     * @var bool If true, an error will be thrown; otherwise a warning.
      */
     public $error = true;
-
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -87,14 +82,12 @@ class ONGR_Sniffs_CSS_ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
 
         if ($this->patternMatch === true) {
             foreach ($this->forbiddenStyleNames as $i => $name) {
-                $this->forbiddenStyleNames[$i] = '/'.$name.'/i';
+                $this->forbiddenStyleNames[$i] = '/' . $name . '/i';
             }
         }
 
-        return array(T_STYLE);
-
+        return [T_STYLE];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -107,12 +100,12 @@ class ONGR_Sniffs_CSS_ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens  = $phpcsFile->getTokens();
-        $style   = strtolower($tokens[$stackPtr]['content']);
+        $tokens = $phpcsFile->getTokens();
+        $style = strtolower($tokens[$stackPtr]['content']);
         $pattern = null;
 
         if ($this->patternMatch === true) {
-            $count   = 0;
+            $count = 0;
             $pattern = preg_replace(
                 $this->forbiddenStyleNames,
                 $this->forbiddenStyleNames,
@@ -134,9 +127,7 @@ class ONGR_Sniffs_CSS_ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
         }
 
         $this->addError($phpcsFile, $stackPtr, $style, $pattern);
-
     }//end process()
-
 
     /**
      * Generates the error or warning for this sniff.
@@ -149,15 +140,15 @@ class ONGR_Sniffs_CSS_ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
      *
      * @return void
      */
-    protected function addError($phpcsFile, $stackPtr, $style, $pattern=null)
+    protected function addError($phpcsFile, $stackPtr, $style, $pattern = null)
     {
-        $data  = array($style);
+        $data = [$style];
         $error = 'The use of style %s is ';
         if ($this->error === true) {
-            $type   = 'Found';
+            $type = 'Found';
             $error .= 'forbidden';
         } else {
-            $type   = 'Discouraged';
+            $type = 'Discouraged';
             $error .= 'discouraged';
         }
 
@@ -166,7 +157,7 @@ class ONGR_Sniffs_CSS_ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
         }
 
         if ($this->forbiddenStyles[$pattern] !== null) {
-            $type  .= 'WithAlternative';
+            $type .= 'WithAlternative';
             $data[] = $this->forbiddenStyles[$pattern];
             $error .= '; use %s instead';
         }
@@ -176,10 +167,5 @@ class ONGR_Sniffs_CSS_ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
         } else {
             $phpcsFile->addWarning($error, $stackPtr, $type, $data);
         }
-
     }//end addError()
-
-
-}//end class
-
-?>
+}

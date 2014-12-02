@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_WhiteSpace_ObjectOperatorSpacingSniff.
  *
@@ -27,10 +33,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_ObjectOperatorSpacingSniff implements PHP_CodeSniffer_Sniff
+class ObjectOperatorSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,10 +42,8 @@ class ONGR_Sniffs_WhiteSpace_ObjectOperatorSpacingSniff implements PHP_CodeSniff
      */
     public function register()
     {
-        return array(T_OBJECT_OPERATOR);
-
+        return [T_OBJECT_OPERATOR];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -56,21 +58,10 @@ class ONGR_Sniffs_WhiteSpace_ObjectOperatorSpacingSniff implements PHP_CodeSniff
     {
         $tokens = $phpcsFile->getTokens();
 
-//        $prevType = $tokens[($stackPtr - 1)]['code'];
-//        if (in_array($prevType, PHP_CodeSniffer_Tokens::$emptyTokens) === true) {
-//            $error = 'Space found before object operator';
-//            $phpcsFile->addError($error, $stackPtr, 'Before');
-//        }
-
         $nextType = $tokens[($stackPtr + 1)]['code'];
         if (in_array($nextType, PHP_CodeSniffer_Tokens::$emptyTokens) === true) {
             $error = 'Space found after object operator';
             $phpcsFile->addError($error, $stackPtr, 'After');
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

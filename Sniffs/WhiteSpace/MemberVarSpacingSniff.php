@@ -13,9 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('PHP_CodeSniffer_Standards_AbstractVariableSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_Standards_AbstractVariableSniff not found');
-}
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Standards_AbstractVariableSniff;
+use PHP_CodeSniffer_Tokens;
 
 /**
  * Verifies that class members are spaced correctly.
@@ -29,10 +31,8 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractVariableSniff', true) === fa
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_MemberVarSpacingSniff extends PHP_CodeSniffer_Standards_AbstractVariableSniff
+class MemberVarSpacingSniff extends PHP_CodeSniffer_Standards_AbstractVariableSniff
 {
-
-
     /**
      * Processes the function tokens within the class.
      *
@@ -51,14 +51,16 @@ class ONGR_Sniffs_WhiteSpace_MemberVarSpacingSniff extends PHP_CodeSniffer_Stand
             if (in_array($tokens[$i]['code'], PHP_CodeSniffer_Tokens::$commentTokens) === true) {
                 // Skip comments.
                 continue;
-            } else if (strpos($tokens[$i]['content'], $phpcsFile->eolChar) === false) {
+            } elseif (strpos($tokens[$i]['content'], $phpcsFile->eolChar) === false) {
                 // Not the end of the line.
                 continue;
             } else {
                 // If this is a WHITESPACE token, and the token right before
                 // it is a DOC_COMMENT, then it is just the newline after the
                 // member var's comment, and can be skipped.
-                if ($tokens[$i]['code'] === T_WHITESPACE && in_array($tokens[($i - 1)]['code'], PHP_CodeSniffer_Tokens::$commentTokens) === true) {
+                if ($tokens[$i]['code'] === T_WHITESPACE
+                    && in_array($tokens[($i - 1)]['code'], PHP_CodeSniffer_Tokens::$commentTokens) === true
+                ) {
                     continue;
                 }
 
@@ -67,23 +69,26 @@ class ONGR_Sniffs_WhiteSpace_MemberVarSpacingSniff extends PHP_CodeSniffer_Stand
             }
         }
 
-        if (is_null($prevLineToken) === true) {
+        if ($prevLineToken === null) {
             // Never found the previous line, which means
             // there are 0 blank lines before the member var.
             $foundLines = 0;
         } else {
-            $prevContent = $phpcsFile->findPrevious(array(T_WHITESPACE, T_DOC_COMMENT, T_OPEN_CURLY_BRACKET), $prevLineToken, null, true);
-            $foundLines  = ($tokens[$prevLineToken]['line'] - $tokens[$prevContent]['line']);
+            $prevContent = $phpcsFile->findPrevious(
+                [T_WHITESPACE, T_DOC_COMMENT, T_OPEN_CURLY_BRACKET],
+                $prevLineToken,
+                null,
+                true
+            );
+            $foundLines = ($tokens[$prevLineToken]['line'] - $tokens[$prevContent]['line']);
         }//end if
 
         if ($foundLines !== 1) {
             $error = 'Expected 1 blank line before member var; %s found';
-            $data  = array($foundLines);
+            $data = [$foundLines];
             $phpcsFile->addError($error, $stackPtr, 'Incorrect', $data);
         }
-
     }//end processMemberVar()
-
 
     /**
      * Processes normal variables.
@@ -96,9 +101,7 @@ class ONGR_Sniffs_WhiteSpace_MemberVarSpacingSniff extends PHP_CodeSniffer_Stand
     protected function processVariable(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         // We don't care about normal variables.
-
     }//end processVariable()
-
 
     /**
      * Processes variables in double quoted strings.
@@ -111,10 +114,5 @@ class ONGR_Sniffs_WhiteSpace_MemberVarSpacingSniff extends PHP_CodeSniffer_Stand
     protected function processVariableInString(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         // We don't care about normal variables.
-
     }//end processVariableInString()
-
-
-}//end class
-
-?>
+}

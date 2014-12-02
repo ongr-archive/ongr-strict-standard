@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Classes;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Classes_ClassFileNameSniff.
  *
@@ -28,10 +33,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Classes_ClassFileNameSniff implements PHP_CodeSniffer_Sniff
+class ClassFileNameSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -39,13 +42,11 @@ class ONGR_Sniffs_Classes_ClassFileNameSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(
-                T_CLASS,
-                T_INTERFACE,
-               );
-
+        return [
+            T_CLASS,
+            T_INTERFACE,
+        ];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -65,22 +66,17 @@ class ONGR_Sniffs_Classes_ClassFileNameSniff implements PHP_CodeSniffer_Sniff
             return;
         }
 
-        $tokens  = $phpcsFile->getTokens();
+        $tokens = $phpcsFile->getTokens();
         $decName = $phpcsFile->findNext(T_STRING, $stackPtr);
 
         if ($tokens[$decName]['content'] !== $fileName) {
             $error = '%s name doesn\'t match filename; expected "%s %s"';
-            $data  = array(
-                      ucfirst($tokens[$stackPtr]['content']),
-                      $tokens[$stackPtr]['content'],
-                      $fileName,
-                     );
+            $data = [
+                ucfirst($tokens[$stackPtr]['content']),
+                $tokens[$stackPtr]['content'],
+                $fileName,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'NoMatch', $data);
         }
-
-    }//end process()
-
-
-}//end class
-
-?>
+    }// End process().
+}

@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Strings;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_Strings_EchoedStringsSniff.
  *
@@ -28,10 +34,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Strings_EchoedStringsSniff implements PHP_CodeSniffer_Sniff
+class EchoedStringsSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -39,10 +43,8 @@ class ONGR_Sniffs_Strings_EchoedStringsSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_ECHO);
-
+        return [T_ECHO];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -57,13 +59,13 @@ class ONGR_Sniffs_Strings_EchoedStringsSniff implements PHP_CodeSniffer_Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $firstContent = $phpcsFile->findNext(array(T_WHITESPACE), ($stackPtr + 1), null, true);
+        $firstContent = $phpcsFile->findNext([T_WHITESPACE], ($stackPtr + 1), null, true);
         // If the first non-whitespace token is not an opening parenthesis, then we are not concerned.
         if ($tokens[$firstContent]['code'] !== T_OPEN_PARENTHESIS) {
             return;
         }
 
-        $endOfStatement = $phpcsFile->findNext(array(T_SEMICOLON), $stackPtr, null, false);
+        $endOfStatement = $phpcsFile->findNext([T_SEMICOLON], $stackPtr, null, false);
 
         // If the token before the semi-colon is not a closing parenthesis, then we are not concerned.
         if ($tokens[($endOfStatement - 1)]['code'] !== T_CLOSE_PARENTHESIS) {
@@ -75,10 +77,5 @@ class ONGR_Sniffs_Strings_EchoedStringsSniff implements PHP_CodeSniffer_Sniff
             $error = 'Echoed strings should not be bracketed';
             $phpcsFile->addError($error, $stackPtr, 'HasBracket');
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

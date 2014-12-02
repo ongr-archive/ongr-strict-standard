@@ -13,10 +13,10 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false) {
-    $error = 'Class PHP_CodeSniffer_Standards_AbstractScopeSniff not found';
-    throw new PHP_CodeSniffer_Exception($error);
-}
+namespace ONGR\Sniffs\Classes;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Standards_AbstractScopeSniff;
 
 /**
  * Tests self member references.
@@ -37,19 +37,15 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Classes_SelfMemberReferenceSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
+class SelfMemberReferenceSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
 {
-
-
     /**
      * Constructs a ONGR_Sniffs_Classes_SelfMemberReferenceSniff.
      */
     public function __construct()
     {
-        parent::__construct(array(T_CLASS), array(T_DOUBLE_COLON));
-
+        parent::__construct([T_CLASS], [T_DOUBLE_COLON]);
     }//end __construct()
-
 
     /**
      * Processes the function tokens within the class.
@@ -68,20 +64,21 @@ class ONGR_Sniffs_Classes_SelfMemberReferenceSniff extends PHP_CodeSniffer_Stand
         if ($tokens[$calledClassName]['code'] === T_SELF) {
             if (strtolower($tokens[$calledClassName]['content']) !== $tokens[$calledClassName]['content']) {
                 $error = 'Must use "self::" for local static member reference; found "%s::"';
-                $data  = array($tokens[$calledClassName]['content']);
+                $data = [$tokens[$calledClassName]['content']];
                 $phpcsFile->addError($error, $calledClassName, 'IncorrectCase', $data);
+
                 return;
             }
-        } else if ($tokens[$calledClassName]['code'] === T_STRING) {
+        } elseif ($tokens[$calledClassName]['code'] === T_STRING) {
             // If the class is called with a namespace prefix, build fully qualified
             // namespace calls for both current scope class and requested class.
             if ($tokens[($calledClassName - 1)]['code'] === T_NS_SEPARATOR) {
-                $declarationName         = $this->getDeclarationNameWithNamespace($tokens, $calledClassName);
-                $declarationName         = substr($declarationName, 1);
-                $fullQualifiedClassName  = $this->getNamespaceOfScope($phpcsFile, $currScope);
-                $fullQualifiedClassName .= '\\'.$phpcsFile->getDeclarationName($currScope);
+                $declarationName = $this->getDeclarationNameWithNamespace($tokens, $calledClassName);
+                $declarationName = substr($declarationName, 1);
+                $fullQualifiedClassName = $this->getNamespaceOfScope($phpcsFile, $currScope);
+                $fullQualifiedClassName .= '\\' . $phpcsFile->getDeclarationName($currScope);
             } else {
-                $declarationName        = $phpcsFile->getDeclarationName($currScope);
+                $declarationName = $phpcsFile->getDeclarationName($currScope);
                 $fullQualifiedClassName = $tokens[$calledClassName]['content'];
             }
 
@@ -91,6 +88,7 @@ class ONGR_Sniffs_Classes_SelfMemberReferenceSniff extends PHP_CodeSniffer_Stand
                 if ($phpcsFile->hasCondition($stackPtr, T_CLOSURE) === false) {
                     $error = 'Must use "self::" for local static member reference';
                     $phpcsFile->addError($error, $calledClassName, 'NotUsed');
+
                     return;
                 }
             }
@@ -99,31 +97,29 @@ class ONGR_Sniffs_Classes_SelfMemberReferenceSniff extends PHP_CodeSniffer_Stand
         if ($tokens[($stackPtr - 1)]['code'] === T_WHITESPACE) {
             $found = strlen($tokens[($stackPtr - 1)]['content']);
             $error = 'Expected 0 spaces before double colon; %s found';
-            $data  = array($found);
+            $data = [$found];
             $phpcsFile->addError($error, $calledClassName, 'SpaceBefore', $data);
         }
 
         if ($tokens[($stackPtr + 1)]['code'] === T_WHITESPACE) {
             $found = strlen($tokens[($stackPtr + 1)]['content']);
             $error = 'Expected 0 spaces after double colon; %s found';
-            $data  = array($found);
+            $data = [$found];
             $phpcsFile->addError($error, $calledClassName, 'SpaceAfter', $data);
         }
-
     }//end processTokenWithinScope()
-
 
     /**
      * Returns the declaration names for classes/interfaces/functions with a namespace.
      *
-     * @param array $tokens   Token stack for this file
+     * @param array $tokens   Token stack for this file.
      * @param int   $stackPtr The position where the namespace building will start.
      *
      * @return string
      */
     protected function getDeclarationNameWithNamespace(array $tokens, $stackPtr)
     {
-        $nameParts      = array();
+        $nameParts = [];
         $currentPointer = $stackPtr;
         while ($tokens[$currentPointer]['code'] === T_NS_SEPARATOR
             || $tokens[$currentPointer]['code'] === T_STRING
@@ -133,10 +129,9 @@ class ONGR_Sniffs_Classes_SelfMemberReferenceSniff extends PHP_CodeSniffer_Stand
         }
 
         $nameParts = array_reverse($nameParts);
+
         return implode('', $nameParts);
-
     }//end getDeclarationNameWithNamespace()
-
 
     /**
      * Returns the namespace declaration of a file.
@@ -161,10 +156,5 @@ class ONGR_Sniffs_Classes_SelfMemberReferenceSniff extends PHP_CodeSniffer_Stand
         }
 
         return $namespace;
-
     }//end getNamespaceOfScope
-
-
-}//end class
-
-?>
+}

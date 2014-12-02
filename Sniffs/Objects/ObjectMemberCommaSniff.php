@@ -12,6 +12,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Objects;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_Objects_ObjectInstantiationSniff.
  *
@@ -25,16 +31,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Objects_ObjectMemberCommaSniff implements PHP_CodeSniffer_Sniff
+class ObjectMemberCommaSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('JS');
-
+    public $supportedTokenizers = ['JS'];
 
     /**
      * Registers the token types that this sniff wishes to listen to.
@@ -43,10 +45,8 @@ class ONGR_Sniffs_Objects_ObjectMemberCommaSniff implements PHP_CodeSniffer_Snif
      */
     public function register()
     {
-        return array(T_CLOSE_CURLY_BRACKET);
-
+        return [T_CLOSE_CURLY_BRACKET];
     }//end register()
-
 
     /**
      * Process the tokens that this sniff is listening for.
@@ -75,10 +75,5 @@ class ONGR_Sniffs_Objects_ObjectMemberCommaSniff implements PHP_CodeSniffer_Snif
             $error = 'Last member of object must not be followed by a comma';
             $phpcsFile->addError($error, $prev, 'Missing');
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

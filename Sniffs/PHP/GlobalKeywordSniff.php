@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\PHP;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_PHP_GlobalKeywordSniff.
  *
@@ -27,10 +32,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_PHP_GlobalKeywordSniff implements PHP_CodeSniffer_Sniff
+class GlobalKeywordSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,10 +41,8 @@ class ONGR_Sniffs_PHP_GlobalKeywordSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_GLOBAL);
-
+        return [T_GLOBAL];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -56,15 +57,10 @@ class ONGR_Sniffs_PHP_GlobalKeywordSniff implements PHP_CodeSniffer_Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $nextVar = $tokens[$phpcsFile->findNext(array(T_VARIABLE), $stackPtr)];
+        $nextVar = $tokens[$phpcsFile->findNext([T_VARIABLE], $stackPtr)];
         $varName = str_replace('$', '', $nextVar['content']);
-        $error   = 'Use of the "global" keyword is forbidden; use "$GLOBALS[\'%s\']" instead';
-        $data    = array($varName);
+        $error = 'Use of the "global" keyword is forbidden; use "$GLOBALS[\'%s\']" instead';
+        $data = [$varName];
         $phpcsFile->addError($error, $stackPtr, 'NotAllowed', $data);
-
     }//end process()
-
-
-}//end class
-
-?>
+}

@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Commenting;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Commenting_PostStatementCommentSniff.
  *
@@ -27,19 +32,15 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Commenting_PostStatementCommentSniff implements PHP_CodeSniffer_Sniff
+class PostStatementCommentSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                  );
-
+    public $supportedTokenizers = [
+        'PHP',
+        'JS',
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -48,10 +49,8 @@ class ONGR_Sniffs_Commenting_PostStatementCommentSniff implements PHP_CodeSniffe
      */
     public function register()
     {
-        return array(T_COMMENT);
-
+        return [T_COMMENT];
     }//end register()
-
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -93,11 +92,5 @@ class ONGR_Sniffs_Commenting_PostStatementCommentSniff implements PHP_CodeSniffe
 
         $error = 'Comments may not appear after statements.';
         $phpcsFile->addError($error, $stackPtr, 'Found');
-
     }//end process()
-
-
-}//end class
-
-
-?>
+}

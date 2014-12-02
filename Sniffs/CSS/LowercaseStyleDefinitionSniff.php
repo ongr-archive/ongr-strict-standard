@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_LowercaseStyleDefinitionSniff.
  *
@@ -25,16 +30,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_LowercaseStyleDefinitionSniff implements PHP_CodeSniffer_Sniff
+class LowercaseStyleDefinitionSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
-
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -43,10 +44,8 @@ class ONGR_Sniffs_CSS_LowercaseStyleDefinitionSniff implements PHP_CodeSniffer_S
      */
     public function register()
     {
-        return array(T_OPEN_CURLY_BRACKET);
-
+        return [T_OPEN_CURLY_BRACKET];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -59,9 +58,9 @@ class ONGR_Sniffs_CSS_LowercaseStyleDefinitionSniff implements PHP_CodeSniffer_S
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens  = $phpcsFile->getTokens();
-        $start   = ($stackPtr + 1);
-        $end     = ($tokens[$stackPtr]['bracket_closer'] - 1);
+        $tokens = $phpcsFile->getTokens();
+        $start = ($stackPtr + 1);
+        $end = ($tokens[$stackPtr]['bracket_closer'] - 1);
         $inStyle = null;
 
         for ($i = $start; $i <= $end; $i++) {
@@ -91,16 +90,13 @@ class ONGR_Sniffs_CSS_LowercaseStyleDefinitionSniff implements PHP_CodeSniffer_S
                 $expected = strtolower($tokens[$i]['content']);
                 if ($expected !== $tokens[$i]['content']) {
                     $error = 'Style definitions must be lowercase; expected %s but found %s';
-                    $data  = array(
-                              $expected,
-                              $tokens[$i]['content'],
-                             );
+                    $data = [
+                        $expected,
+                        $tokens[$i]['content'],
+                    ];
                     $phpcsFile->addError($error, $i, 'FoundUpper', $data);
                 }
             }
         }//end for
-
     }//end process()
-
-}//end class
-?>
+}

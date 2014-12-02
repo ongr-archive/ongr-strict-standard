@@ -12,6 +12,13 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Debug;
+
+use PHP_CodeSniffer;
+use PHP_CodeSniffer_Exception;
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Debug_JavaScriptLintSniff.
  *
@@ -25,16 +32,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Debug_JavaScriptLintSniff implements PHP_CodeSniffer_Sniff
+class JavaScriptLintSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('JS');
-
+    public $supportedTokenizers = ['JS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -43,10 +46,8 @@ class ONGR_Sniffs_Debug_JavaScriptLintSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_OPEN_TAG);
-
+        return [T_OPEN_TAG];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -55,6 +56,7 @@ class ONGR_Sniffs_Debug_JavaScriptLintSniff implements PHP_CodeSniffer_Sniff
      * @param int                  $stackPtr  The position in the stack where
      *                                        the token was found.
      *
+     * @throws PHP_CodeSniffer_Exception
      * @return void
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
@@ -62,14 +64,15 @@ class ONGR_Sniffs_Debug_JavaScriptLintSniff implements PHP_CodeSniffer_Sniff
         $fileName = $phpcsFile->getFilename();
 
         $jslPath = PHP_CodeSniffer::getConfigData('jsl_path');
-        if (is_null($jslPath) === true) {
+        if ($jslPath === null) {
             return;
         }
 
-        $cmd = '"'.$jslPath.'" -nologo -nofilelisting -nocontext -nosummary -output-format __LINE__:__ERROR__ -process "'.$fileName.'"';
+        $cmd = '"' . $jslPath . '" -nologo -nofilelisting -nocontext '
+            . '-nosummary -output-format __LINE__:__ERROR__ -process "' . $fileName . '"';
         $msg = exec($cmd, $output, $retval);
 
-        // $exitCode is the last line of $output if no error occurs, on error it
+        // The $exitCode is the last line of $output if no error occurs, on error it
         // is numeric. Try to handle various error conditions and provide useful
         // error reporting.
         if ($retval === 2 || $retval === 4) {
@@ -77,20 +80,22 @@ class ONGR_Sniffs_Debug_JavaScriptLintSniff implements PHP_CodeSniffer_Sniff
                 $msg = join('\n', $output);
             }
 
-            throw new PHP_CodeSniffer_Exception("Failed invoking JavaScript Lint, retval was [$retval], output was [$msg]");
+            throw new PHP_CodeSniffer_Exception(
+                "Failed invoking JavaScript Lint, retval was [$retval], output was [$msg]"
+            );
         }
-
 
         if (is_array($output) === true) {
             $tokens = $phpcsFile->getTokens();
 
             foreach ($output as $finding) {
-                $split   = strpos($finding, ':');
-                $line    = substr($finding, 0, $split);
+                $split = strpos($finding, ':');
+                $line = substr($finding, 0, $split);
                 $message = substr($finding, ($split + 1));
 
                 // Find the token at the start of the line.
                 $lineToken = null;
+                $ptr = null;
                 foreach ($tokens as $ptr => $info) {
                     if ($info['line'] == $line) {
                         $lineToken = $ptr;
@@ -103,8 +108,5 @@ class ONGR_Sniffs_Debug_JavaScriptLintSniff implements PHP_CodeSniffer_Sniff
                 }
             }//end foreach
         }//end if
-
     }//end process()
-
-}//end class
-?>
+}

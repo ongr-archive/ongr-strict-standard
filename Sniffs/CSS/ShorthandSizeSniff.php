@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_ShorthandSizeSniff.
  *
@@ -26,15 +31,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
+class ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * A list of styles that we shouldn't check.
@@ -43,14 +45,13 @@ class ONGR_Sniffs_CSS_ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
      *
      * @var array
      */
-    public $excludeStyles = array(
-                             'background-position',
-                             'box-shadow',
-                             'transform-origin',
-                             '-webkit-transform-origin',
-                             '-ms-transform-origin',
-                            );
-
+    public $excludeStyles = [
+        'background-position',
+        'box-shadow',
+        'transform-origin',
+        '-webkit-transform-origin',
+        '-ms-transform-origin',
+    ];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -59,10 +60,8 @@ class ONGR_Sniffs_CSS_ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_STYLE);
-
+        return [T_STYLE];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -84,7 +83,7 @@ class ONGR_Sniffs_CSS_ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
         }
 
         // Get the whole style content.
-        $end     = $phpcsFile->findNext(T_SEMICOLON, ($stackPtr + 1));
+        $end = $phpcsFile->findNext(T_SEMICOLON, ($stackPtr + 1));
         $content = $phpcsFile->getTokensAsString(($stackPtr + 1), ($end - $stackPtr - 1));
         $content = trim($content, ': ');
 
@@ -96,10 +95,10 @@ class ONGR_Sniffs_CSS_ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
 
         // Check if this style value is a set of numbers with optional prefixes.
         $content = preg_replace('/\s+/', ' ', $content);
-        $values  = array();
-        $num     = preg_match_all(
+        $values = [];
+        $num = preg_match_all(
             '/([0-9]+)([a-zA-Z]{2}\s+|%\s+|\s+)/',
-            $content.' ',
+            $content . ' ',
             $values,
             PREG_SET_ORDER
         );
@@ -120,10 +119,11 @@ class ONGR_Sniffs_CSS_ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
         }
 
         if ($num === 3) {
-            $expected = trim($content.' '.$values[1][1].$values[1][2]);
+            $expected = trim($content . ' ' . $values[1][1] . $values[1][2]);
             $error = 'Shorthand syntax not allowed here; use %s instead';
-            $data  = array($expected);
+            $data = [$expected];
             $phpcsFile->addError($error, $stackPtr, 'NotAllowed', $data);
+
             return;
         }
 
@@ -132,7 +132,7 @@ class ONGR_Sniffs_CSS_ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
                 // Both values are different, so it is already shorthand.
                 return;
             }
-        } else if ($values[0][0] !== $values[2][0] || $values[1][0] !== $values[3][0]) {
+        } elseif ($values[0][0] !== $values[2][0] || $values[1][0] !== $values[3][0]) {
             // Can't shorthand this.
             return;
         }
@@ -141,21 +141,17 @@ class ONGR_Sniffs_CSS_ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
             // All values are the same.
             $expected = $values[0][0];
         } else {
-            $expected = $values[0][0].' '.$values[1][0];
+            $expected = $values[0][0] . ' ' . $values[1][0];
         }
 
         $expected = preg_replace('/\s+/', ' ', trim($expected));
 
         $error = 'Size definitions must use shorthand if available; expected "%s" but found "%s"';
-        $data  = array(
-                  $expected,
-                  $content,
-                 );
+        $data = [
+            $expected,
+            $content,
+        ];
 
         $phpcsFile->addError($error, $stackPtr, 'NotUsed', $data);
-
     }//end process()
-
-
-}//end class
-?>
+}

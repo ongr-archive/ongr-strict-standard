@@ -12,6 +12,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_CSS_ColonSpacingSniff.
  *
@@ -25,16 +31,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_ColonSpacingSniff implements PHP_CodeSniffer_Sniff
+class ColonSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
-
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -43,10 +45,8 @@ class ONGR_Sniffs_CSS_ColonSpacingSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_COLON);
-
+        return [T_COLON];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -83,10 +83,10 @@ class ONGR_Sniffs_CSS_ColonSpacingSniff implements PHP_CodeSniffer_Sniff
         } else {
             $content = $tokens[($stackPtr + 1)]['content'];
             if (strpos($content, $phpcsFile->eolChar) === false) {
-                $length  = strlen($content);
+                $length = strlen($content);
                 if ($length !== 1) {
                     $error = 'Expected 1 space after colon in style definition; %s found';
-                    $data  = array($length);
+                    $data = [$length];
                     $phpcsFile->addError($error, $stackPtr, 'After', $data);
                 }
             } else {
@@ -94,8 +94,5 @@ class ONGR_Sniffs_CSS_ColonSpacingSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $stackPtr, 'AfterNewline');
             }
         }//end if
-
     }//end process()
-
-}//end class
-?>
+}

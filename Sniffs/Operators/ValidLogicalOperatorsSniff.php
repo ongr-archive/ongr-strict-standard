@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Operators;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Operators_ValidLogicalOperatorsSniff.
  *
@@ -28,10 +33,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Operators_ValidLogicalOperatorsSniff implements PHP_CodeSniffer_Sniff
+class ValidLogicalOperatorsSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -39,14 +42,12 @@ class ONGR_Sniffs_Operators_ValidLogicalOperatorsSniff implements PHP_CodeSniffe
      */
     public function register()
     {
-        return array(
-                T_LOGICAL_AND,
-                T_LOGICAL_OR,
-                T_LOGICAL_XOR,
-               );
-
+        return [
+            T_LOGICAL_AND,
+            T_LOGICAL_OR,
+            T_LOGICAL_XOR,
+        ];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -61,11 +62,11 @@ class ONGR_Sniffs_Operators_ValidLogicalOperatorsSniff implements PHP_CodeSniffe
     {
         $tokens = $phpcsFile->getTokens();
 
-        $replacements = array(
-                         'and' => '&&',
-                         'or'  => '||',
-                         'xor' => '^',
-                        );
+        $replacements = [
+            'and' => '&&',
+            'or' => '||',
+            'xor' => '^',
+        ];
 
         $operator = strtolower($tokens[$stackPtr]['content']);
         if (isset($replacements[$operator]) === false) {
@@ -73,15 +74,10 @@ class ONGR_Sniffs_Operators_ValidLogicalOperatorsSniff implements PHP_CodeSniffe
         }
 
         $error = 'Logical operator "%s" is prohibited; use "%s" instead';
-        $data  = array(
-                  $operator,
-                  $replacements[$operator],
-                 );
+        $data = [
+            $operator,
+            $replacements[$operator],
+        ];
         $phpcsFile->addError($error, $stackPtr, 'NotAllowed', $data);
-
     }//end process()
-
-
-}//end class
-
-?>
+}

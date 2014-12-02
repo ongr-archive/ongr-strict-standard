@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_ColourDefinitionSniff.
  *
@@ -25,16 +30,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_ColourDefinitionSniff implements PHP_CodeSniffer_Sniff
+class ColourDefinitionSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
-
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -43,10 +44,8 @@ class ONGR_Sniffs_CSS_ColourDefinitionSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_COLOUR);
-
+        return [T_COLOUR];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -65,10 +64,10 @@ class ONGR_Sniffs_CSS_ColourDefinitionSniff implements PHP_CodeSniffer_Sniff
         $expected = strtoupper($colour);
         if ($colour !== $expected) {
             $error = 'CSS colours must be defined in uppercase; expected %s but found %s';
-            $data  = array(
-                      $expected,
-                      $colour,
-                     );
+            $data = [
+                $expected,
+                $colour,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'NotUpper', $data);
         }
 
@@ -78,16 +77,13 @@ class ONGR_Sniffs_CSS_ColourDefinitionSniff implements PHP_CodeSniffer_Sniff
         }
 
         if ($colour{1} === $colour{2} && $colour{3} === $colour{4} && $colour{5} === $colour{6}) {
-            $expected = '#'.$colour{1}.$colour{3}.$colour{5};
-            $error    = 'CSS colours must use shorthand if available; expected %s but found %s';
-            $data     = array(
-                         $expected,
-                         $colour,
-                        );
+            $expected = '#' . $colour{1} . $colour{3} . $colour{5};
+            $error = 'CSS colours must use shorthand if available; expected %s but found %s';
+            $data = [
+                $expected,
+                $colour,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'Shorthand', $data);
         }
-
     }//end process()
-
-}//end class
-?>
+}

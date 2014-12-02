@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Functions;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Functions_LowercaseFunctionKeywordsSniff.
  *
@@ -27,10 +32,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Functions_LowercaseFunctionKeywordsSniff implements PHP_CodeSniffer_Sniff
+class LowercaseFunctionKeywordsSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,16 +41,14 @@ class ONGR_Sniffs_Functions_LowercaseFunctionKeywordsSniff implements PHP_CodeSn
      */
     public function register()
     {
-        return array(
-                T_FUNCTION,
-                T_PUBLIC,
-                T_PRIVATE,
-                T_PROTECTED,
-                T_STATIC,
-               );
-
+        return [
+            T_FUNCTION,
+            T_PUBLIC,
+            T_PRIVATE,
+            T_PROTECTED,
+            T_STATIC,
+        ];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -65,17 +66,12 @@ class ONGR_Sniffs_Functions_LowercaseFunctionKeywordsSniff implements PHP_CodeSn
         $content = $tokens[$stackPtr]['content'];
         if ($content !== strtolower($content)) {
             $error = '%s keyword must be lowercase; expected "%s" but found "%s"';
-            $data  = array(
-                      strtoupper($content),
-                      strtolower($content),
-                      $content,
-                     );
+            $data = [
+                strtoupper($content),
+                strtolower($content),
+                $content,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'FoundUppercase', $data);
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

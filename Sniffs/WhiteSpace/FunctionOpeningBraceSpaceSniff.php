@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_WhiteSpace_FunctionOpeningBraceSpaceSniff.
  *
@@ -27,19 +32,15 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_FunctionOpeningBraceSpaceSniff implements PHP_CodeSniffer_Sniff
+class FunctionOpeningBraceSpaceSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                  );
-
+    public $supportedTokenizers = [
+        'PHP',
+        'JS',
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -48,10 +49,8 @@ class ONGR_Sniffs_WhiteSpace_FunctionOpeningBraceSpaceSniff implements PHP_CodeS
      */
     public function register()
     {
-        return array(T_FUNCTION);
-
+        return [T_FUNCTION];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -71,31 +70,34 @@ class ONGR_Sniffs_WhiteSpace_FunctionOpeningBraceSpaceSniff implements PHP_CodeS
             return;
         }
 
-        $openBrace   = $tokens[$stackPtr]['scope_opener'];
+        $openBrace = $tokens[$stackPtr]['scope_opener'];
         $nextContent = $phpcsFile->findNext(T_WHITESPACE, ($openBrace + 1), null, true);
 
         if ($nextContent === $tokens[$stackPtr]['scope_closer']) {
-             // The next bit of content is the closing brace, so this
-             // is an empty function and should have a blank line
-             // between the opening and closing braces.
+            // The next bit of content is the closing brace, so this
+            // is an empty function and should have a blank line
+            // between the opening and closing braces.
             return;
         }
 
         $braceLine = $tokens[$openBrace]['line'];
-        $nextLine  = $tokens[$nextContent]['line'];
+        $nextLine = $tokens[$nextContent]['line'];
 
         $found = ($nextLine - $braceLine - 1);
         if ($found > 0) {
             $error = 'Expected 0 blank lines after opening function brace; %s found';
-            $data  = array($found);
+            $data = [$found];
             $phpcsFile->addError($error, $openBrace, 'SpacingAfter', $data);
         }
 
         if ($phpcsFile->tokenizerType === 'JS') {
             // Do some additional checking before the function brace.
-            $nestedFunction = ($phpcsFile->hasCondition($stackPtr, T_FUNCTION) === true || isset($tokens[$stackPtr]['nested_parenthesis']) === true);
+            $nestedFunction = (
+                $phpcsFile->hasCondition($stackPtr, T_FUNCTION) === true
+                || isset($tokens[$stackPtr]['nested_parenthesis']) === true
+            );
 
-            $functionLine   = $tokens[$tokens[$stackPtr]['parenthesis_closer']]['line'];
+            $functionLine = $tokens[$tokens[$stackPtr]['parenthesis_closer']]['line'];
             $lineDifference = ($braceLine - $functionLine);
 
             if ($nestedFunction === true) {
@@ -107,21 +109,18 @@ class ONGR_Sniffs_WhiteSpace_FunctionOpeningBraceSpaceSniff implements PHP_CodeS
                 if ($lineDifference === 0) {
                     $error = 'Opening brace should be on a new line';
                     $phpcsFile->addError($error, $openBrace, 'ContentBefore');
+
                     return;
                 }
 
                 if ($lineDifference > 1) {
                     $error = 'Opening brace should be on the line after the declaration; found %s blank line(s)';
-                    $data  = array(($lineDifference - 1));
+                    $data = [($lineDifference - 1)];
                     $phpcsFile->addError($error, $openBrace, 'SpacingBefore', $data);
+
                     return;
                 }
             }//end if
         }//end if
-
     }//end process()
-
-
-}//end class
-
-?>
+}

@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_DisallowMultipleStyleDefinitionsSniff.
  *
@@ -25,16 +30,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_DisallowMultipleStyleDefinitionsSniff implements PHP_CodeSniffer_Sniff
+class DisallowMultipleStyleDefinitionsSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
-
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -43,10 +44,8 @@ class ONGR_Sniffs_CSS_DisallowMultipleStyleDefinitionsSniff implements PHP_CodeS
      */
     public function register()
     {
-        return array(T_STYLE);
-
+        return [T_STYLE];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -60,7 +59,7 @@ class ONGR_Sniffs_CSS_DisallowMultipleStyleDefinitionsSniff implements PHP_CodeS
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        $next   = $phpcsFile->findNext(T_STYLE, ($stackPtr + 1));
+        $next = $phpcsFile->findNext(T_STYLE, ($stackPtr + 1));
         if ($next === false) {
             return;
         }
@@ -74,8 +73,5 @@ class ONGR_Sniffs_CSS_DisallowMultipleStyleDefinitionsSniff implements PHP_CodeS
             $error = 'Each style definition must be on a line by itself';
             $phpcsFile->addError($error, $next, 'Found');
         }
-
     }//end process()
-
-}//end class
-?>
+}

@@ -12,15 +12,10 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('Generic_Sniffs_PHP_LowerCaseConstantSniff', true) === false) {
-    $error = 'Class Generic_Sniffs_PHP_LowerCaseConstantSniff not found';
-    throw new PHP_CodeSniffer_Exception($error);
-}
+namespace ONGR\Sniffs\NamingConventions;
 
-if (class_exists('Generic_Sniffs_PHP_UpperCaseConstantSniff', true) === false) {
-    $error = 'Class Generic_Sniffs_PHP_UpperCaseConstantSniff not found';
-    throw new PHP_CodeSniffer_Exception($error);
-}
+use Generic_Sniffs_PHP_LowerCaseConstantSniff;
+use PHP_CodeSniffer_File;
 
 /**
  * ONGR_Sniffs_NamingConventions_ConstantCaseSniff.
@@ -35,10 +30,8 @@ if (class_exists('Generic_Sniffs_PHP_UpperCaseConstantSniff', true) === false) {
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_NamingConventions_ConstantCaseSniff extends Generic_Sniffs_PHP_LowerCaseConstantSniff
+class ConstantCaseSniff extends Generic_Sniffs_PHP_LowerCaseConstantSniff
 {
-
-
     /**
      * Processes this sniff, when one of its tokens is encountered.
      *
@@ -56,10 +49,5 @@ class ONGR_Sniffs_NamingConventions_ConstantCaseSniff extends Generic_Sniffs_PHP
             $sniff = new Generic_Sniffs_PHP_LowerCaseConstantSniff();
             $sniff->process($phpcsFile, $stackPtr);
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

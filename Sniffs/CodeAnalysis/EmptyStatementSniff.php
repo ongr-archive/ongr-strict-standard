@@ -12,9 +12,9 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('Generic_Sniffs_CodeAnalysis_EmptyStatementSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class Generic_Sniffs_CodeAnalysis_EmptyStatementSniff not found');
-}
+namespace ONGR\Sniffs\CodeAnalysis;
+
+use Generic_Sniffs_CodeAnalysis_EmptyStatementSniff;
 
 /**
  * This sniff class detects empty statement.
@@ -27,9 +27,8 @@ if (class_exists('Generic_Sniffs_CodeAnalysis_EmptyStatementSniff', true) === fa
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CodeAnalysis_EmptyStatementSniff extends Generic_Sniffs_CodeAnalysis_EmptyStatementSniff
+class EmptyStatementSniff extends Generic_Sniffs_CodeAnalysis_EmptyStatementSniff
 {
-
     /**
      * List of block tokens that this sniff covers.
      *
@@ -38,17 +37,14 @@ class ONGR_Sniffs_CodeAnalysis_EmptyStatementSniff extends Generic_Sniffs_CodeAn
      *
      * @var array
      */
-    protected $checkedTokens = array(
-                                T_DO      => true,
-                                T_ELSE    => true,
-                                T_ELSEIF  => true,
-                                T_FOR     => true,
-                                T_FOREACH => true,
-                                T_IF      => true,
-                                T_SWITCH  => true,
-                                T_WHILE   => true,
-                               );
-
-}//end class
-
-?>
+    protected $checkedTokens = [
+        T_DO => true,
+        T_ELSE => true,
+        T_ELSEIF => true,
+        T_FOR => true,
+        T_FOREACH => true,
+        T_IF => true,
+        T_SWITCH => true,
+        T_WHILE => true,
+    ];
+}

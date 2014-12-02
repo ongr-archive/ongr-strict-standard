@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_Whitespace_ScopeClosingBraceSniff.
  *
@@ -27,10 +33,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_ScopeClosingBraceSniff implements PHP_CodeSniffer_Sniff
+class ScopeClosingBraceSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -39,9 +43,7 @@ class ONGR_Sniffs_WhiteSpace_ScopeClosingBraceSniff implements PHP_CodeSniffer_S
     public function register()
     {
         return PHP_CodeSniffer_Tokens::$scopeOpeners;
-
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -67,7 +69,7 @@ class ONGR_Sniffs_WhiteSpace_ScopeClosingBraceSniff implements PHP_CodeSniffer_S
         // or an if with an else before it, then we need to start the scope
         // checking from there, rather than the current token.
         $lineStart = ($stackPtr - 1);
-        for ($lineStart; $lineStart > 0; $lineStart--) {
+        for (; $lineStart > 0; $lineStart--) {
             if (strpos($tokens[$lineStart]['content'], $phpcsFile->eolChar) !== false) {
                 break;
             }
@@ -75,36 +77,32 @@ class ONGR_Sniffs_WhiteSpace_ScopeClosingBraceSniff implements PHP_CodeSniffer_S
 
         // We found a new line, now go forward and find the
         // first non-whitespace token.
-        $lineStart = $phpcsFile->findNext(array(T_WHITESPACE), ($lineStart + 1), null, true);
+        $lineStart = $phpcsFile->findNext([T_WHITESPACE], ($lineStart + 1), null, true);
 
         $startColumn = $tokens[$lineStart]['column'];
-        $scopeStart  = $tokens[$stackPtr]['scope_opener'];
-        $scopeEnd    = $tokens[$stackPtr]['scope_closer'];
+        $scopeStart = $tokens[$stackPtr]['scope_opener'];
+        $scopeEnd = $tokens[$stackPtr]['scope_closer'];
 
         // Check that the closing brace is on it's own line.
-        $lastContent = $phpcsFile->findPrevious(array(T_WHITESPACE), ($scopeEnd - 1), $scopeStart, true);
+        $lastContent = $phpcsFile->findPrevious([T_WHITESPACE], ($scopeEnd - 1), $scopeStart, true);
         if ($tokens[$lastContent]['line'] === $tokens[$scopeEnd]['line']) {
             $error = 'Closing brace must be on a line by itself';
             $phpcsFile->addError($error, $scopeEnd, 'ContentBefore');
+
             return;
         }
 
         // Check now that the closing brace is lined up correctly.
         $braceIndent = $tokens[$scopeEnd]['column'];
-        if (in_array($tokens[$stackPtr]['code'], array(T_CASE, T_DEFAULT)) === false) {
+        if (in_array($tokens[$stackPtr]['code'], [T_CASE, T_DEFAULT]) === false) {
             if ($braceIndent !== $startColumn) {
                 $error = 'Closing brace indented incorrectly; expected %s spaces, found %s';
-                $data  = array(
-                          ($startColumn - 1),
-                          ($braceIndent - 1),
-                         );
+                $data = [
+                    ($startColumn - 1),
+                    ($braceIndent - 1),
+                ];
                 $phpcsFile->addError($error, $scopeEnd, 'Indent', $data);
             }
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

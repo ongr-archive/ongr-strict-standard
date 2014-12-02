@@ -12,9 +12,9 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('Generic_Sniffs_PHP_ForbiddenFunctionsSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class Generic_Sniffs_PHP_ForbiddenFunctionsSniff not found');
-}
+namespace ONGR\Sniffs\PHP;
+
+use Generic_Sniffs_PHP_ForbiddenFunctionsSniff;
 
 /**
  * ONGR_Sniffs_PHP_DiscouragedFunctionsSniff.
@@ -29,9 +29,8 @@ if (class_exists('Generic_Sniffs_PHP_ForbiddenFunctionsSniff', true) === false) 
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_PHP_DiscouragedFunctionsSniff extends Generic_Sniffs_PHP_ForbiddenFunctionsSniff
+class DiscouragedFunctionsSniff extends Generic_Sniffs_PHP_ForbiddenFunctionsSniff
 {
-
     /**
      * A list of forbidden functions with their alternatives.
      *
@@ -40,19 +39,14 @@ class ONGR_Sniffs_PHP_DiscouragedFunctionsSniff extends Generic_Sniffs_PHP_Forbi
      *
      * @var array(string => string|null)
      */
-    protected $forbiddenFunctions = array(
-                                     'error_log' => null,
-                                     'print_r'   => null,
-                                     'var_dump'  => null,
-                                    );
+    protected $forbiddenFunctions = [
+        'error_log' => null,
+        'print_r' => null,
+        'var_dump' => null,
+    ];
 
     /**
-     * If true, an error will be thrown; otherwise a warning.
-     *
-     * @var bool
+     * @var bool If true, an error will be thrown; otherwise a warning.
      */
     public $error = false;
-
-}//end class
-
-?>
+}

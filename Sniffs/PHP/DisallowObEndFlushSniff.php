@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\PHP;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Formatting_DisallowObEndFlushSniff.
  *
@@ -27,10 +32,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_PHP_DisallowObEndFlushSniff implements PHP_CodeSniffer_Sniff
+class DisallowObEndFlushSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,10 +41,8 @@ class ONGR_Sniffs_PHP_DisallowObEndFlushSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_STRING);
-
+        return [T_STRING];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -57,12 +58,11 @@ class ONGR_Sniffs_PHP_DisallowObEndFlushSniff implements PHP_CodeSniffer_Sniff
         $tokens = $phpcsFile->getTokens();
 
         if ($tokens[$stackPtr]['content'] === 'ob_end_flush') {
-            $phpcsFile->addError('Use of ob_end_flush() is not allowed; use ob_get_contents() and ob_end_clean() instead', $stackPtr, 'Found');
+            $phpcsFile->addError(
+                'Use of ob_end_flush() is not allowed; use ob_get_contents() and ob_end_clean() instead',
+                $stackPtr,
+                'Found'
+            );
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}
