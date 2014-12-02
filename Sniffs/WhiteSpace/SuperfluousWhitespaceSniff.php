@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff.
  *
@@ -29,29 +34,25 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff implements PHP_CodeSniffer_Sniff
+class SuperfluousWhitespaceSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                   'CSS',
-                                  );
+    public $supportedTokenizers = [
+        'PHP',
+        'JS',
+        'CSS',
+    ];
 
     /**
      * If TRUE, whitespace rules are not checked for blank lines.
      *
      * Blank lines are those that contain only whitespace.
      *
-     * @var boolean
+     * @var bool
      */
     public $ignoreBlankLines = false;
-
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -60,15 +61,13 @@ class ONGR_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff implements PHP_CodeSniff
      */
     public function register()
     {
-        return array(
-                T_OPEN_TAG,
-                T_CLOSE_TAG,
-                T_WHITESPACE,
-                T_COMMENT,
-               );
-
+        return [
+            T_OPEN_TAG,
+            T_CLOSE_TAG,
+            T_WHITESPACE,
+            T_COMMENT,
+        ];
     }//end register()
-
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -84,7 +83,6 @@ class ONGR_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff implements PHP_CodeSniff
         $tokens = $phpcsFile->getTokens();
 
         if ($tokens[$stackPtr]['code'] === T_OPEN_TAG) {
-
             /*
                 Check for start of file whitespace.
             */
@@ -118,9 +116,7 @@ class ONGR_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff implements PHP_CodeSniff
             }//end if
 
             $phpcsFile->addError('Additional whitespace found at start of file', $stackPtr, 'StartFile');
-
-        } else if ($tokens[$stackPtr]['code'] === T_CLOSE_TAG) {
-
+        } elseif ($tokens[$stackPtr]['code'] === T_CLOSE_TAG) {
             /*
                 Check for end of file whitespace.
             */
@@ -131,7 +127,7 @@ class ONGR_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff implements PHP_CodeSniff
                 // the file. If the second last token is whitespace, there was
                 // whitespace at the end of the file.
                 $stackPtr--;
-            } else if ($phpcsFile->tokenizerType === 'CSS') {
+            } elseif ($phpcsFile->tokenizerType === 'CSS') {
                 // The last two tokens are always the close tag and whitespace
                 // inserted when tokenizsed and the third last token is always the
                 // last piece of content in the file. If the third last token is
@@ -172,13 +168,10 @@ class ONGR_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff implements PHP_CodeSniff
                 ) {
                     return;
                 }
-
             }
 
             $phpcsFile->addError('Additional whitespace found at end of file', $stackPtr, 'EndFile');
-
         } else {
-
             /*
                 Check for end of line whitespace.
             */
@@ -207,25 +200,21 @@ class ONGR_Sniffs_WhiteSpace_SuperfluousWhitespaceSniff implements PHP_CodeSniff
             */
 
             if ($phpcsFile->hasCondition($stackPtr, T_FUNCTION) === true) {
-                if ($tokens[($stackPtr - 1)]['line'] < $tokens[$stackPtr]['line'] && $tokens[($stackPtr - 2)]['line'] === $tokens[($stackPtr - 1)]['line']) {
+                if ($tokens[($stackPtr - 1)]['line'] < $tokens[$stackPtr]['line']
+                    && $tokens[($stackPtr - 2)]['line'] === $tokens[($stackPtr - 1)]['line']
+                ) {
                     // This is an empty line and the line before this one is not
-                    //  empty, so this could be the start of a multiple empty
+                    // empty, so this could be the start of a multiple empty
                     // line block.
-                    $next  = $phpcsFile->findNext(T_WHITESPACE, $stackPtr, null, true);
+                    $next = $phpcsFile->findNext(T_WHITESPACE, $stackPtr, null, true);
                     $lines = $tokens[$next]['line'] - $tokens[$stackPtr]['line'];
                     if ($lines > 1) {
                         $error = 'Functions must not contain multiple empty lines in a row; found %s empty lines';
-                        $data  = array($lines);
+                        $data = [$lines];
                         $phpcsFile->addError($error, $stackPtr, 'EmptyLines', $data);
                     }
                 }
             }
-
         }//end if
-
     }//end process()
-
-
-}//end class
-
-?>
+}

@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_WhiteSpace_SemicolonSpacingSniff.
  *
@@ -27,18 +33,15 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_SemicolonSpacingSniff implements PHP_CodeSniffer_Sniff
+class SemicolonSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                  );
+    public $supportedTokenizers = [
+        'PHP',
+        'JS',
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -47,10 +50,8 @@ class ONGR_Sniffs_WhiteSpace_SemicolonSpacingSniff implements PHP_CodeSniffer_Sn
      */
     public function register()
     {
-        return array(T_SEMICOLON);
-
+        return [T_SEMICOLON];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -68,19 +69,14 @@ class ONGR_Sniffs_WhiteSpace_SemicolonSpacingSniff implements PHP_CodeSniffer_Sn
         $prevType = $tokens[($stackPtr - 1)]['code'];
         if (in_array($prevType, PHP_CodeSniffer_Tokens::$emptyTokens) === true) {
             $nonSpace = $phpcsFile->findPrevious(PHP_CodeSniffer_Tokens::$emptyTokens, ($stackPtr - 2), null, true);
-            $expected = $tokens[$nonSpace]['content'].';';
-            $found    = $phpcsFile->getTokensAsString($nonSpace, ($stackPtr - $nonSpace)).';';
-            $error    = 'Space found before semicolon; expected "%s" but found "%s"';
-            $data     = array(
-                         $expected,
-                         $found,
-                        );
+            $expected = $tokens[$nonSpace]['content'] . ';';
+            $found = $phpcsFile->getTokensAsString($nonSpace, ($stackPtr - $nonSpace)) . ';';
+            $error = 'Space found before semicolon; expected "%s" but found "%s"';
+            $data = [
+                $expected,
+                $found,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'Incorrect', $data);
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

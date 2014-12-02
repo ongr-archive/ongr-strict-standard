@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * Sniffs_Squiz_WhiteSpace_OperatorSpacingSniff.
  *
@@ -27,19 +33,15 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_OperatorSpacingSniff implements PHP_CodeSniffer_Sniff
+class OperatorSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                  );
-
+    public $supportedTokenizers = [
+        'PHP',
+        'JS',
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -49,19 +51,17 @@ class ONGR_Sniffs_WhiteSpace_OperatorSpacingSniff implements PHP_CodeSniffer_Sni
     public function register()
     {
         $comparison = PHP_CodeSniffer_Tokens::$comparisonTokens;
-        $operators  = PHP_CodeSniffer_Tokens::$operators;
+        $operators = PHP_CodeSniffer_Tokens::$operators;
         $assignment = PHP_CodeSniffer_Tokens::$assignmentTokens;
-        $inlineIf   = array(
-                       T_INLINE_THEN,
-                       T_INLINE_ELSE,
-                      );
+        $inlineIf = [
+            T_INLINE_THEN,
+            T_INLINE_ELSE,
+        ];
 
         return array_unique(
             array_merge($comparison, $operators, $assignment, $inlineIf)
         );
-
     }//end register()
-
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -82,7 +82,7 @@ class ONGR_Sniffs_WhiteSpace_OperatorSpacingSniff implements PHP_CodeSniffer_Sni
         ) {
             if (isset($tokens[$stackPtr]['nested_parenthesis']) === true) {
                 $parenthesis = array_keys($tokens[$stackPtr]['nested_parenthesis']);
-                $bracket     = array_pop($parenthesis);
+                $bracket = array_pop($parenthesis);
                 if (isset($tokens[$bracket]['parenthesis_owner']) === true) {
                     $function = $tokens[$bracket]['parenthesis_owner'];
                     if ($tokens[$function]['code'] === T_FUNCTION
@@ -103,13 +103,13 @@ class ONGR_Sniffs_WhiteSpace_OperatorSpacingSniff implements PHP_CodeSniffer_Sni
             }
         }
 
-        // Skip short ternary such as: $foo = $bar ?: true;
+        // Skip short ternary such as: $foo = $bar ?: true;.
         if (($tokens[$stackPtr]['code'] == T_INLINE_THEN
             && $tokens[$stackPtr + 1]['code'] == T_INLINE_ELSE)
             || ($tokens[$stackPtr - 1]['code'] == T_INLINE_THEN
             && $tokens[$stackPtr]['code'] == T_INLINE_ELSE)
         ) {
-                return;
+            return;
         }
 
         if ($tokens[$stackPtr]['code'] === T_BITWISE_AND) {
@@ -127,7 +127,7 @@ class ONGR_Sniffs_WhiteSpace_OperatorSpacingSniff implements PHP_CodeSniffer_Sni
                 if (strlen($tokens[($stackPtr - 1)]['content']) !== 1) {
                     $found = strlen($tokens[($stackPtr - 1)]['content']);
                     $error = 'Expected 1 space before "&" operator; %s found';
-                    $data  = array($found);
+                    $data = [$found];
                     $phpcsFile->addError($error, $stackPtr, 'SpacingBeforeAmp', $data);
                 }
             }
@@ -140,7 +140,7 @@ class ONGR_Sniffs_WhiteSpace_OperatorSpacingSniff implements PHP_CodeSniffer_Sni
                 if (strlen($tokens[($stackPtr + 1)]['content']) !== 1) {
                     $found = strlen($tokens[($stackPtr + 1)]['content']);
                     $error = 'Expected 1 space after "&" operator; %s found';
-                    $data  = array($found);
+                    $data = [$found];
                     $phpcsFile->addError($error, $stackPtr, 'SpacingAfterAmp', $data);
                 }
             }
@@ -174,16 +174,16 @@ class ONGR_Sniffs_WhiteSpace_OperatorSpacingSniff implements PHP_CodeSniffer_Sni
 
             // A list of tokens that indicate that the token is not
             // part of an arithmetic operation.
-            $invalidTokens = array(
-                              T_COMMA,
-                              T_OPEN_PARENTHESIS,
-                              T_OPEN_SQUARE_BRACKET,
-                              T_DOUBLE_ARROW,
-                              T_COLON,
-                              T_INLINE_THEN,
-                              T_INLINE_ELSE,
-                              T_CASE,
-                             );
+            $invalidTokens = [
+                T_COMMA,
+                T_OPEN_PARENTHESIS,
+                T_OPEN_SQUARE_BRACKET,
+                T_DOUBLE_ARROW,
+                T_COLON,
+                T_INLINE_THEN,
+                T_INLINE_ELSE,
+                T_CASE,
+            ];
 
             if (in_array($tokens[$prev]['code'], $invalidTokens) === true) {
                 // Just trying to use a negative value; eg. myFunction($var, -2).
@@ -196,32 +196,27 @@ class ONGR_Sniffs_WhiteSpace_OperatorSpacingSniff implements PHP_CodeSniffer_Sni
         if ($tokens[($stackPtr - 1)]['code'] !== T_WHITESPACE) {
             $error = "Expected 1 space before \"$operator\"; 0 found";
             $phpcsFile->addError($error, $stackPtr, 'NoSpaceBefore');
-        } else if (strlen($tokens[($stackPtr - 1)]['content']) !== 1) {
+        } elseif (strlen($tokens[($stackPtr - 1)]['content']) !== 1) {
             $found = strlen($tokens[($stackPtr - 1)]['content']);
             $error = 'Expected 1 space before "%s"; %s found';
-            $data  = array(
-                      $operator,
-                      $found,
-                     );
+            $data = [
+                $operator,
+                $found,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'SpacingBefore', $data);
         }
 
         if ($tokens[($stackPtr + 1)]['code'] !== T_WHITESPACE) {
             $error = "Expected 1 space after \"$operator\"; 0 found";
             $phpcsFile->addError($error, $stackPtr, 'NoSpaceAfter');
-        } else if (strlen($tokens[($stackPtr + 1)]['content']) !== 1) {
+        } elseif (strlen($tokens[($stackPtr + 1)]['content']) !== 1) {
             $found = strlen($tokens[($stackPtr + 1)]['content']);
             $error = 'Expected 1 space after "%s"; %s found';
-            $data  = array(
-                      $operator,
-                      $found,
-                     );
+            $data = [
+                $operator,
+                $found,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'SpacingAfter', $data);
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Strings;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Strings_DoubleQuoteUsageSniff.
  *
@@ -27,10 +32,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Strings_DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
+class DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,13 +41,11 @@ class ONGR_Sniffs_Strings_DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(
-                T_CONSTANT_ENCAPSED_STRING,
-                T_DOUBLE_QUOTED_STRING,
-               );
-
+        return [
+            T_CONSTANT_ENCAPSED_STRING,
+            T_DOUBLE_QUOTED_STRING,
+        ];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -92,18 +93,18 @@ class ONGR_Sniffs_Strings_DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
             $workingString .= $tokens[$i]['content'];
         }
 
-        $allowedChars = array(
-                         '\0',
-                         '\n',
-                         '\r',
-                         '\f',
-                         '\t',
-                         '\v',
-                         '\x',
-                         '\b',
-                         '\'',
-                         '$',
-                        );
+        $allowedChars = [
+            '\0',
+            '\n',
+            '\r',
+            '\f',
+            '\t',
+            '\v',
+            '\x',
+            '\b',
+            '\'',
+            '$',
+        ];
 
         foreach ($allowedChars as $testChar) {
             if (strpos($workingString, $testChar) !== false) {
@@ -112,12 +113,7 @@ class ONGR_Sniffs_Strings_DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
         }
 
         $error = 'String %s does not require double quotes; use single quotes instead';
-        $data  = array($workingString);
+        $data = [$workingString];
         $phpcsFile->addError($error, $stackPtr, 'NotRequired', $data);
-
     }//end process()
-
-
-}//end class
-
-?>
+}

@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\PHP;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_PHP_LowercasePHPFunctionsSniff.
  *
@@ -27,10 +32,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_PHP_LowercasePHPFunctionsSniff implements PHP_CodeSniffer_Sniff
+class LowercasePHPFunctionsSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,10 +41,8 @@ class ONGR_Sniffs_PHP_LowercasePHPFunctionsSniff implements PHP_CodeSniffer_Snif
      */
     public function register()
     {
-        return array(T_STRING);
-
+        return [T_STRING];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -68,17 +69,17 @@ class ONGR_Sniffs_PHP_LowercasePHPFunctionsSniff implements PHP_CodeSniffer_Snif
             return;
         }
 
-        $prev = $phpcsFile->findPrevious(array(T_WHITESPACE, T_BITWISE_AND), ($stackPtr - 1), null, true);
+        $prev = $phpcsFile->findPrevious([T_WHITESPACE, T_BITWISE_AND], ($stackPtr - 1), null, true);
         if ($tokens[$prev]['code'] === T_FUNCTION) {
             // Function declaration, not a function call.
             return;
         }
-        
+
         if ($tokens[$prev]['code'] === T_NS_SEPARATOR) {
             // Namespaced class/function, not an inbuilt function.
             return;
         }
-        
+
         if ($tokens[$prev]['code'] === T_NEW) {
             // Object creation, not an inbuilt function.
             return;
@@ -105,16 +106,11 @@ class ONGR_Sniffs_PHP_LowercasePHPFunctionsSniff implements PHP_CodeSniffer_Snif
 
         if ($content !== strtolower($content)) {
             $error = 'Calls to inbuilt PHP functions must be lowercase; expected "%s" but found "%s"';
-            $data  = array(
-                      strtolower($content),
-                      $content,
-                     );
+            $data = [
+                strtolower($content),
+                $content,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'CallUppercase', $data);
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

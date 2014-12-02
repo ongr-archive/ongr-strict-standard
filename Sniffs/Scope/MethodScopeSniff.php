@@ -13,9 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_Standards_AbstractScopeSniff not found');
-}
+namespace ONGR\Sniffs\Scope;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Standards_AbstractScopeSniff;
+use PHP_CodeSniffer_Tokens;
 
 /**
  * Verifies that class methods have scope modifiers.
@@ -29,19 +31,15 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Scope_MethodScopeSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
+class MethodScopeSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
 {
-
-
     /**
      * Constructs a ONGR_Sniffs_Scope_MethodScopeSniff.
      */
     public function __construct()
     {
-        parent::__construct(array(T_CLASS, T_INTERFACE), array(T_FUNCTION));
-
+        parent::__construct([T_CLASS, T_INTERFACE], [T_FUNCTION]);
     }//end __construct()
-
 
     /**
      * Processes the function tokens within the class.
@@ -65,13 +63,8 @@ class ONGR_Sniffs_Scope_MethodScopeSniff extends PHP_CodeSniffer_Standards_Abstr
         $modifier = $phpcsFile->findPrevious(PHP_CodeSniffer_Tokens::$scopeModifiers, $stackPtr);
         if (($modifier === false) || ($tokens[$modifier]['line'] !== $tokens[$stackPtr]['line'])) {
             $error = 'Visibility must be declared on method "%s"';
-            $data  = array($methodName);
+            $data = [$methodName];
             $phpcsFile->addError($error, $stackPtr, 'Missing', $data);
         }
-
     }//end processTokenWithinScope()
-
-
-}//end class
-
-?>
+}

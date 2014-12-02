@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ONGR_Sniffs_Arrays_ArrayBracketSpacingSniff.
  *
@@ -12,6 +13,12 @@
  * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
+
+namespace ONGR\Sniffs\Arrays;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
 
 /**
  * ONGR_Sniffs_Arrays_ArrayBracketSpacingSniff.
@@ -27,10 +34,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Arrays_ArrayBracketSpacingSniff implements PHP_CodeSniffer_Sniff
+class ArrayBracketSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,13 +43,11 @@ class ONGR_Sniffs_Arrays_ArrayBracketSpacingSniff implements PHP_CodeSniffer_Sni
      */
     public function register()
     {
-        return array(
-                T_OPEN_SQUARE_BRACKET,
-                T_CLOSE_SQUARE_BRACKET,
-               );
-
-    }//end register()
-
+        return [
+            T_OPEN_SQUARE_BRACKET,
+            T_CLOSE_SQUARE_BRACKET,
+        ];
+    }
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -77,13 +80,13 @@ class ONGR_Sniffs_Arrays_ArrayBracketSpacingSniff implements PHP_CodeSniffer_Sni
         $prevType = $tokens[($stackPtr - 1)]['code'];
         if (in_array($prevType, PHP_CodeSniffer_Tokens::$emptyTokens) === true) {
             $nonSpace = $phpcsFile->findPrevious(PHP_CodeSniffer_Tokens::$emptyTokens, ($stackPtr - 2), null, true);
-            $expected = $tokens[$nonSpace]['content'].$tokens[$stackPtr]['content'];
-            $found    = $phpcsFile->getTokensAsString($nonSpace, ($stackPtr - $nonSpace)).$tokens[$stackPtr]['content'];
-            $error    = 'Space found before square bracket; expected "%s" but found "%s"';
-            $data     = array(
-                         $expected,
-                         $found,
-                        );
+            $expected = $tokens[$nonSpace]['content'] . $tokens[$stackPtr]['content'];
+            $found = $phpcsFile->getTokensAsString($nonSpace, ($stackPtr - $nonSpace)) . $tokens[$stackPtr]['content'];
+            $error = 'Space found before square bracket; expected "%s" but found "%s"';
+            $data = [
+                $expected,
+                $found,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'SpaceBeforeBracket', $data);
         }
 
@@ -92,20 +95,15 @@ class ONGR_Sniffs_Arrays_ArrayBracketSpacingSniff implements PHP_CodeSniffer_Sni
             $nextType = $tokens[($stackPtr + 1)]['code'];
             if (in_array($nextType, PHP_CodeSniffer_Tokens::$emptyTokens) === true) {
                 $nonSpace = $phpcsFile->findNext(PHP_CodeSniffer_Tokens::$emptyTokens, ($stackPtr + 2), null, true);
-                $expected = $tokens[$stackPtr]['content'].$tokens[$nonSpace]['content'];
-                $found    = $phpcsFile->getTokensAsString($stackPtr, ($nonSpace - $stackPtr + 1));
-                $error    = 'Space found after square bracket; expected "%s" but found "%s"';
-                $data     = array(
-                             $expected,
-                             $found,
-                            );
+                $expected = $tokens[$stackPtr]['content'] . $tokens[$nonSpace]['content'];
+                $found = $phpcsFile->getTokensAsString($stackPtr, ($nonSpace - $stackPtr + 1));
+                $error = 'Space found after square bracket; expected "%s" but found "%s"';
+                $data = [
+                    $expected,
+                    $found,
+                ];
                 $phpcsFile->addError($error, $stackPtr, 'SpaceAfterBracket', $data);
             }
         }
-
-    }//end process()
-
-
-}//end class
-
-?>
+    }
+}

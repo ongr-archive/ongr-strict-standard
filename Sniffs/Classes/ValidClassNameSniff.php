@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Classes;
+
+use PHP_CodeSniffer;
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Classes_ValidClassNameSniff.
  *
@@ -27,10 +33,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Classes_ValidClassNameSniff implements PHP_CodeSniffer_Sniff
+class ValidClassNameSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,13 +42,11 @@ class ONGR_Sniffs_Classes_ValidClassNameSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(
-                T_CLASS,
-                T_INTERFACE,
-               );
-
+        return [
+            T_CLASS,
+            T_INTERFACE,
+        ];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -61,35 +63,30 @@ class ONGR_Sniffs_Classes_ValidClassNameSniff implements PHP_CodeSniffer_Sniff
 
         if (isset($tokens[$stackPtr]['scope_opener']) === false) {
             $error = 'Possible parse error: %s missing opening or closing brace';
-            $data  = array($tokens[$stackPtr]['content']);
+            $data = [$tokens[$stackPtr]['content']];
             $phpcsFile->addWarning($error, $stackPtr, 'MissingBrace', $data);
+
             return;
         }
 
         // Determine the name of the class or interface. Note that we cannot
         // simply look for the first T_STRING because a class name
         // starting with the number will be multiple tokens.
-        $opener    = $tokens[$stackPtr]['scope_opener'];
+        $opener = $tokens[$stackPtr]['scope_opener'];
         $nameStart = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), $opener, true);
-        $nameEnd   = $phpcsFile->findNext(T_WHITESPACE, $nameStart, $opener);
-        $name      = trim($phpcsFile->getTokensAsString($nameStart, ($nameEnd - $nameStart)));
+        $nameEnd = $phpcsFile->findNext(T_WHITESPACE, $nameStart, $opener);
+        $name = trim($phpcsFile->getTokensAsString($nameStart, ($nameEnd - $nameStart)));
 
         // Check for camel caps format.
         $valid = PHP_CodeSniffer::isCamelCaps($name, true, true, false);
         if ($valid === false) {
-            $type  = ucfirst($tokens[$stackPtr]['content']);
+            $type = ucfirst($tokens[$stackPtr]['content']);
             $error = '%s name "%s" is not in camel caps format';
-            $data  = array(
-                      $type,
-                      $name,
-                     );
+            $data = [
+                $type,
+                $name,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'NotCamelCaps', $data);
         }
-
     }//end process()
-
-
-}//end class
-
-
-?>
+}

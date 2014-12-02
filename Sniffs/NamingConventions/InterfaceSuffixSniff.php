@@ -12,6 +12,11 @@
  * @link     https://github.com/escapestudios/Symfony2-coding-standard
  */
 
+namespace ONGR\Sniffs\NamingConventions;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * Symfony2_Sniffs_NamingConventions_InterfaceSuffixSniff.
  *
@@ -25,16 +30,14 @@
  * @license  http://spdx.org/licenses/MIT MIT License
  * @link     https://github.com/escapestudios/Symfony2-coding-standard
  */
-class ONGR_Sniffs_NamingConventions_InterfaceSuffixSniff implements PHP_CodeSniffer_Sniff
+class InterfaceSuffixSniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array(
+    public $supportedTokenizers = [
         'PHP',
-    );
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -43,7 +46,7 @@ class ONGR_Sniffs_NamingConventions_InterfaceSuffixSniff implements PHP_CodeSnif
      */
     public function register()
     {
-        return array(T_INTERFACE);
+        return [T_INTERFACE];
     }
 
     /**
@@ -57,8 +60,8 @@ class ONGR_Sniffs_NamingConventions_InterfaceSuffixSniff implements PHP_CodeSnif
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens   = $phpcsFile->getTokens();
-        $line     = $tokens[$stackPtr]['line'];
+        $tokens = $phpcsFile->getTokens();
+        $line = $tokens[$stackPtr]['line'];
 
         while ($tokens[$stackPtr]['line'] == $line) {
             if ('T_STRING' == $tokens[$stackPtr]['type']) {
@@ -72,7 +75,5 @@ class ONGR_Sniffs_NamingConventions_InterfaceSuffixSniff implements PHP_CodeSnif
             }
             $stackPtr++;
         }
-
-        return;
     }
 }

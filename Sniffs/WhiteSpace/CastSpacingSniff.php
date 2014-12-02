@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_WhiteSpace_CastSpacingSniff.
  *
@@ -27,10 +33,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_CastSpacingSniff implements PHP_CodeSniffer_Sniff
+class CastSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -39,9 +43,7 @@ class ONGR_Sniffs_WhiteSpace_CastSpacingSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return PHP_CodeSniffer_Tokens::$castTokens;
-
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -56,22 +58,17 @@ class ONGR_Sniffs_WhiteSpace_CastSpacingSniff implements PHP_CodeSniffer_Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $content  = $tokens[$stackPtr]['content'];
+        $content = $tokens[$stackPtr]['content'];
         $expected = str_replace(' ', '', $content);
         $expected = str_replace("\t", '', $expected);
 
         if ($content !== $expected) {
             $error = 'Cast statements must not contain whitespace; expected "%s" but found "%s"';
-            $data  = array(
-                      $expected,
-                      $content,
-                     );
+            $data = [
+                $expected,
+                $content,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'ContainsWhiteSpace', $data);
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_SemicolonSpacingSniff.
  *
@@ -25,16 +30,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_SemicolonSpacingSniff implements PHP_CodeSniffer_Sniff
+class SemicolonSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
-
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -43,10 +44,8 @@ class ONGR_Sniffs_CSS_SemicolonSpacingSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_STYLE);
-
+        return [T_STYLE];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -65,17 +64,15 @@ class ONGR_Sniffs_CSS_SemicolonSpacingSniff implements PHP_CodeSniffer_Sniff
         if ($semicolon === false || $tokens[$semicolon]['line'] !== $tokens[$stackPtr]['line']) {
             $error = 'Style definitions must end with a semicolon';
             $phpcsFile->addError($error, $stackPtr, 'NotAtEnd');
+
             return;
         }
 
         if ($tokens[($semicolon - 1)]['code'] === T_WHITESPACE) {
-            $length  = strlen($tokens[($semicolon - 1)]['content']);
+            $length = strlen($tokens[($semicolon - 1)]['content']);
             $error = 'Expected 0 spaces before semicolon in style definition; %s found';
-            $data  = array($length);
+            $data = [$length];
             $phpcsFile->addError($error, $stackPtr, 'SpaceFound', $data);
         }
-
     }//end process()
-
-}//end class
-?>
+}

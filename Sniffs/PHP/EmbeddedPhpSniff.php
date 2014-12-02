@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\PHP;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_PHP_EmbeddedPhpSniff.
  *
@@ -27,10 +32,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
+class EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,10 +41,8 @@ class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_OPEN_TAG);
-
+        return [T_OPEN_TAG];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -58,19 +59,17 @@ class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
 
         // If the close php tag is on the same line as the opening
         // then we have an inline embedded PHP block.
-        $closeTag = $phpcsFile->findNext(array(T_CLOSE_TAG), $stackPtr);
+        $closeTag = $phpcsFile->findNext([T_CLOSE_TAG], $stackPtr);
         if ($closeTag === false) {
             return;
         }
 
         if ($tokens[$stackPtr]['line'] !== $tokens[$closeTag]['line']) {
-            $this->_validateMultilineEmbeddedPhp($phpcsFile, $stackPtr);
+            $this->validateMultilineEmbeddedPhp($phpcsFile, $stackPtr);
         } else {
-            $this->_validateInlineEmbeddedPhp($phpcsFile, $stackPtr);
+            $this->validateInlineEmbeddedPhp($phpcsFile, $stackPtr);
         }
-
     }//end process()
-
 
     /**
      * Validates embedded PHP that exists on multiple lines.
@@ -81,7 +80,7 @@ class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
      *
      * @return void
      */
-    private function _validateMultilineEmbeddedPhp(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    private function validateMultilineEmbeddedPhp(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
@@ -115,6 +114,7 @@ class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
         if ($firstContent === false) {
             $error = 'Empty embedded PHP tag found';
             $phpcsFile->addError($error, $stackPtr, 'Empty');
+
             return;
         }
 
@@ -128,20 +128,20 @@ class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
 
             $error = 'Blank line found at start of embedded PHP content';
             $phpcsFile->addError($error, $i, 'SpacingBefore');
-        } else if ($tokens[$firstContent]['line'] === $tokens[$stackPtr]['line']) {
+        } elseif ($tokens[$firstContent]['line'] === $tokens[$stackPtr]['line']) {
             $error = 'Opening PHP tag must be on a line by itself';
             $phpcsFile->addError($error, $stackPtr, 'ContentAfterOpen');
         }
 
         // Check the indent of the first line.
-        $startColumn   = $tokens[$stackPtr]['column'];
+        $startColumn = $tokens[$stackPtr]['column'];
         $contentColumn = $tokens[$firstContent]['column'];
         if ($contentColumn !== $startColumn) {
             $error = 'First line of embedded PHP code must be indented %s spaces; %s found';
-            $data  = array(
-                      $startColumn,
-                      $contentColumn,
-                     );
+            $data = [
+                $startColumn,
+                $contentColumn,
+            ];
             $phpcsFile->addError($error, $firstContent, 'Indent', $data);
         }
 
@@ -156,13 +156,11 @@ class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
 
             $error = 'Blank line found at end of embedded PHP content';
             $phpcsFile->addError($error, $i, 'SpacingAfter');
-        } else if ($tokens[$lastContent]['line'] === $tokens[$closingTag]['line']) {
+        } elseif ($tokens[$lastContent]['line'] === $tokens[$closingTag]['line']) {
             $error = 'Closing PHP tag must be on a line by itself';
             $phpcsFile->addError($error, $closingTag, 'ContentAfterEnd');
         }
-
     }//end _validateMultilineEmbeddedPhp()
-
 
     /**
      * Validates embedded PHP that exists on one line.
@@ -173,23 +171,24 @@ class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
      *
      * @return void
      */
-    private function _validateInlineEmbeddedPhp(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    private function validateInlineEmbeddedPhp(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
 
         // We only want one line PHP sections, so return if the closing tag is
         // on the next line.
-        $closeTag = $phpcsFile->findNext(array(T_CLOSE_TAG), $stackPtr, null, false);
+        $closeTag = $phpcsFile->findNext([T_CLOSE_TAG], $stackPtr, null, false);
         if ($tokens[$stackPtr]['line'] !== $tokens[$closeTag]['line']) {
             return;
         }
 
         // Check that there is one, and only one space at the start of the statement.
-        $firstContent = $phpcsFile->findNext(array(T_WHITESPACE), ($stackPtr + 1), null, true);
+        $firstContent = $phpcsFile->findNext([T_WHITESPACE], ($stackPtr + 1), null, true);
 
         if ($firstContent === false || $tokens[$firstContent]['code'] === T_CLOSE_TAG) {
             $error = 'Empty embedded PHP tag found';
             $phpcsFile->addError($error, $stackPtr, 'Empty');
+
             return;
         }
 
@@ -200,33 +199,33 @@ class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
 
         if (strlen($leadingSpace) >= 1) {
             $error = 'Expected 1 space after opening PHP tag; %s found';
-            $data  = array((strlen($leadingSpace) + 1));
+            $data = [(strlen($leadingSpace) + 1)];
             $phpcsFile->addError($error, $stackPtr, 'SpacingAfterOpen', $data);
         }
 
         $semiColonCount = 0;
-        $semiColon      = $stackPtr;
-        $lastSemiColon  = $semiColon;
+        $semiColon = $stackPtr;
+        $lastSemiColon = $semiColon;
 
-        while (($semiColon = $phpcsFile->findNext(array(T_SEMICOLON), ($semiColon + 1), $closeTag)) !== false) {
+        while (($semiColon = $phpcsFile->findNext([T_SEMICOLON], ($semiColon + 1), $closeTag)) !== false) {
             $lastSemiColon = $semiColon;
             $semiColonCount++;
         }
 
         $semiColon = $lastSemiColon;
-        $error     = '';
 
         // Make sure there is atleast 1 semicolon.
         if ($semiColonCount === 0) {
             $error = 'Inline PHP statement must end with a semicolon';
             $phpcsFile->addError($error, $stackPtr, 'NoSemicolon');
+
             return;
         }
 
         // Make sure that there aren't more semicolons than are allowed.
         if ($semiColonCount > 1) {
             $error = 'Inline PHP statement must contain one statement per line; %s found';
-            $data  = array($semiColonCount);
+            $data = [$semiColonCount];
             $phpcsFile->addError($error, $stackPtr, 'MultipleStatements', $data);
         }
 
@@ -236,6 +235,7 @@ class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
             if ($tokens[$i]['code'] !== T_WHITESPACE) {
                 $error = 'Expected 1 space before closing PHP tag; 0 found';
                 $phpcsFile->addError($error, $stackPtr, 'NoSpaceBeforeClose');
+
                 return;
             }
 
@@ -251,13 +251,8 @@ class ONGR_Sniffs_PHP_EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
             $phpcsFile->addError($error, $stackPtr, 'NoSpaceBeforeClose');
         } else {
             $error = 'Expected 1 space before closing PHP tag; %s found';
-            $data  = array(strlen($whitespace));
+            $data = [strlen($whitespace)];
             $phpcsFile->addError($error, $stackPtr, 'SpacingBeforeClose', $data);
         }
-
     }//end _validateInlineEmbeddedPhp()
-
-
-}//end class
-
-?>
+}

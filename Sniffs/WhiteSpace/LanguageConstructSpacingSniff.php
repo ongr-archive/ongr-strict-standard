@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_WhiteSpace_LanguageConstructSpacingSniff.
  *
@@ -28,10 +33,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_LanguageConstructSpacingSniff implements PHP_CodeSniffer_Sniff
+class LanguageConstructSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -39,19 +42,17 @@ class ONGR_Sniffs_WhiteSpace_LanguageConstructSpacingSniff implements PHP_CodeSn
      */
     public function register()
     {
-        return array(
-                T_ECHO,
-                T_PRINT,
-                T_RETURN,
-                T_INCLUDE,
-                T_INCLUDE_ONCE,
-                T_REQUIRE,
-                T_REQUIRE_ONCE,
-                T_NEW,
-               );
-
+        return [
+            T_ECHO,
+            T_PRINT,
+            T_RETURN,
+            T_INCLUDE,
+            T_INCLUDE_ONCE,
+            T_REQUIRE,
+            T_REQUIRE_ONCE,
+            T_NEW,
+        ];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -72,25 +73,20 @@ class ONGR_Sniffs_WhiteSpace_LanguageConstructSpacingSniff implements PHP_CodeSn
         }
 
         if ($tokens[($stackPtr + 1)]['code'] === T_WHITESPACE) {
-            $content       = $tokens[($stackPtr + 1)]['content'];
+            $content = $tokens[($stackPtr + 1)]['content'];
             $contentLength = strlen($content);
             if ($contentLength !== 1) {
                 $error = 'Language constructs must be followed by a single space; expected 1 space but found %s';
-                $data  = array($contentLength);
+                $data = [$contentLength];
                 $phpcsFile->addError($error, $stackPtr, 'IncorrectSingle', $data);
             }
         } else {
             $error = 'Language constructs must be followed by a single space; expected "%s" but found "%s"';
-            $data  = array(
-                      $tokens[$stackPtr]['content'].' '.$tokens[($stackPtr + 1)]['content'],
-                      $tokens[$stackPtr]['content'].$tokens[($stackPtr + 1)]['content'],
-                     );
+            $data = [
+                $tokens[$stackPtr]['content'] . ' ' . $tokens[($stackPtr + 1)]['content'],
+                $tokens[$stackPtr]['content'] . $tokens[($stackPtr + 1)]['content'],
+            ];
             $phpcsFile->addError($error, $stackPtr, 'Incorrect', $data);
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

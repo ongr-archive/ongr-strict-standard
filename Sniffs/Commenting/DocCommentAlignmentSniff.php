@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Commenting;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_Commenting_DocCommentAlignmentSniff.
  *
@@ -27,10 +33,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Commenting_DocCommentAlignmentSniff implements PHP_CodeSniffer_Sniff
+class DocCommentAlignmentSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,17 +42,15 @@ class ONGR_Sniffs_Commenting_DocCommentAlignmentSniff implements PHP_CodeSniffer
      */
     public function register()
     {
-        return array(T_DOC_COMMENT);
-
+        return [T_DOC_COMMENT];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
      *
      * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
      * @param int                  $stackPtr  The position of the current token
-     *                                         in the stack passed in $tokens.
+     *                                        in the stack passed in $tokens.
      *
      * @return void
      */
@@ -58,16 +60,16 @@ class ONGR_Sniffs_Commenting_DocCommentAlignmentSniff implements PHP_CodeSniffer
 
         // We are only interested in function/class/interface doc block comments.
         $nextToken = $phpcsFile->findNext(PHP_CodeSniffer_Tokens::$emptyTokens, ($stackPtr + 1), null, true);
-        $ignore    = array(
-                      T_CLASS,
-                      T_INTERFACE,
-                      T_FUNCTION,
-                      T_PUBLIC,
-                      T_PRIVATE,
-                      T_PROTECTED,
-                      T_STATIC,
-                      T_ABSTRACT,
-                     );
+        $ignore = [
+            T_CLASS,
+            T_INTERFACE,
+            T_FUNCTION,
+            T_PUBLIC,
+            T_PRIVATE,
+            T_PROTECTED,
+            T_STATIC,
+            T_ABSTRACT,
+        ];
 
         if (in_array($tokens[$nextToken]['code'], $ignore) === false) {
             // Could be a file comment.
@@ -86,12 +88,15 @@ class ONGR_Sniffs_Commenting_DocCommentAlignmentSniff implements PHP_CodeSniffer
             }
         }
 
-        $comments       = array($stackPtr);
+        $comments = [$stackPtr];
         $currentComment = $stackPtr;
-        $lastComment    = $stackPtr;
-        while (($currentComment = $phpcsFile->findNext(T_DOC_COMMENT, ($currentComment + 1))) !== false) {
+        $lastComment = $stackPtr;
+        while ((
+            $currentComment = $phpcsFile->findNext(T_DOC_COMMENT, ($currentComment + 1))
+            ) !== false
+        ) {
             if ($tokens[$lastComment]['line'] === ($tokens[$currentComment]['line'] - 1)) {
-                $comments[]  = $currentComment;
+                $comments[] = $currentComment;
                 $lastComment = $currentComment;
             } else {
                 break;
@@ -100,16 +105,16 @@ class ONGR_Sniffs_Commenting_DocCommentAlignmentSniff implements PHP_CodeSniffer
 
         // The $comments array now contains pointers to each token in the
         // comment block.
-        $requiredColumn  = strpos($tokens[$stackPtr]['content'], '*');
+        $requiredColumn = strpos($tokens[$stackPtr]['content'], '*');
         $requiredColumn += $tokens[$stackPtr]['column'];
 
         foreach ($comments as $commentPointer) {
             // Check the spacing after each asterisk.
-            $content   = $tokens[$commentPointer]['content'];
+            $content = $tokens[$commentPointer]['content'];
             $firstChar = substr($content, 0, 1);
-            $lastChar  = substr($content, -1);
-            if ($firstChar !== '/' &&  $lastChar !== '/') {
-                $matches = array();
+            $lastChar = substr($content, -1);
+            if ($firstChar !== '/' && $lastChar !== '/') {
+                $matches = [];
                 preg_match('|^(\s+)?\*(\s+)?@|', $content, $matches);
                 if (empty($matches) === false) {
                     if (isset($matches[2]) === false) {
@@ -119,7 +124,7 @@ class ONGR_Sniffs_Commenting_DocCommentAlignmentSniff implements PHP_CodeSniffer
                         $length = strlen($matches[2]);
                         if ($length < 1) {
                             $error = 'Expected 1 space between asterisk and tag; %s found';
-                            $data  = array($length);
+                            $data = [$length];
                             $phpcsFile->addError($error, $commentPointer, 'SpaceBeforeTag', $data);
                         } else {
                             $remainingSpaces = $length - 1;
@@ -133,7 +138,7 @@ class ONGR_Sniffs_Commenting_DocCommentAlignmentSniff implements PHP_CodeSniffer
             }//end foreach
 
             // Check the alignment of each asterisk.
-            $currentColumn  = strpos($content, '*');
+            $currentColumn = strpos($content, '*');
             $currentColumn += $tokens[$commentPointer]['column'];
 
             if ($currentColumn === $requiredColumn) {
@@ -142,16 +147,11 @@ class ONGR_Sniffs_Commenting_DocCommentAlignmentSniff implements PHP_CodeSniffer
             }
 
             $error = 'Expected %s space(s) before asterisk; %s found';
-            $data  = array(
-                      ($requiredColumn - 1),
-                      ($currentColumn - 1),
-                     );
+            $data = [
+                ($requiredColumn - 1),
+                ($currentColumn - 1),
+            ];
             $phpcsFile->addError($error, $commentPointer, 'SpaceBeforeAsterisk', $data);
         }//end foreach
-
     }//end process()
-
-
-}//end class
-
-?>
+}

@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\ControlStructures;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff.
  *
@@ -28,26 +34,20 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSniffer_Sniff
+class SwitchDeclarationSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                  );
+    public $supportedTokenizers = [
+        'PHP',
+        'JS',
+    ];
 
     /**
-     * The number of spaces code should be indented.
-     *
-     * @var int
+     * @var int The number of spaces code should be indented.
      */
     public $indent = 4;
-
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -56,10 +56,8 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
      */
     public function register()
     {
-        return array(T_SWITCH);
-
+        return [T_SWITCH];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -81,13 +79,16 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
             return;
         }
 
-        $switch        = $tokens[$stackPtr];
-        $nextCase      = $stackPtr;
+        $switch = $tokens[$stackPtr];
+        $nextCase = $stackPtr;
         $caseAlignment = ($switch['column'] + $this->indent);
-        $caseCount     = 0;
-        $foundDefault  = false;
+        $caseCount = 0;
+        $foundDefault = false;
 
-        while (($nextCase = $phpcsFile->findNext(array(T_CASE, T_DEFAULT, T_SWITCH), ($nextCase + 1), $switch['scope_closer'])) !== false) {
+        while ((
+            $nextCase = $phpcsFile->findNext([T_CASE, T_DEFAULT, T_SWITCH], ($nextCase + 1), $switch['scope_closer'])
+            ) !== false
+        ) {
             // Skip nested SWITCH statements; they are handled on their own.
             if ($tokens[$nextCase]['code'] === T_SWITCH) {
                 $nextCase = $tokens[$nextCase]['scope_closer'];
@@ -95,7 +96,7 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
             }
 
             if ($tokens[$nextCase]['code'] === T_DEFAULT) {
-                $type         = 'Default';
+                $type = 'Default';
                 $foundDefault = true;
             } else {
                 $type = 'Case';
@@ -104,17 +105,20 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
 
             if ($tokens[$nextCase]['content'] !== strtolower($tokens[$nextCase]['content'])) {
                 $expected = strtolower($tokens[$nextCase]['content']);
-                $error    = strtoupper($type).' keyword must be lowercase; expected "%s" but found "%s"';
-                $data     = array(
-                             $expected,
-                             $tokens[$nextCase]['content'],
-                            );
-                $phpcsFile->addError($error, $nextCase, $type.'NotLower', $data);
+                $error = strtoupper($type) . ' keyword must be lowercase; expected "%s" but found "%s"';
+                $data = [
+                    $expected,
+                    $tokens[$nextCase]['content'],
+                ];
+                $phpcsFile->addError($error, $nextCase, $type . 'NotLower', $data);
             }
 
             if ($tokens[$nextCase]['column'] !== $caseAlignment) {
-                $error = strtoupper($type).' keyword must be indented '.$this->indent.' spaces from SWITCH keyword';
-                $phpcsFile->addError($error, $nextCase, $type.'Indent');
+                $error = strtoupper($type) .
+                    ' keyword must be indented ' .
+                    $this->indent .
+                    ' spaces from SWITCH keyword';
+                $phpcsFile->addError($error, $nextCase, $type . 'Indent');
             }
 
             if ($type === 'Case'
@@ -127,8 +131,8 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
 
             $opener = $tokens[$nextCase]['scope_opener'];
             if ($tokens[($opener - 1)]['type'] === 'T_WHITESPACE') {
-                $error = 'There must be no space before the colon in a '.strtoupper($type).' statement';
-                $phpcsFile->addError($error, $nextCase, 'SpaceBeforeColon'.$type);
+                $error = 'There must be no space before the colon in a ' . strtoupper($type) . ' statement';
+                $phpcsFile->addError($error, $nextCase, 'SpaceBeforeColon' . $type);
             }
 
             $nextBreak = $tokens[$nextCase]['scope_closer'];
@@ -143,12 +147,13 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
                     // break is shared between multiple case statements, or even
                     // the default case.
                     if ($tokens[$nextBreak]['column'] !== $caseAlignment + $this->indent) {
-                        $error = 'Case breaking statement must be indented '.$this->indent.' spaces from SWITCH keyword';
+                        $error = 'Case breaking statement must be indented ' .
+                            $this->indent . ' spaces from SWITCH keyword';
                         $phpcsFile->addError($error, $nextBreak, 'BreakIndent');
                     }
 
                     $breakLine = $tokens[$nextBreak]['line'];
-                    $prevLine  = 0;
+                    $prevLine = 0;
                     for ($i = ($nextBreak - 1); $i > $stackPtr; $i--) {
                         if ($tokens[$i]['type'] !== 'T_WHITESPACE') {
                             $prevLine = $tokens[$i]['line'];
@@ -162,8 +167,7 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
                         $phpcsFile->addError($error, $nextBreak, 'SpacingBeforeBreak');
                     }
 
-                    $breakLine = $tokens[$nextBreak]['line'];
-                    $nextLine  = $tokens[$tokens[$stackPtr]['scope_closer']]['line'];
+                    $nextLine = $tokens[$tokens[$stackPtr]['scope_closer']]['line'];
                     $semicolon = $phpcsFile->findNext(T_SEMICOLON, $nextBreak);
                     $breakStatementEnd = $tokens[$semicolon]['line'];
                     for ($i = ($semicolon + 1); $i < $tokens[$stackPtr]['scope_closer']; $i++) {
@@ -198,8 +202,8 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
                     }
 
                     if ($nextLine !== ($caseLine + 1)) {
-                        $error = 'Blank lines are not allowed after '.strtoupper($type).' statements';
-                        $phpcsFile->addError($error, $nextCase, 'SpacingAfter'.$type);
+                        $error = 'Blank lines are not allowed after ' . strtoupper($type) . ' statements';
+                        $phpcsFile->addError($error, $nextCase, 'SpacingAfter' . $type);
                     }
                 }//end if
 
@@ -244,7 +248,7 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
                         }
                     }//end if
                 }//end if
-            } else if ($type === 'Default') {
+            } elseif ($type === 'Default') {
                 $error = 'DEFAULT case must have a breaking statement';
                 $phpcsFile->addError($error, $nextCase, 'DefaultNoBreak');
             }//end if
@@ -264,10 +268,5 @@ class ONGR_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
             $error = 'SWITCH statements must contain at least one CASE statement';
             $phpcsFile->addError($error, $stackPtr, 'MissingCase');
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Operators;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_Operators_IncrementDecrementUsageSniff.
  *
@@ -28,10 +34,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSniffer_Sniff
+class IncrementDecrementUsageSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -39,16 +43,14 @@ class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSnif
      */
     public function register()
     {
-        return array(
-                T_EQUAL,
-                T_PLUS_EQUAL,
-                T_MINUS_EQUAL,
-                T_INC,
-                T_DEC,
-               );
-
+        return [
+            T_EQUAL,
+            T_PLUS_EQUAL,
+            T_MINUS_EQUAL,
+            T_INC,
+            T_DEC,
+        ];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -68,9 +70,7 @@ class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSnif
         } else {
             $this->processAssignment($phpcsFile, $stackPtr);
         }
-
     }//end process()
-
 
     /**
      * Checks to ensure increment and decrement operators are not confusing.
@@ -101,6 +101,7 @@ class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSnif
         if (in_array($tokens[$next]['code'], PHP_CodeSniffer_Tokens::$arithmeticTokens) === true) {
             $error = 'Increment and decrement operators cannot be used in an arithmetic operation';
             $phpcsFile->addError($error, $stackPtr, 'NotAllowed');
+
             return;
         }
 
@@ -114,9 +115,7 @@ class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSnif
             $error = 'Increment and decrement operators must be bracketed when used in string concatenation';
             $phpcsFile->addError($error, $stackPtr, 'NoBrackets');
         }
-
     }//end processIncDec()
-
 
     /**
      * Checks to ensure increment and decrement operators are used.
@@ -137,15 +136,24 @@ class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSnif
             return;
         }
 
-        $statementEnd = $phpcsFile->findNext(array(T_SEMICOLON, T_CLOSE_PARENTHESIS, T_CLOSE_SQUARE_BRACKET, T_CLOSE_CURLY_BRACKET), $stackPtr);
+        $statementEnd = $phpcsFile->findNext(
+            [T_SEMICOLON, T_CLOSE_PARENTHESIS, T_CLOSE_SQUARE_BRACKET, T_CLOSE_CURLY_BRACKET],
+            $stackPtr
+        );
 
         // If there is anything other than variables, numbers, spaces or operators we need to return.
-        $noiseTokens = $phpcsFile->findNext(array(T_LNUMBER, T_VARIABLE, T_WHITESPACE, T_PLUS, T_MINUS, T_OPEN_PARENTHESIS), ($stackPtr + 1), $statementEnd, true);
+        $noiseTokens = $phpcsFile->findNext(
+            [T_LNUMBER, T_VARIABLE, T_WHITESPACE, T_PLUS, T_MINUS, T_OPEN_PARENTHESIS],
+            ($stackPtr + 1),
+            $statementEnd,
+            true
+        );
 
         if ($noiseTokens !== false) {
             return;
         }
 
+        $nextVar = null;
         // If we are already using += or -=, we need to ignore
         // the statement if a variable is being used.
         if ($tokens[$stackPtr]['code'] !== T_EQUAL) {
@@ -156,9 +164,9 @@ class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSnif
         }
 
         if ($tokens[$stackPtr]['code'] === T_EQUAL) {
-            $nextVar          = ($stackPtr + 1);
+            $nextVar = ($stackPtr + 1);
             $previousVariable = ($stackPtr + 1);
-            $variableCount    = 0;
+            $variableCount = 0;
             while (($nextVar = $phpcsFile->findNext(T_VARIABLE, ($nextVar + 1), $statementEnd)) !== false) {
                 $previousVariable = $nextVar;
                 $variableCount++;
@@ -176,10 +184,12 @@ class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSnif
 
         // We have only one variable, and it's the same as what is being assigned,
         // so we need to check what is being added or subtracted.
-        $nextNumber     = ($stackPtr + 1);
+        $nextNumber = ($stackPtr + 1);
         $previousNumber = ($stackPtr + 1);
-        $numberCount    = 0;
-        while (($nextNumber = $phpcsFile->findNext(array(T_LNUMBER), ($nextNumber + 1), $statementEnd, false)) !== false) {
+        $numberCount = 0;
+        while ((
+            $nextNumber = $phpcsFile->findNext([T_LNUMBER], ($nextNumber + 1), $statementEnd, false)) !== false
+        ) {
             $previousNumber = $nextNumber;
             $numberCount++;
         }
@@ -191,7 +201,7 @@ class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSnif
         $nextNumber = $previousNumber;
         if ($tokens[$nextNumber]['content'] === '1') {
             if ($tokens[$stackPtr]['code'] === T_EQUAL) {
-                $opToken = $phpcsFile->findNext(array(T_PLUS, T_MINUS), ($nextVar + 1), $statementEnd);
+                $opToken = $phpcsFile->findNext([T_PLUS, T_MINUS], ($nextVar + 1), $statementEnd);
                 if ($opToken === false) {
                     // Operator was before the variable, like:
                     // $var = 1 + $var;
@@ -213,8 +223,8 @@ class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSnif
                 }
             }
 
-            $expected = $tokens[$assignedVar]['content'].$operator.$operator;
-            $found    = $phpcsFile->getTokensAsString($assignedVar, ($statementEnd - $assignedVar + 1));
+            $expected = $tokens[$assignedVar]['content'] . $operator . $operator;
+            $found = $phpcsFile->getTokensAsString($assignedVar, ($statementEnd - $assignedVar + 1));
 
             if ($operator === '+') {
                 $error = 'Increment';
@@ -225,10 +235,5 @@ class ONGR_Sniffs_Operators_IncrementDecrementUsageSniff implements PHP_CodeSnif
             $error .= " operators should be used where possible; found \"$found\" but expected \"$expected\"";
             $phpcsFile->addError($error, $stackPtr);
         }//end if
-
     }//end processAssignment()
-
-
-}//end class
-
-?>
+}

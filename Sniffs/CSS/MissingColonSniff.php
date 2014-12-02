@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_MissingColonSniff.
  *
@@ -25,16 +30,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_MissingColonSniff implements PHP_CodeSniffer_Sniff
+class MissingColonSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
-
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -43,10 +44,8 @@ class ONGR_Sniffs_CSS_MissingColonSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_OPEN_CURLY_BRACKET);
-
+        return [T_OPEN_CURLY_BRACKET];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -59,10 +58,9 @@ class ONGR_Sniffs_CSS_MissingColonSniff implements PHP_CodeSniffer_Sniff
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens   = $phpcsFile->getTokens();
+        $tokens = $phpcsFile->getTokens();
         $lastLine = $tokens[$stackPtr]['line'];
-        $end      = $tokens[$stackPtr]['bracket_closer'];
-        $endLine  = $tokens[$end]['line'];
+        $end = $tokens[$stackPtr]['bracket_closer'];
 
         // Do not check nested style definitions as, for example, in @media style rules.
         $nested = $phpcsFile->findNext(T_OPEN_CURLY_BRACKET, ($stackPtr + 1), $end);
@@ -70,7 +68,7 @@ class ONGR_Sniffs_CSS_MissingColonSniff implements PHP_CodeSniffer_Sniff
             return;
         }
 
-        $foundColon  = false;
+        $foundColon = false;
         $foundString = false;
         for ($i = ($stackPtr + 1); $i <= $end; $i++) {
             if ($tokens[$i]['line'] !== $lastLine) {
@@ -81,21 +79,16 @@ class ONGR_Sniffs_CSS_MissingColonSniff implements PHP_CodeSniffer_Sniff
                     $phpcsFile->addError($error, $foundString, 'Found');
                 }
 
-                $foundColon  = false;
+                $foundColon = false;
                 $foundString = false;
-                $lastLine    = $tokens[$i]['line'];
+                $lastLine = $tokens[$i]['line'];
             }
 
             if ($tokens[$i]['code'] === T_STRING) {
                 $foundString = $i;
-            } else if ($tokens[$i]['code'] === T_COLON) {
+            } elseif ($tokens[$i]['code'] === T_COLON) {
                 $foundColon = $i;
             }
         }//end for
-
     }//end process()
-
-
-}//end class
-
-?>
+}

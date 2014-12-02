@@ -13,9 +13,9 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('PHP_CodeSniffer_Standards_AbstractPatternSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_Standards_AbstractPatternSniff not found');
-}
+namespace ONGR\Sniffs\ControlStructures;
+
+use PHP_CodeSniffer_Standards_AbstractPatternSniff;
 
 /**
  * Verifies that control statements conform to their coding standards.
@@ -29,19 +29,15 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractPatternSniff', true) === fal
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_ControlStructures_ControlSignatureSniff extends PHP_CodeSniffer_Standards_AbstractPatternSniff
+class ControlSignatureSniff extends PHP_CodeSniffer_Standards_AbstractPatternSniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                  );
-
+    public $supportedTokenizers = [
+        'PHP',
+        'JS',
+    ];
 
     /**
      * Returns the patterns that this test wishes to verify.
@@ -50,21 +46,16 @@ class ONGR_Sniffs_ControlStructures_ControlSignatureSniff extends PHP_CodeSniffe
      */
     protected function getPatterns()
     {
-        return array(
-                'try {EOL...} catch (...) {EOL',
-                'do {EOL...} while (...);EOL',
-                'while (...) {EOL',
-                'for (...) {EOL',
-                'if (...) {EOL',
-                'foreach (...) {EOL',
-                '} else if (...) {EOL',
-                '} elseif (...) {EOL',
-                '} else {EOL',
-               );
-
+        return [
+            'try {EOL...} catch (...) {EOL',
+            'do {EOL...} while (...);EOL',
+            'while (...) {EOL',
+            'for (...) {EOL',
+            'if (...) {EOL',
+            'foreach (...) {EOL',
+            '} else if (...) {EOL',
+            '} elseif (...) {EOL',
+            '} else {EOL',
+        ];
     }//end getPatterns()
-
-
-}//end class
-
-?>
+}

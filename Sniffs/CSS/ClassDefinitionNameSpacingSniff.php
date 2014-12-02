@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_ClassDefinitionNameSpacingSniff.
  *
@@ -25,16 +30,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_ClassDefinitionNameSpacingSniff implements PHP_CodeSniffer_Sniff
+class ClassDefinitionNameSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
-
+    public $supportedTokenizers = ['CSS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -43,10 +44,8 @@ class ONGR_Sniffs_CSS_ClassDefinitionNameSpacingSniff implements PHP_CodeSniffer
      */
     public function register()
     {
-        return array(T_OPEN_CURLY_BRACKET);
-
+        return [T_OPEN_CURLY_BRACKET];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -69,16 +68,16 @@ class ONGR_Sniffs_CSS_ClassDefinitionNameSpacingSniff implements PHP_CodeSniffer
 
         // Find the first blank line before this opening brace, unless we get
         // to another style definition, comment or the start of the file.
-        $endTokens = array(
-                      T_OPEN_CURLY_BRACKET,
-                      T_CLOSE_CURLY_BRACKET,
-                      T_COMMENT,
-                      T_DOC_COMMENT,
-                      T_OPEN_TAG,
-                     );
+        $endTokens = [
+            T_OPEN_CURLY_BRACKET,
+            T_CLOSE_CURLY_BRACKET,
+            T_COMMENT,
+            T_DOC_COMMENT,
+            T_OPEN_TAG,
+        ];
 
         $foundContent = false;
-        $currentLine  = $tokens[$stackPtr]['line'];
+        $currentLine = $tokens[$stackPtr]['line'];
         for ($i = ($stackPtr - 1); $i >= 0; $i--) {
             if (in_array($tokens[$i]['code'], $endTokens) === true) {
                 break;
@@ -107,12 +106,7 @@ class ONGR_Sniffs_CSS_ClassDefinitionNameSpacingSniff implements PHP_CodeSniffer
             }
 
             $foundContent = false;
-            $currentLine  = $tokens[$i]['line'];
+            $currentLine = $tokens[$i]['line'];
         }//end for
-
     }//end process()
-
-
-}//end class
-
-?>
+}

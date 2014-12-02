@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\CSS;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_CSS_IndentationSniff.
  *
@@ -25,23 +30,17 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_CSS_IndentationSniff implements PHP_CodeSniffer_Sniff
+class IndentationSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('CSS');
+    public $supportedTokenizers = ['CSS'];
 
     /**
-    * The number of spaces code should be indented.
-    *
-    * @var int
-    */
+     * @var int The number of spaces code should be indented.
+     */
     public $indent = 4;
-
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -50,10 +49,8 @@ class ONGR_Sniffs_CSS_IndentationSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_OPEN_TAG);
-
+        return [T_OPEN_TAG];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -68,8 +65,8 @@ class ONGR_Sniffs_CSS_IndentationSniff implements PHP_CodeSniffer_Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        $numTokens    = (count($tokens) - 2);
-        $indentLevel  = 0;
+        $numTokens = (count($tokens) - 2);
+        $indentLevel = 0;
         $nestingLevel = 0;
         for ($i = 1; $i < $numTokens; $i++) {
             if ($tokens[$i]['code'] === T_COMMENT) {
@@ -81,7 +78,7 @@ class ONGR_Sniffs_CSS_IndentationSniff implements PHP_CodeSniffer_Sniff
                 $indentLevel++;
 
                 // Check for nested class definitions.
-                $found  = $phpcsFile->findNext(
+                $found = $phpcsFile->findNext(
                     T_OPEN_CURLY_BRACKET,
                     ($i + 1),
                     $tokens[$i]['bracket_closer']
@@ -89,7 +86,7 @@ class ONGR_Sniffs_CSS_IndentationSniff implements PHP_CodeSniffer_Sniff
                 if ($found !== false) {
                     $nestingLevel = $indentLevel;
                 }
-            } else if ($tokens[($i + 1)]['code'] === T_CLOSE_CURLY_BRACKET) {
+            } elseif ($tokens[($i + 1)]['code'] === T_CLOSE_CURLY_BRACKET) {
                 $indentLevel--;
             }
 
@@ -99,7 +96,7 @@ class ONGR_Sniffs_CSS_IndentationSniff implements PHP_CodeSniffer_Sniff
 
             // We started a new line, so check indent.
             if ($tokens[$i]['code'] === T_WHITESPACE) {
-                $content     = str_replace($phpcsFile->eolChar, '', $tokens[$i]['content']);
+                $content = str_replace($phpcsFile->eolChar, '', $tokens[$i]['content']);
                 $foundIndent = strlen($content);
             } else {
                 $foundIndent = 0;
@@ -113,16 +110,14 @@ class ONGR_Sniffs_CSS_IndentationSniff implements PHP_CodeSniffer_Sniff
                     $error = 'Blank lines are not allowed in class definitions';
                     $phpcsFile->addError($error, $i, 'BlankLine');
                 }
-            } else if ($foundIndent !== $expectedIndent) {
+            } elseif ($foundIndent !== $expectedIndent) {
                 $error = 'Line indented incorrectly; expected %s spaces, found %s';
-                $data  = array(
-                          $expectedIndent,
-                          $foundIndent,
-                         );
+                $data = [
+                    $expectedIndent,
+                    $foundIndent,
+                ];
                 $phpcsFile->addError($error, $i, 'Incorrect', $data);
             }
         }//end foreach
     }//end process()
-
-}//end class
-?>
+}

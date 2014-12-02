@@ -13,9 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('PHP_CodeSniffer_Standards_AbstractVariableSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_Standards_AbstractVariableSniff not found');
-}
+namespace ONGR\Sniffs\Scope;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Standards_AbstractVariableSniff;
+use PHP_CodeSniffer_Tokens;
 
 /**
  * Verifies that class members have scope modifiers.
@@ -29,10 +31,8 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractVariableSniff', true) === fa
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Scope_MemberVarScopeSniff extends PHP_CodeSniffer_Standards_AbstractVariableSniff
+class MemberVarScopeSniff extends PHP_CodeSniffer_Standards_AbstractVariableSniff
 {
-
-
     /**
      * Processes the function tokens within the class.
      *
@@ -43,17 +43,15 @@ class ONGR_Sniffs_Scope_MemberVarScopeSniff extends PHP_CodeSniffer_Standards_Ab
      */
     protected function processMemberVar(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens   = $phpcsFile->getTokens();
+        $tokens = $phpcsFile->getTokens();
         $modifier = $phpcsFile->findPrevious(PHP_CodeSniffer_Tokens::$scopeModifiers, $stackPtr);
 
         if (($modifier === false) || ($tokens[$modifier]['line'] !== $tokens[$stackPtr]['line'])) {
             $error = 'Scope modifier not specified for member variable "%s"';
-            $data  = array($tokens[$stackPtr]['content']);
+            $data = [$tokens[$stackPtr]['content']];
             $phpcsFile->addError($error, $stackPtr, 'Missing', $data);
         }
-
     }//end processMemberVar()
-
 
     /**
      * Processes normal variables.
@@ -66,9 +64,7 @@ class ONGR_Sniffs_Scope_MemberVarScopeSniff extends PHP_CodeSniffer_Standards_Ab
     protected function processVariable(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         // We don't care about normal variables.
-
     }//end processVariable()
-
 
     /**
      * Processes variables in double quoted strings.
@@ -81,10 +77,5 @@ class ONGR_Sniffs_Scope_MemberVarScopeSniff extends PHP_CodeSniffer_Standards_Ab
     protected function processVariableInString(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         // We don't care about normal variables.
-
     }//end processVariableInString()
-
-
-}//end class
-
-?>
+}

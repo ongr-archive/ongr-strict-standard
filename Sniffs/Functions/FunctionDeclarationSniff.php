@@ -13,9 +13,9 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('PHP_CodeSniffer_Standards_AbstractPatternSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_Standards_AbstractPatternSniff not found');
-}
+namespace ONGR\Sniffs\Functions;
+
+use PHP_CodeSniffer_Standards_AbstractPatternSniff;
 
 /**
  * ONGR_Sniffs_Functions_FunctionDeclarationSniff.
@@ -31,10 +31,8 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractPatternSniff', true) === fal
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Functions_FunctionDeclarationSniff extends PHP_CodeSniffer_Standards_AbstractPatternSniff
+class FunctionDeclarationSniff extends PHP_CodeSniffer_Standards_AbstractPatternSniff
 {
-
-
     /**
      * Returns an array of patterns to check are correct.
      *
@@ -42,15 +40,10 @@ class ONGR_Sniffs_Functions_FunctionDeclarationSniff extends PHP_CodeSniffer_Sta
      */
     protected function getPatterns()
     {
-        return array(
-                'function abc(...);',
-                'function abc(...)',
-                'abstract function abc(...);',
-               );
-
+        return [
+            'function abc(...);',
+            'function abc(...)',
+            'abstract function abc(...);',
+        ];
     }//end getPatterns()
-
-
-}//end class
-
-?>
+}

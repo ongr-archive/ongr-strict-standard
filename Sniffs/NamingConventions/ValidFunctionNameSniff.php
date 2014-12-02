@@ -13,9 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff not found');
-}
+namespace ONGR\Sniffs\NamingConventions;
+
+use PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff;
+use PHP_CodeSniffer;
+use PHP_CodeSniffer_File;
 
 /**
  * ONGR_Sniffs_NamingConventions_ValidFunctionNameSniff.
@@ -32,10 +34,8 @@ if (class_exists('PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff', true) =
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_NamingConventions_ValidFunctionNameSniff extends PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff
+class ValidFunctionNameSniff extends PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff
 {
-
-
     /**
      * Processes the tokens outside the scope.
      *
@@ -52,12 +52,14 @@ class ONGR_Sniffs_NamingConventions_ValidFunctionNameSniff extends PEAR_Sniffs_N
             return;
         }
 
-        $errorData = array($functionName);
+        $errorData = [$functionName];
 
         // Does this function claim to be magical?
         if (preg_match('|^__|', $functionName) !== 0) {
-            $error = 'Function name "%s" is invalid; only PHP magic methods should be prefixed with a double underscore';
+            $error = 'Function name "%s" is invalid;'
+                . ' only PHP magic methods should be prefixed with a double underscore';
             $phpcsFile->addError($error, $stackPtr, 'DoubleUnderscore', $errorData);
+
             return;
         }
 
@@ -65,16 +67,13 @@ class ONGR_Sniffs_NamingConventions_ValidFunctionNameSniff extends PEAR_Sniffs_N
             $error = 'Function name "%s" is not in camel caps format';
             $phpcsFile->addError($error, $stackPtr, 'NotCamelCaps', $errorData);
         }
-
     }//end processTokenOutsideScope()
 
+    /**
+     * {@inheritdoc}
+     */
     protected function processTokenWithinScope(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $currScope)
     {
         // Disabling.
-        return;
     }
-
-
-}//end class
-
-?>
+}

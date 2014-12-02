@@ -12,6 +12,13 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Debug;
+
+use PHP_CodeSniffer;
+use PHP_CodeSniffer_Exception;
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Debug_JSLintSniff.
  *
@@ -25,16 +32,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Debug_JSLintSniff implements PHP_CodeSniffer_Sniff
+class JSLintSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('JS');
-
+    public $supportedTokenizers = ['JS'];
 
     /**
      * Returns the token types that this sniff is interested in.
@@ -43,10 +46,8 @@ class ONGR_Sniffs_Debug_JSLintSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_OPEN_TAG);
-
+        return [T_OPEN_TAG];
     }//end register()
-
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -62,27 +63,27 @@ class ONGR_Sniffs_Debug_JSLintSniff implements PHP_CodeSniffer_Sniff
     {
         $fileName = $phpcsFile->getFilename();
 
-        $rhinoPath  = PHP_CodeSniffer::getConfigData('rhino_path');
+        $rhinoPath = PHP_CodeSniffer::getConfigData('rhino_path');
         $jslintPath = PHP_CodeSniffer::getConfigData('jslint_path');
         if ($rhinoPath === null || $jslintPath === null) {
             return;
         }
 
         $cmd = "$rhinoPath \"$jslintPath\" \"$fileName\"";
-        $msg = exec($cmd, $output, $retval);
+        exec($cmd, $output, $retval);
 
         if (is_array($output) === true) {
             $tokens = $phpcsFile->getTokens();
 
             foreach ($output as $finding) {
-                $matches    = array();
+                $matches = [];
                 $numMatches = preg_match('/Lint at line ([0-9]+).*:(.*)$/', $finding, $matches);
                 if ($numMatches === 0) {
                     continue;
                 }
 
-                $line    = (int) $matches[1];
-                $message = 'jslint says: '.trim($matches[2]);
+                $line = (int)$matches[1];
+                $message = 'jslint says: ' . trim($matches[2]);
 
                 // Find the token at the start of the line.
                 $lineToken = null;
@@ -98,10 +99,5 @@ class ONGR_Sniffs_Debug_JSLintSniff implements PHP_CodeSniffer_Sniff
                 }
             }//end foreach
         }//end if
-
     }//end process()
-
-
-}//end class
-
-?>
+}

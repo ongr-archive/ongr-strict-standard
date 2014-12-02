@@ -13,6 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Functions;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * ONGR_Sniffs_Functions_GlobalFunctionSniff.
  *
@@ -27,10 +32,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Functions_GlobalFunctionSniff implements PHP_CodeSniffer_Sniff
+class GlobalFunctionSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,10 +41,8 @@ class ONGR_Sniffs_Functions_GlobalFunctionSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(T_FUNCTION);
-
+        return [T_FUNCTION];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -65,14 +66,9 @@ class ONGR_Sniffs_Functions_GlobalFunctionSniff implements PHP_CodeSniffer_Sniff
             // Special exception for __autoload as it needs to be global.
             if ($functionName !== '__autoload') {
                 $error = 'Consider putting global function "%s" in a static class';
-                $data  = array($functionName);
+                $data = [$functionName];
                 $phpcsFile->addWarning($error, $stackPtr, 'Found', $data);
             }
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

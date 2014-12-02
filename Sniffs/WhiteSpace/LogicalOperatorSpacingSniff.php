@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * Sniffs_Squiz_WhiteSpace_OperatorSpacingSniff.
  *
@@ -27,19 +33,15 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_LogicalOperatorSpacingSniff implements PHP_CodeSniffer_Sniff
+class LogicalOperatorSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                  );
-
+    public $supportedTokenizers = [
+        'PHP',
+        'JS',
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -49,9 +51,7 @@ class ONGR_Sniffs_WhiteSpace_LogicalOperatorSpacingSniff implements PHP_CodeSnif
     public function register()
     {
         return PHP_CodeSniffer_Tokens::$booleanOperators;
-
     }//end register()
-
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -77,7 +77,7 @@ class ONGR_Sniffs_WhiteSpace_LogicalOperatorSpacingSniff implements PHP_CodeSnif
             ) {
                 $found = strlen($tokens[($stackPtr - 1)]['content']);
                 $error = 'Expected 1 space before logical operator; %s found';
-                $data  = array($found);
+                $data = [$found];
                 $phpcsFile->addError($error, $stackPtr, 'TooMuchSpaceBefore', $data);
             }
         }
@@ -93,14 +93,9 @@ class ONGR_Sniffs_WhiteSpace_LogicalOperatorSpacingSniff implements PHP_CodeSnif
             ) {
                 $found = strlen($tokens[($stackPtr + 1)]['content']);
                 $error = 'Expected 1 space after logical operator; %s found';
-                $data  = array($found);
+                $data = [$found];
                 $phpcsFile->addError($error, $stackPtr, 'TooMuchSpaceAfter', $data);
             }
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

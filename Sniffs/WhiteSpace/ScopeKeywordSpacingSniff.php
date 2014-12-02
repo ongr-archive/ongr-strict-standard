@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_WhiteSpace_ScopeKeywordSpacingSniff.
  *
@@ -27,10 +33,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_ScopeKeywordSpacingSniff implements PHP_CodeSniffer_Sniff
+class ScopeKeywordSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -38,12 +42,11 @@ class ONGR_Sniffs_WhiteSpace_ScopeKeywordSpacingSniff implements PHP_CodeSniffer
      */
     public function register()
     {
-        $register   = PHP_CodeSniffer_Tokens::$scopeModifiers;
+        $register = PHP_CodeSniffer_Tokens::$scopeModifiers;
         $register[] = T_STATIC;
+
         return $register;
-
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -70,7 +73,7 @@ class ONGR_Sniffs_WhiteSpace_ScopeKeywordSpacingSniff implements PHP_CodeSniffer
         }
 
         if ($tokens[$prevToken]['code'] === T_AS) {
-            // Trait visibilty change, e.g., use HelloWorld { sayHello as private; }
+            // Trait visibilty change, e.g., use HelloWorld { sayHello as private; }.
             return;
         }
 
@@ -80,13 +83,8 @@ class ONGR_Sniffs_WhiteSpace_ScopeKeywordSpacingSniff implements PHP_CodeSniffer
             || $nextToken['content'] === $phpcsFile->eolChar
         ) {
             $error = 'Scope keyword "%s" must be followed by a single space';
-            $data  = array($tokens[$stackPtr]['content']);
+            $data = [$tokens[$stackPtr]['content']];
             $phpcsFile->addError($error, $stackPtr, 'Incorrect', $data);
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

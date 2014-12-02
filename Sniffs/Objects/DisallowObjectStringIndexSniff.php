@@ -12,6 +12,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\Objects;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+
 /**
  * Ensures that object indexes are written in dot notation.
  *
@@ -23,16 +28,12 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Objects_DisallowObjectStringIndexSniff implements PHP_CodeSniffer_Sniff
+class DisallowObjectStringIndexSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array('JS');
-
+    public $supportedTokenizers = ['JS'];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -41,10 +42,8 @@ class ONGR_Sniffs_Objects_DisallowObjectStringIndexSniff implements PHP_CodeSnif
      */
     public function register()
     {
-        return array(T_OPEN_SQUARE_BRACKET);
-
+        return [T_OPEN_SQUARE_BRACKET];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -89,10 +88,5 @@ class ONGR_Sniffs_Objects_DisallowObjectStringIndexSniff implements PHP_CodeSnif
             $error = 'Object indexes must be written in dot notation';
             $phpcsFile->addError($error, $prev, 'Found');
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

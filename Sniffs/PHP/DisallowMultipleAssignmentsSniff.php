@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\PHP;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_PHP_DisallowMultipleAssignmentsSniff.
  *
@@ -28,10 +34,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffer_Sniff
+class DisallowMultipleAssignmentsSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -39,10 +43,8 @@ class ONGR_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
      */
     public function register()
     {
-        return array(T_EQUAL);
-
+        return [T_EQUAL];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -58,7 +60,7 @@ class ONGR_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
         $tokens = $phpcsFile->getTokens();
 
         // Ignore default value assignments in function definitions.
-        $function = $phpcsFile->findPrevious(array(T_FUNCTION, T_CLOSURE), ($stackPtr - 1));
+        $function = $phpcsFile->findPrevious([T_FUNCTION, T_CLOSURE], ($stackPtr - 1));
         if ($function !== false) {
             $opener = $tokens[$function]['parenthesis_opener'];
             $closer = $tokens[$function]['parenthesis_closer'];
@@ -77,7 +79,9 @@ class ONGR_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
 
         for ($varToken = ($stackPtr - 1); $varToken >= 0; $varToken--) {
             // Skip brackets.
-            if (isset($tokens[$varToken]['parenthesis_opener']) === true && $tokens[$varToken]['parenthesis_opener'] < $varToken) {
+            if (isset($tokens[$varToken]['parenthesis_opener']) === true
+                && $tokens[$varToken]['parenthesis_opener'] < $varToken
+            ) {
                 $varToken = $tokens[$varToken]['parenthesis_opener'];
                 continue;
             }
@@ -133,7 +137,7 @@ class ONGR_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
         }
 
         // Make sure this variable is the first thing in the statement.
-        $varLine  = $tokens[$varToken]['line'];
+        $varLine = $tokens[$varToken]['line'];
         $prevLine = 0;
         for ($i = ($varToken - 1); $i >= 0; $i--) {
             if ($tokens[$i]['code'] === T_SEMICOLON) {
@@ -184,10 +188,5 @@ class ONGR_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
             $error = 'Assignments must be the first block of code on a line';
             $phpcsFile->addError($error, $stackPtr, 'Found');
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

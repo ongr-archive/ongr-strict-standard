@@ -13,9 +13,11 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false) {
-    throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_Standards_AbstractScopeSniff not found');
-}
+namespace ONGR\Sniffs\Scope;
+
+use PHP_CodeSniffer_Exception;
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Standards_AbstractScopeSniff;
 
 /**
  * ONGR_Sniffs_Scope_StaticThisUsageSniff.
@@ -32,21 +34,17 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractScopeSniff', true) === false
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_Scope_StaticThisUsageSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
+class StaticThisUsageSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
 {
-
-
     /**
      * Constructs the test with the tokens it wishes to listen for.
      *
-     * @return void
+     * @throws PHP_CodeSniffer_Exception
      */
     public function __construct()
     {
-        parent::__construct(array(T_CLASS), array(T_FUNCTION));
-
+        parent::__construct([T_CLASS], [T_FUNCTION]);
     }//end __construct()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -60,16 +58,12 @@ class ONGR_Sniffs_Scope_StaticThisUsageSniff extends PHP_CodeSniffer_Standards_A
      */
     public function processTokenWithinScope(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $currScope)
     {
-        $tokens   = $phpcsFile->getTokens();
+        $tokens = $phpcsFile->getTokens();
         $function = $tokens[($stackPtr + 2)];
 
         if ($function['code'] !== T_STRING) {
             return;
         }
-
-        $functionName = $function['content'];
-        $classOpener  = $tokens[$currScope]['scope_condition'];
-        $className    = $tokens[($classOpener + 2)]['content'];
 
         $methodProps = $phpcsFile->getMethodProperties($stackPtr);
 
@@ -81,7 +75,15 @@ class ONGR_Sniffs_Scope_StaticThisUsageSniff extends PHP_CodeSniffer_Standards_A
             }
 
             $thisUsage = $stackPtr;
-            while (($thisUsage = $phpcsFile->findNext(array(T_VARIABLE), ($thisUsage + 1), $tokens[$stackPtr]['scope_closer'], false, '$this')) !== false) {
+            while ((
+                $thisUsage = $phpcsFile->findNext(
+                    [T_VARIABLE],
+                    ($thisUsage + 1),
+                    $tokens[$stackPtr]['scope_closer'],
+                    false,
+                    '$this'
+                )) !== false
+            ) {
                 if ($thisUsage === false) {
                     return;
                 }
@@ -90,10 +92,5 @@ class ONGR_Sniffs_Scope_StaticThisUsageSniff extends PHP_CodeSniffer_Standards_A
                 $phpcsFile->addError($error, $thisUsage, 'Found');
             }
         }//end if
-
     }//end processTokenWithinScope()
-
-
-}//end class
-
-?>
+}

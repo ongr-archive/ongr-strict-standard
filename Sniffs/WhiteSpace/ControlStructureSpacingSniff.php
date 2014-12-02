@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\WhiteSpace;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_WhiteSpace_ControlStructureSpacingSniff.
  *
@@ -27,19 +33,15 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_WhiteSpace_ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
+class ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
 {
-
     /**
-     * A list of tokenizers this sniff supports.
-     *
-     * @var array
+     * @var array A list of tokenizers this sniff supports.
      */
-    public $supportedTokenizers = array(
-                                   'PHP',
-                                   'JS',
-                                  );
-
+    public $supportedTokenizers = [
+        'PHP',
+        'JS',
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -48,19 +50,17 @@ class ONGR_Sniffs_WhiteSpace_ControlStructureSpacingSniff implements PHP_CodeSni
      */
     public function register()
     {
-        return array(
-                T_IF,
-                T_WHILE,
-                T_FOREACH,
-                T_FOR,
-                T_SWITCH,
-                T_DO,
-                T_ELSE,
-                T_ELSEIF,
-               );
-
+        return [
+            T_IF,
+            T_WHILE,
+            T_FOREACH,
+            T_FOR,
+            T_SWITCH,
+            T_DO,
+            T_ELSE,
+            T_ELSEIF,
+        ];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -79,18 +79,18 @@ class ONGR_Sniffs_WhiteSpace_ControlStructureSpacingSniff implements PHP_CodeSni
             $parenOpener = $tokens[$stackPtr]['parenthesis_opener'];
             $parenCloser = $tokens[$stackPtr]['parenthesis_closer'];
             if ($tokens[($parenOpener + 1)]['code'] === T_WHITESPACE) {
-                $gap   = strlen($tokens[($parenOpener + 1)]['content']);
+                $gap = strlen($tokens[($parenOpener + 1)]['content']);
                 $error = 'Expected 0 spaces after opening bracket; %s found';
-                $data  = array($gap);
+                $data = [$gap];
                 $phpcsFile->addError($error, ($parenOpener + 1), 'SpacingAfterOpenBrace', $data);
             }
 
             if ($tokens[$parenOpener]['line'] === $tokens[$parenCloser]['line']
                 && $tokens[($parenCloser - 1)]['code'] === T_WHITESPACE
             ) {
-                $gap   = strlen($tokens[($parenCloser - 1)]['content']);
+                $gap = strlen($tokens[($parenCloser - 1)]['content']);
                 $error = 'Expected 0 spaces before closing bracket; %s found';
-                $data  = array($gap);
+                $data = [$gap];
                 $phpcsFile->addError($error, ($parenCloser - 1), 'SpaceBeforeCloseBrace', $data);
             }
         }//end if
@@ -183,22 +183,13 @@ class ONGR_Sniffs_WhiteSpace_ControlStructureSpacingSniff implements PHP_CodeSni
                 return;
             }
 
-            if ($tokens[$trailingContent]['code'] !== T_RETURN && $tokens[$trailingContent]['line'] !== ($tokens[$scopeCloser]['line'] + 1)) {
+            if ($tokens[$trailingContent]['code'] !== T_RETURN
+                && $tokens[$trailingContent]['line'] !== ($tokens[$scopeCloser]['line'] + 1)
+            ) {
                 // Return statements must have blank line before them otherwise there should be no blank lines.
                 $error = 'Blank line found after control structure';
                 $phpcsFile->addError($error, $scopeCloser, 'LineAfterClose');
             }
-        } else if ($tokens[$trailingContent]['code'] !== T_ELSE
-            && $tokens[$trailingContent]['code'] !== T_ELSEIF
-            && $tokens[$trailingContent]['line'] === ($tokens[$scopeCloser]['line'] + 1)
-        ) {
-//            $error = 'No blank line found after control structure';
-//            $phpcsFile->addError($error, $scopeCloser, 'NoLineAfterClose');
         }
-
     }//end process()
-
-
-}//end class
-
-?>
+}

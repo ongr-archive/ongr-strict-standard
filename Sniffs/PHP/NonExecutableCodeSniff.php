@@ -13,6 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+namespace ONGR\Sniffs\PHP;
+
+use PHP_CodeSniffer_File;
+use PHP_CodeSniffer_Sniff;
+use PHP_CodeSniffer_Tokens;
+
 /**
  * ONGR_Sniffs_PHP_NonExecutableCodeSniff.
  *
@@ -28,10 +34,8 @@
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ONGR_Sniffs_PHP_NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
+class NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
 {
-
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -39,16 +43,14 @@ class ONGR_Sniffs_PHP_NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return array(
-                T_BREAK,
-                T_CONTINUE,
-                T_RETURN,
-                T_THROW,
-                T_EXIT,
-               );
-
+        return [
+            T_BREAK,
+            T_CONTINUE,
+            T_RETURN,
+            T_THROW,
+            T_EXIT,
+        ];
     }//end register()
-
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -75,7 +77,7 @@ class ONGR_Sniffs_PHP_NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
             if ($tokens[$i]['code'] === T_CLOSE_PARENTHESIS) {
                 $i = $tokens[$i]['parenthesis_opener'];
                 continue;
-            } else if (in_array($tokens[$i]['code'], PHP_CodeSniffer_Tokens::$emptyTokens) === true) {
+            } elseif (in_array($tokens[$i]['code'], PHP_CodeSniffer_Tokens::$emptyTokens) === true) {
                 continue;
             }
 
@@ -101,6 +103,7 @@ class ONGR_Sniffs_PHP_NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
                     if ($tokens[$owner]['code'] === T_FUNCTION) {
                         $warning = 'Empty return statement not required here';
                         $phpcsFile->addWarning($warning, $stackPtr, 'ReturnNotRequired');
+
                         return;
                     }
                 }
@@ -114,16 +117,16 @@ class ONGR_Sniffs_PHP_NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
                 // so any code between this token and the next CASE, DEFAULT or
                 // end of SWITCH token will not be executable.
                 $next = $phpcsFile->findNext(
-                    array(
-                     T_CASE,
-                     T_DEFAULT,
-                     T_CLOSE_CURLY_BRACKET,
-                    ),
+                    [
+                        T_CASE,
+                        T_DEFAULT,
+                        T_CLOSE_CURLY_BRACKET,
+                    ],
                     ($stackPtr + 1)
                 );
 
                 if ($next !== false) {
-                    $end      = $phpcsFile->findNext(array(T_SEMICOLON), ($stackPtr + 1));
+                    $end = $phpcsFile->findNext([T_SEMICOLON], ($stackPtr + 1));
                     $lastLine = $tokens[$end]['line'];
                     for ($i = ($stackPtr + 1); $i < $next; $i++) {
                         if (in_array($tokens[$i]['code'], PHP_CodeSniffer_Tokens::$emptyTokens) === true) {
@@ -132,9 +135,9 @@ class ONGR_Sniffs_PHP_NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
 
                         $line = $tokens[$i]['line'];
                         if ($line > $lastLine) {
-                            $type    = substr($tokens[$stackPtr]['type'], 2);
+                            $type = substr($tokens[$stackPtr]['type'], 2);
                             $warning = 'Code after %s statement cannot be executed';
-                            $data    = array($type);
+                            $data = [$type];
                             $phpcsFile->addWarning($warning, $i, 'Unreachable', $data);
                             $lastLine = $line;
                         }
@@ -151,12 +154,12 @@ class ONGR_Sniffs_PHP_NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
         // we should ignore this token.
         $prev = $phpcsFile->findPrevious(PHP_CodeSniffer_Tokens::$emptyTokens, ($stackPtr - 1), null, true);
         if (isset($tokens[$prev]['parenthesis_owner']) === true) {
-            $owner  = $tokens[$prev]['parenthesis_owner'];
-            $ignore = array(
-                       T_IF,
-                       T_ELSE,
-                       T_ELSEIF,
-                      );
+            $owner = $tokens[$prev]['parenthesis_owner'];
+            $ignore = [
+                T_IF,
+                T_ELSE,
+                T_ELSEIF,
+            ];
             if (in_array($tokens[$owner]['code'], $ignore) === true) {
                 return;
             }
@@ -256,17 +259,12 @@ class ONGR_Sniffs_PHP_NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
 
             $line = $tokens[$i]['line'];
             if ($line > $lastLine) {
-                $type    = substr($tokens[$stackPtr]['type'], 2);
+                $type = substr($tokens[$stackPtr]['type'], 2);
                 $warning = 'Code after %s statement cannot be executed';
-                $data    = array($type);
+                $data = [$type];
                 $phpcsFile->addWarning($warning, $i, 'Unreachable', $data);
                 $lastLine = $line;
             }
         }//end for
-
     }//end process()
-
-
-}//end class
-
-?>
+}
