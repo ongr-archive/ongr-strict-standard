@@ -115,7 +115,7 @@ class BlockCommentSniff implements PHP_CodeSniffer_Sniff
             $lastLine = $tokens[$nextComment]['line'];
             $commentLines[] = $nextComment;
             if (strpos($tokens[$nextComment]['content'], '*/') !== false) {
-                // We found block comment close.
+                // We found the ending of block comment.
                 break;
             }
         }

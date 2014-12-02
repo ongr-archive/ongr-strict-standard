@@ -123,7 +123,7 @@ class FunctionCommentThrowTagSniff extends PHP_CodeSniffer_Standards_AbstractSco
                 /*
                     If we can't find a NEW, we are probably throwing
                     a variable, so we ignore it, but they still need to
-                    provide at least one @throws tag, even through we
+                    provide at least one "throws" tag, even through we
                     don't know the exception class.
                 */
 
