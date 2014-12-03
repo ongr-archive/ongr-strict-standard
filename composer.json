@@ -9,7 +9,7 @@
         "symfony"
     ],
     "type": "library",
-    "license": "proprietary",
+    "license": "BSD-3-Clause",
     "authors": [
         {
             "name": "ONGR",
