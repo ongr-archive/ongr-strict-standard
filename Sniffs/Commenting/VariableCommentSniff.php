@@ -267,6 +267,8 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
                 $data = [$spacing];
                 $this->currentFile->addError($error, $errorPos, 'VarIndent', $data);
             }
+
+            $this->processVarComment($var, $errorPos);
         } else {
             $error = 'Missing @var tag in variable comment';
             $this->currentFile->addError($error, $commentEnd, 'MissingVar');
@@ -332,5 +334,39 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
      */
     protected function processVariableInString(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-    }//end processVariableInString()
+    }
+
+    /**
+     * Check if var comment is correct.
+     *
+     * @param PHP_CodeSniffer_CommentParser_SingleElement $var
+     * @param int                                         $errorPos
+     */
+    protected function processVarComment(PHP_CodeSniffer_CommentParser_SingleElement $var, $errorPos)
+    {
+        $comment = array_slice($var->getTokens(), 3);
+
+        $last = trim($comment[count($comment) - 1]);
+        while (empty($last)) {
+            unset($comment[count($comment) - 1]);
+            $last = trim($comment[count($comment) - 1]);
+        }
+
+        if (!in_array(substr($last, -1, 1), ['.', '?', '!'])) {
+            $this->currentFile->addError(
+                'Variable comments must end in full-stops, exclamation marks, or question marks',
+                $errorPos,
+                'VariableComment'
+            );
+        }
+
+        $firstLetter = substr($comment[0], 0, 1);
+        if (strtoupper($firstLetter) !== $firstLetter) {
+            $this->currentFile->addError(
+                'Variable comments must must start with a capital letter',
+                $errorPos,
+                'VariableComment'
+            );
+        }
+    }
 }
