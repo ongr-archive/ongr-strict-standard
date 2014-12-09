@@ -248,7 +248,7 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 );
                 if ($multiLine && !$next) {
                     // There is no more content which means missing comma.
-                    $error = 'Each line in an array declaration must end in a comma';
+                    $error = 'Each line in an array declaration must end with a coma';
                     $phpcsFile->addError($error, $nextToken, 'NoCommaAfterLast');
 
                     return;
@@ -459,7 +459,7 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 continue;
             }
 
-            // Check each line ends in a comma.
+            // Check each line ends with a coma.
             $valueLine = $tokens[$index['value']]['line'];
             $nextComma = false;
             for ($i = ($index['value'] + 1); $i < $arrayEnd; $i++) {
@@ -477,7 +477,7 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
             }
 
             if (($nextComma === false) || ($tokens[$nextComma]['line'] !== $valueLine)) {
-                $error = 'Each line in an array declaration must end in a comma';
+                $error = 'Each line in an array declaration must end with a coma';
                 $phpcsFile->addError($error, $index['value'], 'NoComma');
             }
 
