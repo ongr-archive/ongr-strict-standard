@@ -1,5 +1,10 @@
 # ONGR Strict Coding Standard
 
+[![Total Downloads](https://poser.pugx.org/ongr/ongr-strict-standard/downloads.svg)](https://packagist.org/packages/ongr/ongr-strict-standard)
+[![Latest Stable Version](https://poser.pugx.org/ongr/ongr-strict-standard/v/stable.svg)](https://packagist.org/packages/ongr/ongr-strict-standard)
+[![Latest Unstable Version](https://poser.pugx.org/ongr/ongr-strict-standard/v/unstable.svg)](https://packagist.org/packages/ongr/ongr-strict-standard)
+[![License](https://poser.pugx.org/ongr/ongr-strict-standard/license.svg)](https://packagist.org/packages/ongr/ongr-strict-standard)
+
 This package solves the problem: 
 
 > "Why did you forget to add 1 space before and after assignment operator?"
