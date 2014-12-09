@@ -95,7 +95,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_FUNCTION];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -268,7 +268,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                 $error = 'Function comment long description must start with a capital letter';
                 $phpcsFile->addError($error, ($commentStart + $newlineCount), 'LongNotCapital');
             }
-        }//end if
+        }
 
         // Exactly one blank line before tags.
         $params = $this->commentParser->getTagOrders();
@@ -318,7 +318,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
             $error = 'Additional blank lines found at end of function comment';
             $this->currentFile->addError($error, $commentEnd, 'SpacingAfter');
         }
-    }//end process()
+    }
 
     /**
      * Process the see tags.
@@ -358,9 +358,9 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                     $data = [$spacing];
                     $this->currentFile->addError($error, $errorPos, 'SeeIndent', $data);
                 }
-            }//end foreach
-        }//end if
-    }//end processSees()
+            }
+        }
+    }
 
     /**
      * Process the return comment of this function comment.
@@ -484,7 +484,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                                 }
                             }
                         }
-                    }//end if
+                    }
 
                     $spacing = substr_count($return->getWhitespaceBeforeValue(), ' ');
                     if ($spacing !== 1) {
@@ -492,7 +492,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                         $data = [$spacing];
                         $this->currentFile->addError($error, $errorPos, 'ReturnIndent', $data);
                     }
-                }//end if
+                }
             } else {
                 $tokens = $this->currentFile->getTokens();
 
@@ -521,7 +521,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                         }
                     }
                 }
-            }//end if
+            }
         } else {
             // No return tag for constructor and destructor.
             if ($return !== null) {
@@ -529,8 +529,8 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                 $error = '@return tag is not required for constructor and destructor';
                 $this->currentFile->addError($error, $errorPos, 'ReturnNotRequired');
             }
-        }//end if
-    }//end processReturn()
+        }
+    }
 
     /**
      * Process any throw tags that this function comment has.
@@ -565,8 +565,8 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                     $this->currentFile->addError($error, $errorPos, 'ThrowsOrder');
                 }
             }
-        }//end foreach
-    }//end processThrows()
+        }
+    }
 
     /**
      * Process the function parameter comments.
@@ -713,8 +713,8 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                                 $this->currentFile->addError($error, ($commentEnd + 2), 'InvalidTypeHint', $data);
                             }
                         }
-                    }//end if
-                }//end foreach
+                    }
+                }
 
                 // Make sure the names of the parameter comment matches the
                 // actual parameter.
@@ -773,7 +773,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                 }
 
                 $previousParam = $param;
-            }//end foreach
+            }
 
             if ($spaceBeforeVar !== 1 && $spaceBeforeVar !== 10000) {
                 $error = 'Expected 1 space after the longest type';
@@ -784,7 +784,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                 $error = 'Expected 1 space after the longest variable name';
                 $this->currentFile->addError($error, $longestVar, 'SpacingAfterLongName');
             }
-        }//end if
+        }
 
         $realNames = [];
         foreach ($realParams as $realParam) {
@@ -804,7 +804,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
             $data = [$neededParam];
             $this->currentFile->addError($error, $errorPos, 'MissingParamTag', $data);
         }
-    }//end processParams()
+    }
 
     /**
      * Process a list of unknown tags.
@@ -816,7 +816,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
      */
     protected function processUnknownTags($commentStart, $commentEnd)
     {
-    }//end processUnknownTags
+    }
 
     /**
      * @param string $content

@@ -42,7 +42,7 @@ class GlobalKeywordSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_GLOBAL];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -62,5 +62,5 @@ class GlobalKeywordSniff implements PHP_CodeSniffer_Sniff
         $error = 'Use of the "global" keyword is forbidden; use "$GLOBALS[\'%s\']" instead';
         $data = [$varName];
         $phpcsFile->addError($error, $stackPtr, 'NotAllowed', $data);
-    }//end process()
+    }
 }

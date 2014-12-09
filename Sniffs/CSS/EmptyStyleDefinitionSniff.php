@@ -45,7 +45,7 @@ class EmptyStyleDefinitionSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_STYLE];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -68,5 +68,5 @@ class EmptyStyleDefinitionSniff implements PHP_CodeSniffer_Sniff
             $error = 'Style definition is empty';
             $phpcsFile->addError($error, $stackPtr, 'Found');
         }
-    }//end process()
+    }
 }

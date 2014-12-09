@@ -60,7 +60,7 @@ class FunctionDeclarationArgumentSpacingSniff implements PHP_CodeSniffer_Sniff
             T_FUNCTION,
             T_CLOSURE,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -92,7 +92,7 @@ class FunctionDeclarationArgumentSpacingSniff implements PHP_CodeSniffer_Sniff
                 $this->processBracket($phpcsFile, $openBracket);
             }
         }
-    }//end process()
+    }
 
     /**
      * Processes the contents of a single set of brackets.
@@ -152,7 +152,7 @@ class FunctionDeclarationArgumentSpacingSniff implements PHP_CodeSniffer_Sniff
                     ];
                     $phpcsFile->addError($error, $nextToken, 'SpaceAfterDefault', $data);
                 }
-            }//end if
+            }
 
             // Find and check the comma (if there is one).
             $nextComma = $phpcsFile->findNext(T_COMMA, ($nextParam + 1), $closeBracket);
@@ -231,12 +231,12 @@ class FunctionDeclarationArgumentSpacingSniff implements PHP_CodeSniffer_Sniff
                             ];
                             $phpcsFile->addError($error, $nextToken, 'SpacingBeforeArg', $data);
                         }
-                    }//end if
+                    }
                 } else {
                     $error = 'Expected 1 space between comma and argument "%s"; 0 found';
                     $data = [$arg];
                     $phpcsFile->addError($error, $nextToken, 'NoSpaceBeforeArg', $data);
-                }//end if
+                }
             } else {
                 $gap = 0;
                 if ($tokens[$whitespace]['code'] === T_WHITESPACE) {
@@ -288,11 +288,11 @@ class FunctionDeclarationArgumentSpacingSniff implements PHP_CodeSniffer_Sniff
                         $gap,
                     ];
                     $phpcsFile->addError($error, $nextToken, 'SpacingAfterOpen', $data);
-                }//end if
-            }//end if
+                }
+            }
 
             $params[] = $nextParam;
-        }//end while
+        }
 
         $gap = 0;
         if ($tokens[($closeBracket - 1)]['code'] === T_WHITESPACE) {
@@ -316,5 +316,5 @@ class FunctionDeclarationArgumentSpacingSniff implements PHP_CodeSniffer_Sniff
             ];
             $phpcsFile->addError($error, $closeBracket, 'SpacingBeforeClose', $data);
         }
-    }//end processBracket()
+    }
 }

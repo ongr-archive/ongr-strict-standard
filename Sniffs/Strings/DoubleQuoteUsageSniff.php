@@ -45,7 +45,7 @@ class DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
             T_CONSTANT_ENCAPSED_STRING,
             T_DOUBLE_QUOTED_STRING,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -115,5 +115,5 @@ class DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
         $error = 'String %s does not require double quotes; use single quotes instead';
         $data = [$workingString];
         $phpcsFile->addError($error, $stackPtr, 'NotRequired', $data);
-    }//end process()
+    }
 }

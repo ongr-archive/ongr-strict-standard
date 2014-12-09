@@ -50,7 +50,7 @@ class PostStatementCommentSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_COMMENT];
-    }//end register()
+    }
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -76,10 +76,6 @@ class PostStatementCommentSniff implements PHP_CodeSniffer_Sniff
             return;
         }
 
-        if ($tokens[$lastContent]['code'] === T_CLOSE_CURLY_BRACKET) {
-            return;
-        }
-
         // Special case for JS files.
         if ($tokens[$lastContent]['code'] === T_COMMA
             || $tokens[$lastContent]['code'] === T_SEMICOLON
@@ -92,5 +88,5 @@ class PostStatementCommentSniff implements PHP_CodeSniffer_Sniff
 
         $error = 'Comments may not appear after statements.';
         $phpcsFile->addError($error, $stackPtr, 'Found');
-    }//end process()
+    }
 }

@@ -42,7 +42,7 @@ class EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OPEN_TAG];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -69,7 +69,7 @@ class EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
         } else {
             $this->validateInlineEmbeddedPhp($phpcsFile, $stackPtr);
         }
-    }//end process()
+    }
 
     /**
      * Validates embedded PHP that exists on multiple lines.
@@ -160,7 +160,7 @@ class EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
             $error = 'Closing PHP tag must be on a line by itself';
             $phpcsFile->addError($error, $closingTag, 'ContentAfterEnd');
         }
-    }//end _validateMultilineEmbeddedPhp()
+    }
 
     /**
      * Validates embedded PHP that exists on one line.
@@ -254,5 +254,5 @@ class EmbeddedPhpSniff implements PHP_CodeSniffer_Sniff
             $data = [strlen($whitespace)];
             $phpcsFile->addError($error, $stackPtr, 'SpacingBeforeClose', $data);
         }
-    }//end _validateInlineEmbeddedPhp()
+    }
 }

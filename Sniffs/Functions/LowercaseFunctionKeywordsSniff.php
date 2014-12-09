@@ -48,7 +48,7 @@ class LowercaseFunctionKeywordsSniff implements PHP_CodeSniffer_Sniff
             T_PROTECTED,
             T_STATIC,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -73,5 +73,5 @@ class LowercaseFunctionKeywordsSniff implements PHP_CodeSniffer_Sniff
             ];
             $phpcsFile->addError($error, $stackPtr, 'FoundUppercase', $data);
         }
-    }//end process()
+    }
 }

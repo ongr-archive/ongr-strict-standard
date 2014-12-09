@@ -49,7 +49,7 @@ class PropertyLabelSpacingSniff implements PHP_CodeSniffer_Sniff
             T_PROPERTY,
             T_LABEL,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -75,5 +75,5 @@ class PropertyLabelSpacingSniff implements PHP_CodeSniffer_Sniff
             $error = 'There must be a single space after the colon in a property/label declaration';
             $phpcsFile->addError($error, $stackPtr, 'After');
         }
-    }//end process()
+    }
 }

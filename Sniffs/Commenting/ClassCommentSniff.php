@@ -68,7 +68,7 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
             T_TRAIT,
             T_INTERFACE,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -147,8 +147,8 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
 
                             return;
                         }
-                    }//end if
-                }//end if
+                    }
+                }
 
                 // Exactly one blank line before the class comment.
                 $prevTokenEnd = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
@@ -156,8 +156,8 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
                     $error = "There must be exactly one blank line before the {$name} comment";
                     $phpcsFile->addError($error, ($commentStart - 1), 'SpacingBefore');
                 }
-            }//end if
-        }//end if
+            }
+        }
 
         $commentString = $phpcsFile->getTokensAsString($commentStart, ($commentEnd - $commentStart + 1));
 
@@ -270,5 +270,5 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
             $error = "Additional blank lines found at end of {$name} comment";
             $this->currentFile->addError($error, $commentEnd, 'SpacingAfter');
         }
-    }//end process()
+    }
 }

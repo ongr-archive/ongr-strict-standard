@@ -52,7 +52,7 @@ class ForEachLoopDeclarationSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_FOREACH];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -148,7 +148,7 @@ class ForEachLoopDeclarationSniff implements PHP_CodeSniffer_Sniff
                     $phpcsFile->addError($error, $stackPtr, 'SpacingAfterArrow', $data);
                 }
             }
-        }//end if
+        }
 
         if ($tokens[($asToken - 1)]['code'] !== T_WHITESPACE) {
             $error = 'Expected 1 space before "as"; 0 found';

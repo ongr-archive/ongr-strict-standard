@@ -45,5 +45,5 @@ class FunctionDeclarationSniff extends PHP_CodeSniffer_Standards_AbstractPattern
             'function abc(...)',
             'abstract function abc(...);',
         ];
-    }//end getPatterns()
+    }
 }

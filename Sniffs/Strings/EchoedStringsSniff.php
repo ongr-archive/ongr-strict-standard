@@ -44,7 +44,7 @@ class EchoedStringsSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_ECHO];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -77,5 +77,5 @@ class EchoedStringsSniff implements PHP_CodeSniffer_Sniff
             $error = 'Echoed strings should not be bracketed';
             $phpcsFile->addError($error, $stackPtr, 'HasBracket');
         }
-    }//end process()
+    }
 }

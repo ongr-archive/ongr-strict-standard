@@ -49,5 +49,5 @@ class ConstantCaseSniff extends Generic_Sniffs_PHP_LowerCaseConstantSniff
             $sniff = new Generic_Sniffs_PHP_LowerCaseConstantSniff();
             $sniff->process($phpcsFile, $stackPtr);
         }
-    }//end process()
+    }
 }

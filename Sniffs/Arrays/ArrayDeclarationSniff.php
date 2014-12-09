@@ -44,7 +44,7 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
             T_ARRAY,
             T_OPEN_SHORT_ARRAY,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -156,7 +156,7 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                         $phpcsFile->addError($error, $nextArrow, 'SpaceAfterDoubleArrow', $data);
                     }
                 }
-            }//end while
+            }
 
             if ($valueCount > 0) {
                 // We have a multiple value array that is inside a condition or
@@ -190,11 +190,11 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                         ];
                         $phpcsFile->addError($error, $comma, 'SpaceBeforeComma', $data);
                     }
-                }//end foreach
-            }//end if
+                }
+            }
 
             return;
-        }//end if
+        }
 
         // Check the closing bracket is on a new line.
         $lastContent = $phpcsFile->findPrevious(T_WHITESPACE, ($arrayEnd - 1), $arrayStart, true);
@@ -299,11 +299,11 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                     $valueContent = $phpcsFile->findNext(T_WHITESPACE, ($valueContent + 1), $nextToken, true);
                     $indices[] = ['value' => $valueContent];
                     $singleUsed = true;
-                }//end if
+                }
 
                 $lastToken = T_COMMA;
                 continue;
-            }//end if
+            }
 
             if ($tokens[$nextToken]['code'] === T_DOUBLE_ARROW) {
                 if ($singleUsed === true) {
@@ -346,8 +346,8 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 $currentEntry['value'] = $nextContent;
                 $indices[] = $currentEntry;
                 $lastToken = T_DOUBLE_ARROW;
-            }//end if
-        }//end while
+            }
+        }
 
         /*
             This section checks for arrays that don't specify keys.
@@ -391,7 +391,7 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                     }
                 }
             }
-        }//end if
+        }
 
         /*
             Below the actual indentation of the array is checked.
@@ -480,8 +480,8 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                     $phpcsFile->addError($error, $nextComma, 'SpaceBeforeComma', $data);
                 }
             }
-        }//end foreach
-    }//end process()
+        }
+    }
 
     /**
      * @param PHP_CodeSniffer_File $phpcsFile

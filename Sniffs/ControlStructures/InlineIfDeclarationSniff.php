@@ -42,7 +42,7 @@ class InlineIfDeclarationSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_INLINE_THEN];
-    }//end register()
+    }
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -121,5 +121,5 @@ class InlineIfDeclarationSniff implements PHP_CodeSniffer_Sniff
             $data = [$spaceAfter];
             $phpcsFile->addError($error, $inlineElse, 'SpacingAfterElse', $data);
         }
-    }//end process()
+    }
 }

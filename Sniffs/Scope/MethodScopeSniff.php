@@ -39,7 +39,7 @@ class MethodScopeSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
     public function __construct()
     {
         parent::__construct([T_CLASS, T_INTERFACE], [T_FUNCTION]);
-    }//end __construct()
+    }
 
     /**
      * Processes the function tokens within the class.
@@ -66,5 +66,5 @@ class MethodScopeSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
             $data = [$methodName];
             $phpcsFile->addError($error, $stackPtr, 'Missing', $data);
         }
-    }//end processTokenWithinScope()
+    }
 }

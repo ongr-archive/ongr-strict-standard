@@ -61,7 +61,7 @@ class OperatorSpacingSniff implements PHP_CodeSniffer_Sniff
         return array_unique(
             array_merge($comparison, $operators, $assignment, $inlineIf)
         );
-    }//end register()
+    }
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -146,7 +146,7 @@ class OperatorSpacingSniff implements PHP_CodeSniffer_Sniff
             }
 
             return;
-        }//end if
+        }
 
         if ($tokens[$stackPtr]['code'] === T_MINUS) {
             // Check minus spacing, but make sure we aren't just assigning
@@ -189,7 +189,7 @@ class OperatorSpacingSniff implements PHP_CodeSniffer_Sniff
                 // Just trying to use a negative value; eg. myFunction($var, -2).
                 return;
             }
-        }//end if
+        }
 
         $operator = $tokens[$stackPtr]['content'];
 
@@ -218,5 +218,5 @@ class OperatorSpacingSniff implements PHP_CodeSniffer_Sniff
             ];
             $phpcsFile->addError($error, $stackPtr, 'SpacingAfter', $data);
         }
-    }//end process()
+    }
 }

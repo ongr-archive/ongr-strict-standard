@@ -43,7 +43,7 @@ class DocCommentAlignmentSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_DOC_COMMENT];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -135,7 +135,7 @@ class DocCommentAlignmentSniff implements PHP_CodeSniffer_Sniff
                         }
                     }
                 }
-            }//end foreach
+            }
 
             // Check the alignment of each asterisk.
             $currentColumn = strpos($content, '*');
@@ -152,6 +152,6 @@ class DocCommentAlignmentSniff implements PHP_CodeSniffer_Sniff
                 ($currentColumn - 1),
             ];
             $phpcsFile->addError($error, $commentPointer, 'SpaceBeforeAsterisk', $data);
-        }//end foreach
-    }//end process()
+        }
+    }
 }

@@ -55,7 +55,7 @@ class ClassDeclarationSniff extends PSR2_Sniffs_Classes_ClassDeclarationSniff
             $error = 'Only one interface or class is allowed in a file';
             $phpcsFile->addError($error, $nextClass, 'MultipleClasses');
         }
-    }//end process()
+    }
 
     /**
      * Processes the opening section of a class declaration.
@@ -90,7 +90,7 @@ class ClassDeclarationSniff extends PSR2_Sniffs_Classes_ClassDeclarationSniff
                     }
                 }
             }
-        }//end if
+        }
 
         $curlyBrace = $tokens[$stackPtr]['scope_opener'];
         $i = 1;
@@ -103,7 +103,7 @@ class ClassDeclarationSniff extends PSR2_Sniffs_Classes_ClassDeclarationSniff
             $error = 'Expected no blank lines after an opening brace, %s found';
             $phpcsFile->addError($error, $curlyBrace, 'OpenBraceBlankLines', $data);
         }
-    }//end processOpen()
+    }
 
     /**
      * Processes the closing section of a class declaration.
@@ -155,7 +155,7 @@ class ClassDeclarationSniff extends PSR2_Sniffs_Classes_ClassDeclarationSniff
                 ];
                 $phpcsFile->addError($error, $closeBrace, 'NewlinesAfterCloseBrace', $data);
             }
-        }//end if
+        }
 
         // Check the closing brace is on it's own line, but allow
         // for comments like "//end class".
@@ -167,5 +167,5 @@ class ClassDeclarationSniff extends PSR2_Sniffs_Classes_ClassDeclarationSniff
             $data = [$tokens[$stackPtr]['content']];
             $phpcsFile->addError($error, $closeBrace, 'CloseBraceSameLine', $data);
         }
-    }//end processClose()
+    }
 }

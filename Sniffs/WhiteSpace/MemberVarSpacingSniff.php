@@ -81,14 +81,14 @@ class MemberVarSpacingSniff extends PHP_CodeSniffer_Standards_AbstractVariableSn
                 true
             );
             $foundLines = ($tokens[$prevLineToken]['line'] - $tokens[$prevContent]['line']);
-        }//end if
+        }
 
         if ($foundLines !== 1) {
             $error = 'Expected 1 blank line before member var; %s found';
             $data = [$foundLines];
             $phpcsFile->addError($error, $stackPtr, 'Incorrect', $data);
         }
-    }//end processMemberVar()
+    }
 
     /**
      * Processes normal variables.
@@ -101,7 +101,7 @@ class MemberVarSpacingSniff extends PHP_CodeSniffer_Standards_AbstractVariableSn
     protected function processVariable(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         // We don't care about normal variables.
-    }//end processVariable()
+    }
 
     /**
      * Processes variables in double quoted strings.
@@ -114,5 +114,5 @@ class MemberVarSpacingSniff extends PHP_CodeSniffer_Standards_AbstractVariableSn
     protected function processVariableInString(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         // We don't care about normal variables.
-    }//end processVariableInString()
+    }
 }

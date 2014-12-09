@@ -42,7 +42,7 @@ class LowercasePHPFunctionsSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_STRING];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -112,5 +112,5 @@ class LowercasePHPFunctionsSniff implements PHP_CodeSniffer_Sniff
             ];
             $phpcsFile->addError($error, $stackPtr, 'CallUppercase', $data);
         }
-    }//end process()
+    }
 }

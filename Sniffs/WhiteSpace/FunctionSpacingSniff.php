@@ -47,7 +47,7 @@ class FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_FUNCTION];
-    }//end register()
+    }
 
     /**
      * Processes this sniff when one of its tokens is encountered.
@@ -181,8 +181,8 @@ class FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
                 }
 
                 $i--;
-            }//end while
-        }//end if
+            }
+        }
 
         if ($foundLines !== $this->spacing) {
             $error = 'Expected %s blank line';
@@ -197,5 +197,5 @@ class FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
             ];
             $phpcsFile->addError($error, $stackPtr, 'Before', $data);
         }
-    }//end process()
+    }
 }

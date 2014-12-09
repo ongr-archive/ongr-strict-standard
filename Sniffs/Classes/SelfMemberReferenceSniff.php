@@ -45,7 +45,7 @@ class SelfMemberReferenceSniff extends PHP_CodeSniffer_Standards_AbstractScopeSn
     public function __construct()
     {
         parent::__construct([T_CLASS], [T_DOUBLE_COLON]);
-    }//end __construct()
+    }
 
     /**
      * Processes the function tokens within the class.
@@ -92,7 +92,7 @@ class SelfMemberReferenceSniff extends PHP_CodeSniffer_Standards_AbstractScopeSn
                     return;
                 }
             }
-        }//end if
+        }
 
         if ($tokens[($stackPtr - 1)]['code'] === T_WHITESPACE) {
             $found = strlen($tokens[($stackPtr - 1)]['content']);
@@ -107,7 +107,7 @@ class SelfMemberReferenceSniff extends PHP_CodeSniffer_Standards_AbstractScopeSn
             $data = [$found];
             $phpcsFile->addError($error, $calledClassName, 'SpaceAfter', $data);
         }
-    }//end processTokenWithinScope()
+    }
 
     /**
      * Returns the declaration names for classes/interfaces/functions with a namespace.
@@ -131,7 +131,7 @@ class SelfMemberReferenceSniff extends PHP_CodeSniffer_Standards_AbstractScopeSn
         $nameParts = array_reverse($nameParts);
 
         return implode('', $nameParts);
-    }//end getDeclarationNameWithNamespace()
+    }
 
     /**
      * Returns the namespace declaration of a file.
@@ -156,5 +156,5 @@ class SelfMemberReferenceSniff extends PHP_CodeSniffer_Standards_AbstractScopeSn
         }
 
         return $namespace;
-    }//end getNamespaceOfScope
+    }
 }

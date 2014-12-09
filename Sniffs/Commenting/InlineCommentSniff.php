@@ -54,7 +54,7 @@ class InlineCommentSniff implements PHP_CodeSniffer_Sniff
             T_COMMENT,
             T_DOC_COMMENT,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -122,8 +122,8 @@ class InlineCommentSniff implements PHP_CodeSniffer_Sniff
                 if ($tokens[$prevToken]['code'] === T_OPEN_TAG) {
                     return;
                 }
-            }//end if
-        }//end if
+            }
+        }
 
         if ($tokens[$stackPtr]['content']{0} === '#') {
             $error = 'Perl-style comments are not allowed; use "// Comment" instead';
@@ -195,7 +195,7 @@ class InlineCommentSniff implements PHP_CodeSniffer_Sniff
                 $comment,
             ];
             $phpcsFile->addError($error, $stackPtr, 'SpacingBefore', $data);
-        }//end if
+        }
 
         // The below section determines if a comment block is correctly capitalised,
         // and ends in a full-stop. It will find the last comment in a block, and
@@ -265,5 +265,5 @@ class InlineCommentSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $stackPtr, 'InvalidEndChar', $data);
             }
         }
-    }//end process()
+    }
 }

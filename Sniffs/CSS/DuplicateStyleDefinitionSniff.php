@@ -45,7 +45,7 @@ class DuplicateStyleDefinitionSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OPEN_CURLY_BRACKET];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -82,6 +82,6 @@ class DuplicateStyleDefinitionSniff implements PHP_CodeSniffer_Sniff
             }
 
             $next = $phpcsFile->findNext(T_STYLE, ($next + 1), $end);
-        }//end while
-    }//end process()
+        }
+    }
 }

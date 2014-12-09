@@ -43,7 +43,7 @@ class ConcatenationSpacingSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_STRING_CONCAT];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -63,5 +63,5 @@ class ConcatenationSpacingSniff implements PHP_CodeSniffer_Sniff
             $message = 'Concat operator must be surrounded by spaces';
             $phpcsFile->addError($message, $stackPtr, 'MustExist');
         }
-    }//end process()
+    }
 }

@@ -52,7 +52,7 @@ class LanguageConstructSpacingSniff implements PHP_CodeSniffer_Sniff
             T_REQUIRE_ONCE,
             T_NEW,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -88,5 +88,5 @@ class LanguageConstructSpacingSniff implements PHP_CodeSniffer_Sniff
             ];
             $phpcsFile->addError($error, $stackPtr, 'Incorrect', $data);
         }
-    }//end process()
+    }
 }

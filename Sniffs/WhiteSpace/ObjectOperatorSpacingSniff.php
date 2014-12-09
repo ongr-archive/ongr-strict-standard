@@ -43,7 +43,7 @@ class ObjectOperatorSpacingSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OBJECT_OPERATOR];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -63,5 +63,5 @@ class ObjectOperatorSpacingSniff implements PHP_CodeSniffer_Sniff
             $error = 'Space found after object operator';
             $phpcsFile->addError($error, $stackPtr, 'After');
         }
-    }//end process()
+    }
 }

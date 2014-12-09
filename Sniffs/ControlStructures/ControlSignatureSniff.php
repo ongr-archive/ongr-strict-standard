@@ -57,5 +57,5 @@ class ControlSignatureSniff extends PHP_CodeSniffer_Standards_AbstractPatternSni
             '} elseif (...) {EOL',
             '} else {EOL',
         ];
-    }//end getPatterns()
+    }
 }

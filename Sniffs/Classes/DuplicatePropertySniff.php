@@ -45,7 +45,7 @@ class DuplicatePropertySniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OBJECT];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -85,9 +85,9 @@ class DuplicatePropertySniff implements PHP_CodeSniffer_Sniff
                 }
 
                 $properties[$propName] = $next;
-            }//end if
+            }
 
             $next = $phpcsFile->findNext($wantedTokens, ($next + 1), $end);
-        }//end while
-    }//end process()
+        }
+    }
 }

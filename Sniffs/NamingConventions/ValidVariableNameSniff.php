@@ -46,7 +46,7 @@ class ValidVariableNameSniff extends PHP_CodeSniffer_Standards_AbstractVariableS
      */
     protected function processVariable(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-    }//end processVariable()
+    }
 
     /**
      * Processes class member variables.
@@ -88,7 +88,7 @@ class ValidVariableNameSniff extends PHP_CodeSniffer_Standards_AbstractVariableS
             $error = 'Member variable "%s" is not in valid camel caps format';
             $phpcsFile->addError($error, $stackPtr, 'MemberNotCamelCaps', $errorData);
         }
-    }//end processMemberVar()
+    }
 
     /**
      * Processes the variable found within a double quoted string.
@@ -101,5 +101,5 @@ class ValidVariableNameSniff extends PHP_CodeSniffer_Standards_AbstractVariableS
      */
     protected function processVariableInString(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-    }//end processVariableInString()
+    }
 }

@@ -46,7 +46,7 @@ class ColonSpacingSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_COLON];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -93,6 +93,6 @@ class ColonSpacingSniff implements PHP_CodeSniffer_Sniff
                 $error = 'Expected 1 space after colon in style definition; newline found';
                 $phpcsFile->addError($error, $stackPtr, 'AfterNewline');
             }
-        }//end if
-    }//end process()
+        }
+    }
 }
