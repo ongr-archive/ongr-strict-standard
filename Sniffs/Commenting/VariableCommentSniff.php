@@ -345,15 +345,24 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
      */
     protected function processVarComment(PHP_CodeSniffer_CommentParser_SingleElement $var, $errorPos)
     {
-        $comment = array_slice($var->getTokens(), 3);
+        $comment = $var->getContent();
 
-        $last = trim($comment[count($comment) - 1]);
-        while (empty($last)) {
-            unset($comment[count($comment) - 1]);
-            $last = trim($comment[count($comment) - 1]);
+        // Pattern from PHP_CodeSniffer::suggestType.
+        $comment = trim(preg_replace('/^array\(\s*([^\s^=^>]*)(\s*=>\s*(.*))?\s*\)/i', '', $comment, 1, $count));
+
+        if (!$count) {
+            $space = strpos($comment, ' ');
+            if ($space === false) {
+                return;
+            }
+            $comment = substr($comment, $space + 1);
         }
 
-        if (!in_array(substr($last, -1, 1), ['.', '?', '!'])) {
+        if ($comment === '') {
+            return;
+        }
+
+        if (!in_array(substr($comment, -1, 1), ['.', '?', '!'])) {
             $this->currentFile->addError(
                 'Variable comments must end in full-stops, exclamation marks, or question marks',
                 $errorPos,
@@ -361,7 +370,7 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
             );
         }
 
-        $firstLetter = substr($comment[0], 0, 1);
+        $firstLetter = substr($comment, 0, 1);
         if (strtoupper($firstLetter) !== $firstLetter) {
             $this->currentFile->addError(
                 'Variable comments must must start with a capital letter',
