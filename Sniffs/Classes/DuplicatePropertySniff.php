@@ -33,7 +33,7 @@ use PHP_CodeSniffer_Sniff;
 class DuplicatePropertySniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * @var array A list of tokenizers this sniff supports
+     * @var array A list of tokenizers this sniff supports.
      */
     public $supportedTokenizers = ['JS'];
 
