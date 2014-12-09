@@ -76,10 +76,6 @@ class PostStatementCommentSniff implements PHP_CodeSniffer_Sniff
             return;
         }
 
-        if ($tokens[$lastContent]['code'] === T_CLOSE_CURLY_BRACKET) {
-            return;
-        }
-
         // Special case for JS files.
         if ($tokens[$lastContent]['code'] === T_COMMA
             || $tokens[$lastContent]['code'] === T_SEMICOLON
