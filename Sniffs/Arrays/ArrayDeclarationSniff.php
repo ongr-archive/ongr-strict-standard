@@ -235,9 +235,24 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 $indices[] = ['value' => $nextToken];
                 if ($tokens[$nextToken]['code'] == T_OPEN_SHORT_ARRAY) {
                     $nextToken = $tokens[$nextToken]['bracket_closer'];
-                    continue;
+                } else {
+                    $nextToken = $tokens[$nextToken]['parenthesis_closer'];
                 }
-                $nextToken = $tokens[$nextToken]['parenthesis_closer'];
+                // If array declaration is the only thing on last line other checks
+                // will not have any chance to check for comma so we need to do it now.
+                $multiLine = $tokens[$arrayStart]['line'] !== $tokens[$arrayEnd]['line'];
+                $next = $phpcsFile->findNext(
+                    [T_DOUBLE_ARROW, T_COMMA, T_ARRAY, T_OPEN_SHORT_ARRAY, T_OPEN_PARENTHESIS],
+                    $nextToken,
+                    $arrayEnd
+                );
+                if ($multiLine && !$next) {
+                    // There is no more content which means missing comma.
+                    $error = 'Each line in an array declaration must end in a comma';
+                    $phpcsFile->addError($error, $nextToken, 'NoCommaAfterLast');
+
+                    return;
+                }
                 continue;
             }
 
@@ -443,42 +458,39 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $index['index'], 'KeyNotAligned', $data);
                 continue;
             }
+
             // Check each line ends in a comma.
-            if ($tokens[$index['value']]['code'] !== T_ARRAY
-                && $tokens[$index['value']]['code'] !== T_OPEN_SHORT_ARRAY
-            ) {
-                $valueLine = $tokens[$index['value']]['line'];
-                $nextComma = false;
-                for ($i = ($index['value'] + 1); $i < $arrayEnd; $i++) {
-                    // Skip bracketed statements, like function calls.
-                    if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS) {
-                        $i = $tokens[$i]['parenthesis_closer'];
-                        $valueLine = $tokens[$i]['line'];
-                        continue;
-                    }
-
-                    if ($tokens[$i]['code'] === T_COMMA) {
-                        $nextComma = $i;
-                        break;
-                    }
+            $valueLine = $tokens[$index['value']]['line'];
+            $nextComma = false;
+            for ($i = ($index['value'] + 1); $i < $arrayEnd; $i++) {
+                // Skip bracketed statements, like function calls.
+                if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS) {
+                    $i = $tokens[$i]['parenthesis_closer'];
+                    $valueLine = $tokens[$i]['line'];
+                    continue;
                 }
 
-                if (($nextComma === false) || ($tokens[$nextComma]['line'] !== $valueLine)) {
-                    $error = 'Each line in an array declaration must end in a comma';
-                    $phpcsFile->addError($error, $index['value'], 'NoComma');
+                if ($tokens[$i]['code'] === T_COMMA) {
+                    $nextComma = $i;
+                    break;
                 }
+            }
 
-                // Check that there is no space before the comma.
-                if ($nextComma !== false && $tokens[($nextComma - 1)]['code'] === T_WHITESPACE) {
-                    $content = $tokens[($nextComma - 2)]['content'];
-                    $spaceLength = strlen($tokens[($nextComma - 1)]['content']);
-                    $error = 'Expected 0 spaces between "%s" and comma; %s found';
-                    $data = [
-                        $content,
-                        $spaceLength,
-                    ];
-                    $phpcsFile->addError($error, $nextComma, 'SpaceBeforeComma', $data);
-                }
+            if (($nextComma === false) || ($tokens[$nextComma]['line'] !== $valueLine)) {
+                $error = 'Each line in an array declaration must end in a comma';
+                $phpcsFile->addError($error, $index['value'], 'NoComma');
+            }
+
+            // Check that there is no space before the comma.
+            if ($nextComma !== false && $tokens[($nextComma - 1)]['code'] === T_WHITESPACE) {
+                $content = $tokens[($nextComma - 2)]['content'];
+                $spaceLength = strlen($tokens[($nextComma - 1)]['content']);
+                $error = 'Expected 0 spaces between "%s" and comma; %s found';
+                $data = [
+                    $content,
+                    $spaceLength,
+                ];
+                $phpcsFile->addError($error, $nextComma, 'SpaceBeforeComma', $data);
             }
         }//end foreach
     }//end process()
