@@ -154,7 +154,8 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
                 }
             } else {
                 // There is no long comment.
-                $error = 'Multiline variable comment should have both long and short comments';
+                $error = 'Short description should be after variable type '
+                    . 'or there should be both long and short description';
                 $phpcsFile->addError($error, ($commentStart + $newlineCount), 'BadMultilineVariable');
             }
 
