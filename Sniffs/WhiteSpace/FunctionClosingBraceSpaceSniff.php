@@ -50,7 +50,7 @@ class FunctionClosingBraceSpaceSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_FUNCTION];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -109,5 +109,5 @@ class FunctionClosingBraceSpaceSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $closeBrace, 'SpacingBeforeClose', $data);
             }
         }
-    }//end process()
+    }
 }

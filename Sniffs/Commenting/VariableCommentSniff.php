@@ -156,7 +156,7 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
                 // There is no long comment.
                 $error = 'Multiline variable comment should have both long and short comments';
                 $phpcsFile->addError($error, ($commentStart + $newlineCount), 'BadMultilineVariable');
-            }//end if
+            }
 
             // Short description must be single line and end with a full stop.
             $testShort = trim($short);
@@ -175,7 +175,7 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
                 $error = 'Variable comment short description must end with a full stop';
                 $phpcsFile->addError($error, ($commentStart + 1), 'ShortFullStop');
             }
-        }//end if
+        }
 
         // Exactly one blank line before tags.
         $tags = $this->commentParser->getTagOrders();
@@ -207,7 +207,7 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
             $error = 'Additional blank lines found at end of variable comment';
             $this->currentFile->addError($error, $commentEnd, 'SpacingAfter');
         }
-    }//end processMemberVar()
+    }
 
     /**
      * Process the var tag.
@@ -272,8 +272,8 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
         } else {
             $error = 'Missing @var tag in variable comment';
             $this->currentFile->addError($error, $commentEnd, 'MissingVar');
-        }//end if
-    }//end processVar()
+        }
+    }
 
     /**
      * Process the see tags.
@@ -304,7 +304,7 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
                 }
             }
         }
-    }//end processSees()
+    }
 
     /**
      * Called to process a normal variable.
@@ -319,7 +319,7 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
      */
     protected function processVariable(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-    }//end processVariable()
+    }
 
     /**
      * Called to process variables found in double quoted strings.

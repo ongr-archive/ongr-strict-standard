@@ -67,7 +67,7 @@ class ValidFunctionNameSniff extends PEAR_Sniffs_NamingConventions_ValidFunction
             $error = 'Function name "%s" is not in camel caps format';
             $phpcsFile->addError($error, $stackPtr, 'NotCamelCaps', $errorData);
         }
-    }//end processTokenOutsideScope()
+    }
 
     /**
      * {@inheritdoc}

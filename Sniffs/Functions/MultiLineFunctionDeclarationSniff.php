@@ -66,7 +66,7 @@ class MultiLineFunctionDeclarationSniff extends PEAR_Sniffs_Functions_FunctionDe
 
         $openBracket = $phpcsFile->findNext(T_OPEN_PARENTHESIS, ($use + 1), null);
         $this->processBracket($phpcsFile, $openBracket, $tokens, 'use');
-    }//end processMultiLineDeclaration()
+    }
 
     /**
      * Processes the contents of a single set of brackets.
@@ -125,5 +125,5 @@ class MultiLineFunctionDeclarationSniff extends PEAR_Sniffs_Functions_FunctionDe
                 $lastCommaLine = $tokens[$i]['line'];
             }
         }
-    }//end processBracket()
+    }
 }

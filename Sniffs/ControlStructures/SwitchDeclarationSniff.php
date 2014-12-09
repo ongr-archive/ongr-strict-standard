@@ -57,7 +57,7 @@ class SwitchDeclarationSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_SWITCH];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -205,7 +205,7 @@ class SwitchDeclarationSniff implements PHP_CodeSniffer_Sniff
                         $error = 'Blank lines are not allowed after ' . strtoupper($type) . ' statements';
                         $phpcsFile->addError($error, $nextCase, 'SpacingAfter' . $type);
                     }
-                }//end if
+                }
 
                 if ($tokens[$nextBreak]['code'] === T_BREAK) {
                     if ($type === 'Case') {
@@ -246,13 +246,13 @@ class SwitchDeclarationSniff implements PHP_CodeSniffer_Sniff
                             $error = 'Comment required for empty DEFAULT case';
                             $phpcsFile->addError($error, $nextCase, 'EmptyDefault');
                         }
-                    }//end if
-                }//end if
+                    }
+                }
             } elseif ($type === 'Default') {
                 $error = 'DEFAULT case must have a breaking statement';
                 $phpcsFile->addError($error, $nextCase, 'DefaultNoBreak');
-            }//end if
-        }//end while
+            }
+        }
 
         if ($foundDefault === false) {
             $error = 'All SWITCH statements must contain a DEFAULT case';
@@ -268,5 +268,5 @@ class SwitchDeclarationSniff implements PHP_CodeSniffer_Sniff
             $error = 'SWITCH statements must contain at least one CASE statement';
             $phpcsFile->addError($error, $stackPtr, 'MissingCase');
         }
-    }//end process()
+    }
 }

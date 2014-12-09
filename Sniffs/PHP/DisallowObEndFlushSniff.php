@@ -42,7 +42,7 @@ class DisallowObEndFlushSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_STRING];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -64,5 +64,5 @@ class DisallowObEndFlushSniff implements PHP_CodeSniffer_Sniff
                 'Found'
             );
         }
-    }//end process()
+    }
 }

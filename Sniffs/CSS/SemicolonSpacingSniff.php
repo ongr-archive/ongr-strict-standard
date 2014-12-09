@@ -45,7 +45,7 @@ class SemicolonSpacingSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_STYLE];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -74,5 +74,5 @@ class SemicolonSpacingSniff implements PHP_CodeSniffer_Sniff
             $data = [$length];
             $phpcsFile->addError($error, $stackPtr, 'SpaceFound', $data);
         }
-    }//end process()
+    }
 }

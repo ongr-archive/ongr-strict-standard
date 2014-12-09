@@ -47,7 +47,7 @@ class JSLintSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OPEN_TAG];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -97,7 +97,7 @@ class JSLintSniff implements PHP_CodeSniffer_Sniff
                 if ($lineToken !== null) {
                     $phpcsFile->addWarning($message, $lineToken, 'ExternalTool');
                 }
-            }//end foreach
-        }//end if
-    }//end process()
+            }
+        }
+    }
 }

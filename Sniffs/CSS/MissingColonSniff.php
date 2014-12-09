@@ -45,7 +45,7 @@ class MissingColonSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OPEN_CURLY_BRACKET];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -89,6 +89,6 @@ class MissingColonSniff implements PHP_CodeSniffer_Sniff
             } elseif ($tokens[$i]['code'] === T_COLON) {
                 $foundColon = $i;
             }
-        }//end for
-    }//end process()
+        }
+    }
 }

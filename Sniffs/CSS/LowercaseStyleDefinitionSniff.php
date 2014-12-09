@@ -45,7 +45,7 @@ class LowercaseStyleDefinitionSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OPEN_CURLY_BRACKET];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -97,6 +97,6 @@ class LowercaseStyleDefinitionSniff implements PHP_CodeSniffer_Sniff
                     $phpcsFile->addError($error, $i, 'FoundUpper', $data);
                 }
             }
-        }//end for
-    }//end process()
+        }
+    }
 }

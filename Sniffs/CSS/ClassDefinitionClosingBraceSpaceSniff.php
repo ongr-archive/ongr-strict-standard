@@ -46,7 +46,7 @@ class ClassDefinitionClosingBraceSpaceSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_CLOSE_CURLY_BRACKET];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -94,5 +94,5 @@ class ClassDefinitionClosingBraceSpaceSniff implements PHP_CodeSniffer_Sniff
             $data = [$num];
             $phpcsFile->addError($error, $stackPtr, 'SpacingBeforeClose', $data);
         }
-    }//end process()
+    }
 }

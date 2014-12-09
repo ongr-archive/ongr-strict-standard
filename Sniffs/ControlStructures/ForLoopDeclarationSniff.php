@@ -60,7 +60,7 @@ class ForLoopDeclarationSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_FOR];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -172,7 +172,7 @@ class ForLoopDeclarationSniff implements PHP_CodeSniffer_Sniff
                         }
                     }
                 }
-            }//end if
-        }//end if
-    }//end process()
+            }
+        }
+    }
 }

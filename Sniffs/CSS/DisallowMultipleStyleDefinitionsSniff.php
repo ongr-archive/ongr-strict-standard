@@ -45,7 +45,7 @@ class DisallowMultipleStyleDefinitionsSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_STYLE];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -73,5 +73,5 @@ class DisallowMultipleStyleDefinitionsSniff implements PHP_CodeSniffer_Sniff
             $error = 'Each style definition must be on a line by itself';
             $phpcsFile->addError($error, $next, 'Found');
         }
-    }//end process()
+    }
 }

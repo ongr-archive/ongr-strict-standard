@@ -42,7 +42,7 @@ class InnerFunctionsSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_FUNCTION];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -67,5 +67,5 @@ class InnerFunctionsSniff implements PHP_CodeSniffer_Sniff
             $error = 'The use of inner functions is forbidden';
             $phpcsFile->addError($error, $stackPtr, 'NotAllowed');
         }
-    }//end process()
+    }
 }

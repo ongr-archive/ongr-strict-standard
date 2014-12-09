@@ -50,7 +50,7 @@ class NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
             T_THROW,
             T_EXIT,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -142,12 +142,12 @@ class NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
                             $lastLine = $line;
                         }
                     }
-                }//end if
+                }
 
                 // That's all we have to check for these types of statements.
                 return;
             }
-        }//end if
+        }
 
         // This token may be part of an inline condition.
         // If we find a closing parenthesis that belongs to a condition
@@ -200,7 +200,7 @@ class NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
                         break;
                     }
                 }
-            }//end for
+            }
 
             if ($nextOpener === null) {
                 $end = $closer;
@@ -215,7 +215,7 @@ class NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
 
             // Throw an error for all lines until the end of the file.
             $end = ($phpcsFile->numTokens - 1);
-        }//end if
+        }
 
         // Find the semicolon that ends this statement, skipping
         // nested statements like FOR loops and closures.
@@ -237,7 +237,7 @@ class NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
             if ($tokens[$start]['code'] === T_SEMICOLON) {
                 break;
             }
-        }//end for
+        }
 
         $lastLine = $tokens[$start]['line'];
         for ($i = ($start + 1); $i < $end; $i++) {
@@ -265,6 +265,6 @@ class NonExecutableCodeSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addWarning($warning, $i, 'Unreachable', $data);
                 $lastLine = $line;
             }
-        }//end for
-    }//end process()
+        }
+    }
 }

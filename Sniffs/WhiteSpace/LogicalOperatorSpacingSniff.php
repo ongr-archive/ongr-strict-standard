@@ -51,7 +51,7 @@ class LogicalOperatorSpacingSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return PHP_CodeSniffer_Tokens::$booleanOperators;
-    }//end register()
+    }
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -97,5 +97,5 @@ class LogicalOperatorSpacingSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $stackPtr, 'TooMuchSpaceAfter', $data);
             }
         }
-    }//end process()
+    }
 }

@@ -44,7 +44,7 @@ class DisallowMultipleAssignmentsSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_EQUAL];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -188,5 +188,5 @@ class DisallowMultipleAssignmentsSniff implements PHP_CodeSniffer_Sniff
             $error = 'Assignments must be the first block of code on a line';
             $phpcsFile->addError($error, $stackPtr, 'Found');
         }
-    }//end process()
+    }
 }

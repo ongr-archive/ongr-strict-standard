@@ -60,7 +60,7 @@ class ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
             T_ELSE,
             T_ELSEIF,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -93,7 +93,7 @@ class ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
                 $data = [$gap];
                 $phpcsFile->addError($error, ($parenCloser - 1), 'SpaceBeforeCloseBrace', $data);
             }
-        }//end if
+        }
 
         if (isset($tokens[$stackPtr]['scope_closer']) === false) {
             return;
@@ -158,7 +158,7 @@ class ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
             ) {
                 $trailingContent = $nextCode;
             }
-        }//end if
+        }
 
         if ($tokens[$trailingContent]['code'] === T_ELSE) {
             if ($tokens[$stackPtr]['code'] === T_IF) {
@@ -191,5 +191,5 @@ class ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $scopeCloser, 'LineAfterClose');
             }
         }
-    }//end process()
+    }
 }

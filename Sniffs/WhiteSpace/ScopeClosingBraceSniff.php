@@ -43,7 +43,7 @@ class ScopeClosingBraceSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return PHP_CodeSniffer_Tokens::$scopeOpeners;
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -104,5 +104,5 @@ class ScopeClosingBraceSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $scopeEnd, 'Indent', $data);
             }
         }
-    }//end process()
+    }
 }

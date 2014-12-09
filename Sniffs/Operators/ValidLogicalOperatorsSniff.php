@@ -47,7 +47,7 @@ class ValidLogicalOperatorsSniff implements PHP_CodeSniffer_Sniff
             T_LOGICAL_OR,
             T_LOGICAL_XOR,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -79,5 +79,5 @@ class ValidLogicalOperatorsSniff implements PHP_CodeSniffer_Sniff
             $replacements[$operator],
         ];
         $phpcsFile->addError($error, $stackPtr, 'NotAllowed', $data);
-    }//end process()
+    }
 }

@@ -53,7 +53,7 @@ class LowercaseDeclarationSniff implements PHP_CodeSniffer_Sniff
             T_TRY,
             T_CATCH,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -78,5 +78,5 @@ class LowercaseDeclarationSniff implements PHP_CodeSniffer_Sniff
             ];
             $phpcsFile->addError($error, $stackPtr, 'FoundUppercase', $data);
         }
-    }//end process()
+    }
 }

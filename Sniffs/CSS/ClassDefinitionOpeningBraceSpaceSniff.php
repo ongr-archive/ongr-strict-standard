@@ -47,7 +47,7 @@ class ClassDefinitionOpeningBraceSpaceSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OPEN_CURLY_BRACKET];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -77,7 +77,7 @@ class ClassDefinitionOpeningBraceSpaceSniff implements PHP_CodeSniffer_Sniff
                 $data = [$length];
                 $phpcsFile->addError($error, $stackPtr, 'Before', $data);
             }
-        }//end if
+        }
 
         $next = $phpcsFile->findNext(PHP_CodeSniffer_Tokens::$emptyTokens, ($stackPtr + 1), null, true);
         if ($next === false) {
@@ -109,5 +109,5 @@ class ClassDefinitionOpeningBraceSpaceSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $stackPtr, 'After', $data);
             }
         }
-    }//end process()
+    }
 }

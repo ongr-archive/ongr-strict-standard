@@ -67,7 +67,7 @@ class SuperfluousWhitespaceSniff implements PHP_CodeSniffer_Sniff
             T_WHITESPACE,
             T_COMMENT,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this sniff, when one of its tokens is encountered.
@@ -113,7 +113,7 @@ class SuperfluousWhitespaceSniff implements PHP_CodeSniffer_Sniff
                         return;
                     }
                 }
-            }//end if
+            }
 
             $phpcsFile->addError('Additional whitespace found at start of file', $stackPtr, 'StartFile');
         } elseif ($tokens[$stackPtr]['code'] === T_CLOSE_TAG) {
@@ -215,6 +215,6 @@ class SuperfluousWhitespaceSniff implements PHP_CodeSniffer_Sniff
                     }
                 }
             }
-        }//end if
-    }//end process()
+        }
+    }
 }

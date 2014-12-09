@@ -51,7 +51,7 @@ class FunctionCommentThrowTagSniff extends PHP_CodeSniffer_Standards_AbstractSco
     public function __construct()
     {
         parent::__construct([T_FUNCTION], [T_THROW]);
-    }//end __construct()
+    }
 
     /**
      * Processes the function tokens within the class.
@@ -162,12 +162,12 @@ class FunctionCommentThrowTagSniff extends PHP_CodeSniffer_Standards_AbstractSco
                                 ($endException - $currException)
                             );
                         }
-                    }//end if
-                }//end if
+                    }
+                }
 
                 $currPos = $phpcsFile->findNext(T_THROW, ($currPos + 1), $currScopeEnd);
-            }//end while
-        }//end if
+            }
+        }
 
         // Only need one @throws tag for each type of exception thrown.
         $throwTokens = array_unique($throwTokens);
@@ -220,6 +220,6 @@ class FunctionCommentThrowTagSniff extends PHP_CodeSniffer_Standards_AbstractSco
                     }
                 }
             }
-        }//end if
-    }//end processTokenWithinScope()
+        }
+    }
 }

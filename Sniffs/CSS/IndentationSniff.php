@@ -50,7 +50,7 @@ class IndentationSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OPEN_TAG];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -118,6 +118,6 @@ class IndentationSniff implements PHP_CodeSniffer_Sniff
                 ];
                 $phpcsFile->addError($error, $i, 'Incorrect', $data);
             }
-        }//end foreach
-    }//end process()
+        }
+    }
 }

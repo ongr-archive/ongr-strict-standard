@@ -46,7 +46,7 @@ class ObjectMemberCommaSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_CLOSE_CURLY_BRACKET];
-    }//end register()
+    }
 
     /**
      * Process the tokens that this sniff is listening for.
@@ -75,5 +75,5 @@ class ObjectMemberCommaSniff implements PHP_CodeSniffer_Sniff
             $error = 'Last member of object must not be followed by a comma';
             $phpcsFile->addError($error, $prev, 'Missing');
         }
-    }//end process()
+    }
 }

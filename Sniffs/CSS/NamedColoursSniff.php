@@ -72,7 +72,7 @@ class NamedColoursSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_STRING];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -98,5 +98,5 @@ class NamedColoursSniff implements PHP_CodeSniffer_Sniff
             $error = 'Named colours are forbidden; use hex, rgb, or rgba values instead';
             $phpcsFile->addError($error, $stackPtr, 'Forbidden');
         }
-    }//end process()
+    }
 }

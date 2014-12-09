@@ -61,5 +61,5 @@ class ForbiddenFunctionsSniff extends Generic_Sniffs_PHP_ForbiddenFunctionsSniff
         $tokens[] = T_PRINT;
 
         return $tokens;
-    }//end register()
+    }
 }

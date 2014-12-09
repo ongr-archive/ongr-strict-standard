@@ -42,7 +42,7 @@ class GlobalFunctionSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_FUNCTION];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -70,5 +70,5 @@ class GlobalFunctionSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addWarning($error, $stackPtr, 'Found', $data);
             }
         }
-    }//end process()
+    }
 }

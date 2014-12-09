@@ -45,7 +45,7 @@ class OpacitySniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_STYLE];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -96,6 +96,6 @@ class OpacitySniff implements PHP_CodeSniffer_Sniff
                 $error = 'Opacity values must be between 0 and 1';
                 $phpcsFile->addError($error, $next, 'Invalid');
             }
-        }//end if
-    }//end process()
+        }
+    }
 }

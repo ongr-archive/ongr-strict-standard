@@ -61,7 +61,7 @@ class ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_STYLE];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -153,5 +153,5 @@ class ShorthandSizeSniff implements PHP_CodeSniffer_Sniff
         ];
 
         $phpcsFile->addError($error, $stackPtr, 'NotUsed', $data);
-    }//end process()
+    }
 }

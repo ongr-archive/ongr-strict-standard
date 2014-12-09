@@ -46,7 +46,7 @@ class ScopeKeywordSpacingSniff implements PHP_CodeSniffer_Sniff
         $register[] = T_STATIC;
 
         return $register;
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -86,5 +86,5 @@ class ScopeKeywordSpacingSniff implements PHP_CodeSniffer_Sniff
             $data = [$tokens[$stackPtr]['content']];
             $phpcsFile->addError($error, $stackPtr, 'Incorrect', $data);
         }
-    }//end process()
+    }
 }

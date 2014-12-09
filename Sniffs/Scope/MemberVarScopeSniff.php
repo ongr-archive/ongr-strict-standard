@@ -51,7 +51,7 @@ class MemberVarScopeSniff extends PHP_CodeSniffer_Standards_AbstractVariableSnif
             $data = [$tokens[$stackPtr]['content']];
             $phpcsFile->addError($error, $stackPtr, 'Missing', $data);
         }
-    }//end processMemberVar()
+    }
 
     /**
      * Processes normal variables.
@@ -64,7 +64,7 @@ class MemberVarScopeSniff extends PHP_CodeSniffer_Standards_AbstractVariableSnif
     protected function processVariable(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         // We don't care about normal variables.
-    }//end processVariable()
+    }
 
     /**
      * Processes variables in double quoted strings.
@@ -77,5 +77,5 @@ class MemberVarScopeSniff extends PHP_CodeSniffer_Standards_AbstractVariableSnif
     protected function processVariableInString(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         // We don't care about normal variables.
-    }//end processVariableInString()
+    }
 }

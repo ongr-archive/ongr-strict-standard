@@ -44,7 +44,7 @@ class StaticThisUsageSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
     public function __construct()
     {
         parent::__construct([T_CLASS], [T_FUNCTION]);
-    }//end __construct()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -91,6 +91,6 @@ class StaticThisUsageSniff extends PHP_CodeSniffer_Standards_AbstractScopeSniff
                 $error = 'Usage of "$this" in static methods will cause runtime errors';
                 $phpcsFile->addError($error, $thisUsage, 'Found');
             }
-        }//end if
-    }//end processTokenWithinScope()
+        }
+    }
 }

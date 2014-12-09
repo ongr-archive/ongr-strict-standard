@@ -45,7 +45,7 @@ class ClassDefinitionNameSpacingSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OPEN_CURLY_BRACKET];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -107,6 +107,6 @@ class ClassDefinitionNameSpacingSniff implements PHP_CodeSniffer_Sniff
 
             $foundContent = false;
             $currentLine = $tokens[$i]['line'];
-        }//end for
-    }//end process()
+        }
+    }
 }

@@ -45,7 +45,7 @@ class ColourDefinitionSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_COLOUR];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -85,5 +85,5 @@ class ColourDefinitionSniff implements PHP_CodeSniffer_Sniff
             ];
             $phpcsFile->addError($error, $stackPtr, 'Shorthand', $data);
         }
-    }//end process()
+    }
 }

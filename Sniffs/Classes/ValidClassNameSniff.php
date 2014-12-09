@@ -46,7 +46,7 @@ class ValidClassNameSniff implements PHP_CodeSniffer_Sniff
             T_CLASS,
             T_INTERFACE,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -88,5 +88,5 @@ class ValidClassNameSniff implements PHP_CodeSniffer_Sniff
             ];
             $phpcsFile->addError($error, $stackPtr, 'NotCamelCaps', $data);
         }
-    }//end process()
+    }
 }

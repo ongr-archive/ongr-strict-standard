@@ -87,7 +87,7 @@ class ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
         }
 
         return [T_STYLE];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -127,7 +127,7 @@ class ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
         }
 
         $this->addError($phpcsFile, $stackPtr, $style, $pattern);
-    }//end process()
+    }
 
     /**
      * Generates the error or warning for this sniff.
@@ -167,5 +167,5 @@ class ForbiddenStylesSniff implements PHP_CodeSniffer_Sniff
         } else {
             $phpcsFile->addWarning($error, $stackPtr, $type, $data);
         }
-    }//end addError()
+    }
 }

@@ -46,7 +46,7 @@ class BlockCommentSniff implements PHP_CodeSniffer_Sniff
             T_COMMENT,
             T_DOC_COMMENT,
         ];
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -91,7 +91,7 @@ class BlockCommentSniff implements PHP_CodeSniffer_Sniff
             if ($tokens[$prevToken]['code'] === T_OPEN_TAG) {
                 return;
             }
-        }//end if
+        }
 
         $commentLines = [$stackPtr];
         $nextComment = $stackPtr;
@@ -202,7 +202,7 @@ class BlockCommentSniff implements PHP_CodeSniffer_Sniff
                 $error = 'Comment line indented incorrectly; expected at least %s but found %s';
                 $phpcsFile->addError($error, $line, 'LineIndent', $data);
             }
-        }//end foreach
+        }
 
         // Finally, test the last line is correct.
         $lastIndex = (count($commentLines) - 1);
@@ -249,5 +249,5 @@ class BlockCommentSniff implements PHP_CodeSniffer_Sniff
             $error = 'Empty line required after block comment';
             $phpcsFile->addError($error, $commentCloser, 'NoEmptyLineAfter');
         }
-    }//end process()
+    }
 }

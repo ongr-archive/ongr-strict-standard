@@ -43,7 +43,7 @@ class CastSpacingSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return PHP_CodeSniffer_Tokens::$castTokens;
-    }//end register()
+    }
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -70,5 +70,5 @@ class CastSpacingSniff implements PHP_CodeSniffer_Sniff
             ];
             $phpcsFile->addError($error, $stackPtr, 'ContainsWhiteSpace', $data);
         }
-    }//end process()
+    }
 }

@@ -45,7 +45,7 @@ class DuplicateClassDefinitionSniff implements PHP_CodeSniffer_Sniff
     public function register()
     {
         return [T_OPEN_TAG];
-    }//end register()
+    }
 
     /**
      * Processes the tokens that this sniff is interested in.
@@ -103,6 +103,6 @@ class DuplicateClassDefinitionSniff implements PHP_CodeSniffer_Sniff
             }
 
             $next = $phpcsFile->findNext(T_OPEN_CURLY_BRACKET, ($next + 1));
-        }//end while
-    }//end process()
+        }
+    }
 }
