@@ -11,3 +11,4 @@ before_script:
 script:
   - vendor/bin/phpcs -p --standard=. --ignore=Tests/app/,Resources/public/ ./TmpConnectionsBundle/
   - vendor/bin/phpcs -p --standard=. --ignore=vendor/,TmpConnectionsBundle/ ./
+  - vendor/bin/phpunit Tests/AllTests.php

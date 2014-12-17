@@ -77,11 +77,10 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
             if (($arrayEnd - $arrayStart) !== 1) {
                 $error = 'Empty array declaration must have no space between the parentheses';
                 $phpcsFile->addError($error, $stackPtr, 'SpaceInEmptyArray');
-
-                // We can return here because there is nothing else to check. All code
-                // below can assume that the array is not empty.
-                return;
             }
+            // We can return here because there is nothing else to check. All code
+            // below can assume that the array is not empty.
+            return;
         }
 
         if ($tokens[$arrayStart]['line'] === $tokens[$arrayEnd]['line']) {
@@ -232,6 +231,9 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 || $tokens[$nextToken]['code'] === T_OPEN_PARENTHESIS
             ) {
                 // Skip contents in parenthesis and let subsequent calls of this test handle nested arrays.
+                if ($tokens[$nextToken - 2]['code'] == T_CLOSURE) {
+                    $nextToken -= 2;
+                }
                 $indices[] = ['value' => $nextToken];
                 if ($tokens[$nextToken]['code'] == T_OPEN_SHORT_ARRAY) {
                     $nextToken = $tokens[$nextToken]['bracket_closer'];
@@ -257,23 +259,6 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
             }
 
             if ($tokens[$nextToken]['code'] === T_COMMA) {
-                $stackPtrCount = 0;
-                if (isset($tokens[$stackPtr]['nested_parenthesis']) === true) {
-                    $stackPtrCount = count($tokens[$stackPtr]['nested_parenthesis']);
-                }
-
-                $nextPtrCount = 0;
-                if (isset($tokens[$nextToken]['nested_parenthesis'])) {
-                    $nextPtrCount = count($tokens[$nextToken]['nested_parenthesis']);
-                }
-
-                if ($nextPtrCount > ($stackPtrCount + 1)) {
-                    // This comma is inside more parenthesis than the ARRAY keyword,
-                    // then there it is actually a comma used to separate arguments
-                    // in a function call.
-                    continue;
-                }
-
                 if ($keyUsed === true && $lastToken === T_COMMA) {
                     $error = 'No key specified for array entry; first entry specifies key';
                     $phpcsFile->addError($error, $nextToken, 'NoKeySpecified');
@@ -301,16 +286,17 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                         null,
                         true
                     );
+
                     while ($tokens[$valueContent]['line'] === $tokens[$nextToken]['line']) {
                         if ($valueContent === $arrayStart) {
                             // Value must have been on the same line as the array
                             // parenthesis, so we have reached the start of the value.
+
                             break;
                         }
 
                         $valueContent--;
                     }
-
                     $valueContent = $phpcsFile->findNext(T_WHITESPACE, ($valueContent + 1), $nextToken, true);
                     $indices[] = ['value' => $valueContent];
                     $singleUsed = true;
@@ -333,7 +319,7 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 ) {
                     $error = 'Expected single whitespace before double arrow, found %s spaces';
                     if ($tokens[$nextToken - 1]['code'] !== T_WHITESPACE) {
-                        $data = 0;
+                        $data = [0];
                     } else {
                         $data = [strlen($tokens[$nextToken - 1]['content'])];
                     }
@@ -374,6 +360,16 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 'd',
                );
         */
+
+        if (empty($indices)) {
+            // Multi-line array is not empty and nothing but 1 value was found.
+            $value = $arrayStart + 1;
+            while ($tokens[$value]['code'] == T_WHITESPACE) {
+                $value++;
+            }
+            $error = 'Each line in an array declaration must end with a comma';
+            $phpcsFile->addError($error, $value, 'NoComma');
+        }
 
         if ($keyUsed === false && empty($indices) === false) {
             $count = count($indices);
@@ -429,13 +425,11 @@ class ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
             to be moved back one space however, then both errors would be fixed.
         */
 
-        $numValues = count($indices);
-
         $indicesStart = ($statementStartColumn + 4);
         foreach ($indices as $index) {
             if (isset($index['index']) === false) {
                 // Array value only.
-                if (($tokens[$index['value']]['line'] === $tokens[$stackPtr]['line']) && ($numValues > 1)) {
+                if (($tokens[$index['value']]['line'] === $tokens[$stackPtr]['line'])) {
                     $error = 'The first value in a multi-value array must be on a new line';
                     $phpcsFile->addError($error, $stackPtr, 'FirstValueNoNewline');
                 }
