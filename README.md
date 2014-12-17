@@ -45,7 +45,7 @@ Or optionally you can install globally to all projects at `~/.composer/composer.
 
 Then: `composer global update`.
 
-**Warning** if you are planing on developing then sources should be located in ONGR directory.
+**Warning** if you are planing on developing then sources should be located in `ONGR` directory.
 
 For example when cloning add target directory:
 
