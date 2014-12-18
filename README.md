@@ -1,6 +1,6 @@
 # ONGR Strict Coding Standard
 
-[![Build](https://travis-ci.org/ongr-io/ongr-strict-standard.svg?branch=master)](https://travis-ci.org/ongr-io/ongr-strict-standard)    
+[![Build](https://travis-ci.org/ongr-io/ongr-strict-standard.svg?branch=master)](https://travis-ci.org/ongr-io/ongr-strict-standard)
 [![Total Downloads](https://poser.pugx.org/ongr/ongr-strict-standard/downloads.svg)](https://packagist.org/packages/ongr/ongr-strict-standard)
 [![Latest Stable Version](https://poser.pugx.org/ongr/ongr-strict-standard/v/stable.svg)](https://packagist.org/packages/ongr/ongr-strict-standard)
 [![Latest Unstable Version](https://poser.pugx.org/ongr/ongr-strict-standard/v/unstable.svg)](https://packagist.org/packages/ongr/ongr-strict-standard)
