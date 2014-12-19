@@ -209,6 +209,9 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
             return;
         }
 
+        $this->checkShortCommentWhiteSpace($comment, $commentStart);
+        $this->checkLongCommentWhiteSpace($comment, $commentStart);
+
         // The first line of the comment should just be the /** code.
         $eolPos = strpos($commentString, $phpcsFile->eolChar);
         $firstLine = substr($commentString, 0, $eolPos);
@@ -850,6 +853,54 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                     'EndLineWhiteSpace'
                 );
             }
+        }
+    }
+
+    /**
+     * Checks for extra whitespaces in the beginning of short description.
+     *
+     * @param PHP_CodeSniffer_CommentParser_CommentElement $comment
+     * @param int                                          $commentStart
+     */
+    private function checkShortCommentWhiteSpace($comment, $commentStart)
+    {
+        // Method getShortComment returns comment with all whitespaces.
+        $short = $comment->getShortComment();
+        if (trim(substr($short, 0, 2)) == '') {
+            $this->currentFile->addError(
+                'Extra whitespaces before short description',
+                $commentStart + 1,
+                'ExtraWhiteSpace'
+            );
+        }
+    }
+
+    /**
+     * Checks for extra whitespaces in the beginning of long description.
+     *
+     * @param PHP_CodeSniffer_CommentParser_CommentElement $comment
+     * @param int                                          $commentStart
+     */
+    private function checkLongCommentWhiteSpace($comment, $commentStart)
+    {
+        $long = $comment->getLongComment();
+        if ($long == '') {
+            return;
+        }
+        // Method getLongComment does not return all whitespaces so we need to get it from raw.
+        $raw = $comment->getRawContent();
+        $short = $comment->getShortComment();
+
+        $longBegin = strpos($raw, ' ', strlen($short));
+        $longBeginContent = strpos($raw, $long);
+
+        $between = substr($raw, $longBegin, $longBeginContent - $longBegin);
+        if (strlen($between) > 1) {
+            $this->currentFile->addError(
+                'Extra whitespaces before long description',
+                $commentStart + 3,
+                'ExtraWhiteSpace'
+            );
         }
     }
 }
