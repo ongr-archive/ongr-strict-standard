@@ -252,7 +252,7 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
                 } elseif ($suggestedType === 'integer') {
                     $suggestedType = 'int';
                 }
-                if ($content !== $suggestedType) {
+                if ($content !== $suggestedType && strpos($content, $suggestedType . ' ') === false) {
                     $error = 'Expected "%s"; found "%s" for @var tag in variable comment';
                     $data = [
                         $suggestedType,
@@ -359,6 +359,15 @@ class VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSni
         }
 
         if ($comment === '') {
+            return;
+        }
+
+        if (substr($comment, 0, 1) == '$') {
+            $this->currentFile->addError(
+                'Class field docs should not contain field name',
+                $errorPos
+            );
+
             return;
         }
 

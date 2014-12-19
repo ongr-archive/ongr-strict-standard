@@ -1,0 +1,81 @@
+<?php
+
+/*
+ * This file is part of the ONGR package.
+ *
+ * (c) NFQ Technologies UAB <info@nfq.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Test;
+
+class VariableCommentSniffTest
+{
+    /**
+     * @var int
+     */
+    public $foo;
+
+    /**
+     * @var int $bar
+     */
+    public $bar;
+
+    /**
+     * @var int $fooBar This is fooBar.
+     */
+    public $fooBar;
+
+    /**
+     * @var int This is barFoo.
+     */
+    public $barFoo;
+
+    /**
+     * @var array(string => string|null) This is fooBar2.
+     */
+    public $fooBar2;
+
+    /**
+     * @var array(string => string|array) $fooBar3 This is fooBar3.
+     */
+    public $fooBar3;
+
+    /**
+     * @var array(string => string|null) $fooBar4
+     */
+    public $fooBar4;
+
+    /**
+     * @var array(string => string|null)
+     */
+    public $fooBar5;
+
+    /**
+     * @var array(string => array())
+     */
+    public $fooBar6;
+
+    /**
+     * @var int This is fooBar7
+     */
+    public $fooBar7;
+
+    /**
+     * @var int This is fooBar8!
+     */
+    public $fooBar8;
+
+    /**
+     * @var int This is fooBar9?
+     */
+    public $fooBar9;
+
+    /**
+     * @var int $bar2
+     * @var int $foo2 Bar.
+     */
+    protected $bar2, $foo2;
+}
