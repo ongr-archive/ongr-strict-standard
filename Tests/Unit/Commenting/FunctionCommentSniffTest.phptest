@@ -1,0 +1,32 @@
+<?php
+
+/*
+ * This file is part of the ONGR package.
+ *
+ * (c) NFQ Technologies UAB <info@nfq.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Test;
+
+/**
+ * FunctionCommentSniff class.
+ */
+class FunctionCommentSniffTest
+{
+    /**
+     * Foo. 
+     *
+     * There is a white space after "Foo."
+     * Some editors may remove it
+     * so if you edit this file check if it is present.
+     *
+     * @param mixed $bar
+     */
+    protected function foo($bar)
+    {
+        foo($bar);
+    }
+}

@@ -188,6 +188,8 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
         $commentString = $phpcsFile->getTokensAsString($commentStart, ($commentEnd - $commentStart + 1));
         $this->methodName = $phpcsFile->getDeclarationName($stackPtr);
 
+        $this->checkForExtraWhiteSpace(array_slice($tokens, $commentStart, $commentEnd - $commentStart, true));
+
         try {
             $this->commentParser = new PHP_CodeSniffer_CommentParser_FunctionCommentParser($commentString, $phpcsFile);
             $this->commentParser->parse();
@@ -830,5 +832,24 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
         ];
 
         return in_array($content, $ignored, true);
+    }
+
+    /**
+     * Checks for extra whitespaces in given tokens.
+     *
+     * @param array $array_slice
+     */
+    private function checkForExtraWhiteSpace($array_slice)
+    {
+        foreach ($array_slice as $stackPtr => $token) {
+            $content = str_replace(["\n", "\r"], '', $token['content']);
+            if ($content !== rtrim($content)) {
+                $this->currentFile->addError(
+                    'Whitespace found at end of line',
+                    $stackPtr,
+                    'EndLineWhiteSpace'
+                );
+            }
+        }
     }
 }
