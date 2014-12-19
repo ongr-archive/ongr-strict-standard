@@ -10,5 +10,5 @@ before_script:
   - composer update --prefer-source
 script:
   - vendor/bin/phpcs -p --standard=. --ignore=Tests/app/,Resources/public/ ./TmpConnectionsBundle/
-  - vendor/bin/phpcs -p --standard=. --ignore=vendor/,TmpConnectionsBundle/ ./
+  - vendor/bin/phpcs -p --standard=. --ignore=vendor/,TmpConnectionsBundle/,Tests/Build ./
   - vendor/bin/phpunit Tests/AllTests.php
