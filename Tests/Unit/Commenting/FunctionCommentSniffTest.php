@@ -25,6 +25,9 @@ class FunctionCommentSniffTest extends AbstractSniffUnitTest
     {
         return [
             20 => ['Whitespace found at end of line'],
+            34 => ['Extra whitespaces before short description'],
+            36 => ['Extra whitespaces before long description'],
+            68 => ['Missing short description in function doc comment'],
         ];
     }
 

@@ -29,4 +29,47 @@ class FunctionCommentSniffTest
     {
         foo($bar);
     }
+
+    /**
+     *  Bar.
+     *
+     *  There is a extra white space before "Bar."
+     * and this sentence.
+     *
+     * @param mixed $bar
+     */
+    protected function bar($bar)
+    {
+        foo($bar);
+    }
+
+    /**
+     * Bar.
+     *
+     * @param mixed $bar
+     */
+    protected function fooBar($bar)
+    {
+        foo($bar);
+    }
+
+    /**
+     * Bar.
+     *
+     * Foo.
+     *
+     * @param mixed $bar
+     */
+    protected function fooBar2($bar)
+    {
+        foo($bar);
+    }
+
+    /**
+     * @param mixed $bar
+     */
+    protected function fooBar3($bar)
+    {
+        foo($bar);
+    }
 }
