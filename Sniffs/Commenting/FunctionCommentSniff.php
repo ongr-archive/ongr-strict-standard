@@ -188,7 +188,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
         $commentString = $phpcsFile->getTokensAsString($commentStart, ($commentEnd - $commentStart + 1));
         $this->methodName = $phpcsFile->getDeclarationName($stackPtr);
 
-        $this->checkForExtraWhiteSpace(array_slice($tokens, $commentStart, $commentEnd - $commentStart, true));
+        $this->checkForExtraWhitespace(array_slice($tokens, $commentStart, $commentEnd - $commentStart, true));
 
         try {
             $this->commentParser = new PHP_CodeSniffer_CommentParser_FunctionCommentParser($commentString, $phpcsFile);
@@ -209,8 +209,8 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
             return;
         }
 
-        $this->checkShortCommentWhiteSpace($comment, $commentStart);
-        $this->checkLongCommentWhiteSpace($comment, $commentStart);
+        $this->checkShortCommentWhitespace($comment, $commentStart);
+        $this->checkLongCommentWhitespace($comment, $commentStart);
 
         // The first line of the comment should just be the /** code.
         $eolPos = strpos($commentString, $phpcsFile->eolChar);
@@ -259,7 +259,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
         // Exactly one blank line between short and long description.
         $long = $comment->getLongComment();
         if (empty($long) === false) {
-            $between = $comment->getWhiteSpaceBetween();
+            $between = $comment->getWhitespaceBetween();
             $newlineBetween = substr_count($between, $phpcsFile->eolChar);
             if ($newlineBetween !== 2) {
                 $error = 'There must be exactly one blank line between descriptions in function comment';
@@ -842,7 +842,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
      *
      * @param array $array_slice
      */
-    private function checkForExtraWhiteSpace($array_slice)
+    private function checkForExtraWhitespace($array_slice)
     {
         foreach ($array_slice as $stackPtr => $token) {
             $content = str_replace(["\n", "\r"], '', $token['content']);
@@ -850,7 +850,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
                 $this->currentFile->addError(
                     'Whitespace found at end of line',
                     $stackPtr,
-                    'EndLineWhiteSpace'
+                    'EndLineWhitespace'
                 );
             }
         }
@@ -862,7 +862,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
      * @param PHP_CodeSniffer_CommentParser_CommentElement $comment
      * @param int                                          $commentStart
      */
-    private function checkShortCommentWhiteSpace($comment, $commentStart)
+    private function checkShortCommentWhitespace($comment, $commentStart)
     {
         // Method getShortComment returns comment with all whitespaces.
         $short = $comment->getShortComment();
@@ -873,7 +873,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
             $this->currentFile->addError(
                 'Extra whitespaces before short description',
                 $commentStart + 1,
-                'ExtraWhiteSpace'
+                'ExtraWhitespace'
             );
         }
     }
@@ -884,7 +884,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
      * @param PHP_CodeSniffer_CommentParser_CommentElement $comment
      * @param int                                          $commentStart
      */
-    private function checkLongCommentWhiteSpace($comment, $commentStart)
+    private function checkLongCommentWhitespace($comment, $commentStart)
     {
         $long = $comment->getLongComment();
         $short = $comment->getShortComment();
@@ -902,7 +902,7 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
             $this->currentFile->addError(
                 'Extra whitespaces before long description',
                 $commentStart + 3,
-                'ExtraWhiteSpace'
+                'ExtraWhitespace'
             );
         }
     }
