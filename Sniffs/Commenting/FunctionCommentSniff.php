@@ -866,6 +866,9 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
     {
         // Method getShortComment returns comment with all whitespaces.
         $short = $comment->getShortComment();
+        if (trim($short) == '') {
+            return;
+        }
         if (trim(substr($short, 0, 2)) == '') {
             $this->currentFile->addError(
                 'Extra whitespaces before short description',
@@ -884,12 +887,12 @@ class FunctionCommentSniff implements PHP_CodeSniffer_Sniff
     private function checkLongCommentWhiteSpace($comment, $commentStart)
     {
         $long = $comment->getLongComment();
-        if ($long == '') {
+        $short = $comment->getShortComment();
+        if ($long == '' || trim($short) == '') {
             return;
         }
         // Method getLongComment does not return all whitespaces so we need to get it from raw.
         $raw = $comment->getRawContent();
-        $short = $comment->getShortComment();
 
         $longBegin = strpos($raw, ' ', strlen($short));
         $longBeginContent = strpos($raw, $long);
