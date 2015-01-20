@@ -1,0 +1,52 @@
+<?php
+
+/*
+ * This file is part of the ONGR package.
+ *
+ * (c) NFQ Technologies UAB <info@nfq.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+if ($a = foo($b)) {
+    bar($a);
+}
+
+while ($b = foo($a)) {
+    $a = bar($b);
+}
+
+$a = $b = 'foo';
+
+$c = 'bar';
+
+foo($b = 'bar');
+
+if ($a && $b = bar()) {
+    foo($b);
+}
+
+while ($a && $b = bar($a)) {
+    $a = foo($b);
+}
+
+for ($i = 0; $i < 1; ++$i) {
+    foo($i);
+}
+
+for ($i = 0; $i = foo($i); ++$i) {
+    foo($i);
+}
+
+for ($i = 0; $i < 1; $i = foo($i)) {
+    foo($i);
+}
+
+for ($i = $j = 0; $i < $j; $i = foo($j)) {
+    foo($i);
+}
+
+if (($a && $b = foo($a)) || ($b && $c)) {
+    $foo($b);
+}
