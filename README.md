@@ -88,7 +88,7 @@ Note: do not use `~` for HOME parameter, as PHPCS will not expand it.
 
 **IDEs also support running Code Sniffer** and adding error annotations directly on editor's source code (e.g. PHPStorm). Please see your IDE's documentation on how to add standard from custom directory.
 
-## PHPStorm helper
+## PHPStorm Helper
 
 Configure PHPCS: http://www.jetbrains.com/phpstorm/webhelp/using-php-code-sniffer-tool.html
 
