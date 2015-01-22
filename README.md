@@ -6,23 +6,47 @@
 [![Latest Unstable Version](https://poser.pugx.org/ongr/ongr-strict-standard/v/unstable.svg)](https://packagist.org/packages/ongr/ongr-strict-standard)
 [![License](https://poser.pugx.org/ongr/ongr-strict-standard/license.svg)](https://packagist.org/packages/ongr/ongr-strict-standard)
 
-This package solves the problem: 
+This standard provides strict code style checking for whitespace, commenting style and PHPDoc. It is PSR-2 compatible, enforces good programming and documentation practices.
 
-> "Why did you forget to add 1 space before and after assignment operator?"
->
-> "Because, I don't like it."
+## Example
 
-This standard provides automated PSR-2 and Symfony 2 compatible code style checking with added strict rules for whitespace, commenting style and PHPDoc.
+Ever wanted to standardize your team's code style?
+
+```php
+<?php
+namespace   Project/MyClass ;
+
+use Foo;
+
+use  Bar;
+use Baz;
+
+/**
+ *  this class has method
+
+ */
+class MyClass
+{
+
+    public  function foo( $param){
+        $a = $param *  2;
+        return $a+1;
+
+    }
+}
+```
+
+*No more!*
 
 ## Features
 
-- Required class short description everywhere except for PHPUnit testing classes.
-- Required method short descriptions except for setters / getters and some magic methods.
-- Comments start with capital letter and ends with appropriate punctuation.
-- Line spacing between methods, spaces around operators, indentation of statements and arrays are mostly strictly defined.
-- PHP >= 5.4 short array syntax is required.
-- Require type hinting in PHPDoc for all parameters. Require @return and @throws tags where necessary.
-- Code must not be aligned in assignments and array definitions.
+- **Standardizes whitespace** almost **everywhere**. E.g. between methods, spaces around operators, indentation of statements, etc.
+- Required **class short description** everywhere except for PHPUnit testing classes.
+- Required **method short descriptions** except for setters / getters and some magic methods.
+- Comments start with **capital letter** and ends with appropriate punctuation. This suggests proper documentation and **reduces laziness**.
+- PHP >= 5.4 **short array syntax** is required.
+- Require **type hinting** in PHPDoc for all parameters. **Require @return and @throws tags** where necessary.
+- Code **must not be aligned** in assignments and array definitions.
 - Strings should be "double quoted" only with a reason ($variable interpolation inside, etc.)
 
 ## Acknowledgement
@@ -46,9 +70,9 @@ Or optionally you can install globally to all projects at `~/.composer/composer.
 
 Then: `composer global update`.
 
-**Warning** if you are planing on developing then sources should be located in `ONGR` directory.
+**Warning** if you are planing on developing, then sources should be located in `ONGR` directory.
 
-For example when cloning add target directory:
+For example, when cloning add target directory:
 
 ```sh
     git clone git@github.com:<username>/ongr-strict-standard.git ONGR
@@ -60,9 +84,9 @@ For example when cloning add target directory:
 vendor/bin/phpcs -p --standard=/home/<user>/.composer/vendor/ongr/ongr-strict-standard/ONGR --ignore=vendor/,Tests/app/,Resources/public/ ./
 ```
 
-Note: do not use ~ for HOME parameter, as PHPCS will not expand it.
+Note: do not use `~` for HOME parameter, as PHPCS will not expand it.
 
-IDEs also support running Code Sniffer and adding error annotations directly on editor's source code (e.g. PHPStorm). Please see your IDE's documentation on how to add standard from custom directory.
+**IDEs also support running Code Sniffer** and adding error annotations directly on editor's source code (e.g. PHPStorm). Please see your IDE's documentation on how to add standard from custom directory.
 
 ## PHPStorm helper
 
