@@ -44,10 +44,15 @@ class MyClass
 - Required **class short description** everywhere except for PHPUnit testing classes.
 - Required **method short descriptions** except for setters / getters and some magic methods.
 - Comments start with **capital letter** and ends with appropriate punctuation. This suggests proper documentation and **reduces laziness**.
-- PHP >= 5.4 **short array syntax** is required.
+- **Short array syntax** is required.
 - Require **type hinting** in PHPDoc for all parameters. **Require @return and @throws tags** where necessary.
 - Code **must not be aligned** in assignments and array definitions.
 - Strings should be "double quoted" only with a reason ($variable interpolation inside, etc.)
+
+## Requirements
+
+- PHP >=5.4
+- CodeSniffer 1.x
 
 ## Acknowledgement
 
