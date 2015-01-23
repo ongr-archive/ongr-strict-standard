@@ -10,16 +10,13 @@ This standard provides strict code style checking for whitespace, commenting sty
 
 ## Example
 
-Ever wanted to standardize your team's code style?
+Ever wanted to standardize your team's code style? This is a **PSR-2 compliant code**:
 
 ```php
 <?php
-namespace   Project/MyClass ;
+namespace Project\MyClass ;
 
 use Foo;
-
-use  Bar;
-use Baz;
 
 /**
  *  this class has method
@@ -28,7 +25,8 @@ use Baz;
 class MyClass
 {
 
-    public  function foo( $param){
+    public function foo($param)
+    {
         $a = $param *  2;
         return $a+1;
 
@@ -36,7 +34,24 @@ class MyClass
 }
 ```
 
-*No more!*
+*No more code like this!*
+
+After ONGR Strict Standard validation:
+
+```
+  2 | ERROR | Space found before semicolon; expected "MyClass;" but found
+    |       | "MyClass ;"
+  7 | ERROR | Class comment short description must start with a capital letter
+  7 | ERROR | Class comment short description must end with a full stop
+  8 | ERROR | Expected 1 space(s) before asterisk; 0 found
+ 11 | ERROR | Expected no blank lines after an opening brace, 1 found
+ 13 | ERROR | Missing function doc comment
+ 15 | ERROR | Expected 1 space after "*"; 2 found
+ 16 | ERROR | Missing blank line before return statement
+ 16 | ERROR | Expected 1 space before "+"; 0 found
+ 16 | ERROR | Expected 1 space after "+"; 0 found
+ 18 | ERROR | Expected 0 blank lines before closing function brace; 1 found
+```
 
 ## Features
 
@@ -65,7 +80,7 @@ Composer:
 ```json
 {
     "require-dev": {
-        "ongr/ongr-strict-standard": "~1.0-beta",
+        "ongr/ongr-strict-standard": "~1.0",
         "squizlabs/php_codesniffer": "~1"
     }
 }
