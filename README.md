@@ -44,7 +44,6 @@ After ONGR Strict Standard validation:
   7 | ERROR | Class comment short description must start with a capital letter
   7 | ERROR | Class comment short description must end with a full stop
   8 | ERROR | Expected 1 space(s) before asterisk; 0 found
- 10 | ERROR | Class name doesn't match filename; expected "class kst"
  11 | ERROR | Expected no blank lines after an opening brace, 1 found
  13 | ERROR | Missing function doc comment
  15 | ERROR | Expected 1 space after "*"; 2 found
