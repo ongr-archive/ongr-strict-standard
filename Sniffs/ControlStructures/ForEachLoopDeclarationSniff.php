@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ONGR_Sniffs_ControlStructures_ForEachLoopDeclarationSniff.
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Verifies that control statements conform to their coding standards.
  *

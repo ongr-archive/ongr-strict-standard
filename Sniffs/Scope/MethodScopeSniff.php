@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Verifies that class methods have scope modifiers.
  *

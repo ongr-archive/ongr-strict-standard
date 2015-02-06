@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Ensures that object indexes are written in dot notation.
  *

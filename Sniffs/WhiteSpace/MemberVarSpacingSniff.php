@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Verifies that class members are spaced correctly.
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Verifies that a "throws" tag exists for a function that throws exceptions.
  * Verifies the number of "throws" tags and the number of throw tokens matches.
