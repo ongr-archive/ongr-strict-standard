@@ -1,0 +1,9 @@
+<?php echo'foo'?>
+
+<?php
+echo 'bar'
+?>
+
+<?php
+
+echo 'foobar';
