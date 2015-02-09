@@ -1,4 +1,5 @@
 <?php
+
 /**
  * ONGR_Sniffs_Formatting_FunctionSpacingSniff.
  *
@@ -35,9 +36,14 @@ use PHP_CodeSniffer_Sniff;
 class FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * @var int The number of blank lines between functions.
+     * @var int The number of blank lines after the function.
      */
-    public $spacing = 1;
+    public $spacingAfter = 1;
+
+    /**
+     * @var int The number of blank lines before the function.
+     */
+    public $spacingBefore = 0;
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -61,7 +67,7 @@ class FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        $this->spacing = (int)$this->spacing;
+        $this->spacingAfter = (int)$this->spacingAfter;
 
         /*
             Check the number of blank lines
@@ -104,15 +110,15 @@ class FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
             }
         }
 
-        if ($foundLines !== $this->spacing) {
+        if ($foundLines !== $this->spacingAfter) {
             $error = 'Expected %s blank line';
-            if ($this->spacing !== 1) {
+            if ($this->spacingAfter !== 1) {
                 $error .= 's';
             }
 
             $error .= ' after function; %s found';
             $data = [
-                $this->spacing,
+                $this->spacingAfter,
                 $foundLines,
             ];
             $phpcsFile->addError($error, $closer, 'After', $data);
@@ -157,6 +163,12 @@ class FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
                     return;
                 }
 
+                if ($tokens[$i]['code'] === T_DOC_COMMENT) {
+                    // Found a comment. Should be checked, since blank lines
+                    // after previous function are checked only until comments.
+                    break;
+                }
+
                 if (isset($tokens[$i]['scope_condition']) === true) {
                     $scopeCondition = $tokens[$i]['scope_condition'];
                     if ($tokens[$scopeCondition]['code'] === T_FUNCTION) {
@@ -184,15 +196,15 @@ class FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
             }
         }
 
-        if ($foundLines !== $this->spacing) {
+        if ($foundLines !== $this->spacingBefore) {
             $error = 'Expected %s blank line';
-            if ($this->spacing !== 1) {
+            if ($this->spacingBefore !== 1) {
                 $error .= 's';
             }
 
             $error .= ' before function; %s found';
             $data = [
-                $this->spacing,
+                $this->spacingBefore,
                 $foundLines,
             ];
             $phpcsFile->addError($error, $stackPtr, 'Before', $data);
