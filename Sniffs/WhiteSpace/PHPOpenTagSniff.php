@@ -1,7 +1,5 @@
 <?php
 
-namespace ONGR\Sniffs\WhiteSpace;
-
 /**
  * ONGR_Sniffs_WhiteSpace_PHPOpenTagSniff.
  *
@@ -14,6 +12,8 @@ namespace ONGR\Sniffs\WhiteSpace;
  * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
+
+namespace ONGR\Sniffs\WhiteSpace;
 
 use PHP_CodeSniffer_File;
 use PHP_CodeSniffer_Sniff;
