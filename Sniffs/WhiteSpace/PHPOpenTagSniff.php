@@ -2,16 +2,18 @@
 
 namespace ONGR\Sniffs\WhiteSpace;
 
-/*
- * This file is part of the ONGR package.
+/**
+ * ONGR_Sniffs_WhiteSpace_PHPOpenTagSniff.
  *
- * (c) NFQ Technologies UAB <info@nfq.com>
+ * PHP version 5
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * @category  PHP
+ * @package   PHP_CodeSniffer
+ * @author    Greg Sherwood <gsherwood@squiz.net>
+ * @copyright 2006-2014 Squiz Pty Ltd (ABN 77 084 670 600)
+ * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-
-
 
 use PHP_CodeSniffer_File;
 use PHP_CodeSniffer_Sniff;

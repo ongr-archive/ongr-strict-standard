@@ -14,7 +14,7 @@ namespace ONGR\Tests\Unit\WhiteSpace;
 use ONGR\Tests\AbstractSniffUnitTest;
 
 /**
- * DisallowMultipleAssignmentsSniffTest class.
+ * PHPOpenTagSniffTest class.
  */
 class PHPOpenTagSniffTest extends AbstractSniffUnitTest
 {

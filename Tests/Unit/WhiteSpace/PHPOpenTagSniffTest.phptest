@@ -1,7 +1,7 @@
-<?php echo'foo'?>
+<?php echo 'foo'; ?>
 
 <?php
-echo 'bar'
+echo 'bar';
 ?>
 
 <?php
