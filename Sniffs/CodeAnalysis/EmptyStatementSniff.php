@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This sniff class detects empty statement.
  *

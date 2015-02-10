@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Parses and verifies the variable doc comment.
  *

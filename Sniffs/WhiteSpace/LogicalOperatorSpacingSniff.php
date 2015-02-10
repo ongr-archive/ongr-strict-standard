@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sniffs_Squiz_WhiteSpace_OperatorSpacingSniff.
  *

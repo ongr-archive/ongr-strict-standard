@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A test to ensure that arrays conform to the array coding standard.
  *

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * An abstract class that all sniff unit tests must extend.
  *
