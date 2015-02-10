@@ -13,9 +13,6 @@ namespace ONGR\Tests\Unit\WhiteSpace;
 
 use ONGR\Tests\AbstractSniffUnitTest;
 
-/**
- * DisallowMultipleAssignmentsSniffTest class.
- */
 class FunctionSpacingSniffTest extends AbstractSniffUnitTest
 {
     /**
