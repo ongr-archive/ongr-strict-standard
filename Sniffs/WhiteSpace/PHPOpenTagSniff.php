@@ -45,7 +45,7 @@ class PHPOpenTagSniff implements PHP_CodeSniffer_Sniff
     {
         $tokens = $phpcsFile->getTokens();
 
-        if ($tokens[$stackPtr + 1]['code'] !== T_WHITESPACE) {
+        if (isset($tokens[$stackPtr + 1]) && $tokens[$stackPtr + 1]['code'] !== T_WHITESPACE) {
             $error = 'There must be one blank line after the php open tag and no whitespaces';
             $phpcsFile->addError($error, $stackPtr, 'BlankLineAfter');
         }
