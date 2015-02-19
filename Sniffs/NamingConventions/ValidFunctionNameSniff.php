@@ -1,7 +1,6 @@
 <?php
-
 /**
- * ONGR_Sniffs_NamingConventions_ValidFunctionNameSniff.
+ * Ongr_Sniffs_NamingConventions_ValidFunctionNameSniff.
  *
  * PHP version 5
  *
@@ -14,14 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-namespace ONGR\Sniffs\NamingConventions;
-
-use PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff;
-use PHP_CodeSniffer;
-use PHP_CodeSniffer_File;
+if (class_exists('PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff', true) === false) {
+    throw new PHP_CodeSniffer_Exception('Class PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff not found');
+}
 
 /**
- * ONGR_Sniffs_NamingConventions_ValidFunctionNameSniff.
+ * Ongr_Sniffs_NamingConventions_ValidFunctionNameSniff.
  *
  * Ensures method names are correct depending on whether they are public
  * or private, and that functions are named correctly.
@@ -35,8 +32,10 @@ use PHP_CodeSniffer_File;
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ValidFunctionNameSniff extends PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff
+class Ongr_Sniffs_NamingConventions_ValidFunctionNameSniff extends PEAR_Sniffs_NamingConventions_ValidFunctionNameSniff
 {
+
+
     /**
      * Processes the tokens outside the scope.
      *
@@ -53,14 +52,12 @@ class ValidFunctionNameSniff extends PEAR_Sniffs_NamingConventions_ValidFunction
             return;
         }
 
-        $errorData = [$functionName];
+        $errorData = array($functionName);
 
         // Does this function claim to be magical?
         if (preg_match('|^__|', $functionName) !== 0) {
-            $error = 'Function name "%s" is invalid;'
-                . ' only PHP magic methods should be prefixed with a double underscore';
+            $error = 'Function name "%s" is invalid; only PHP magic methods should be prefixed with a double underscore';
             $phpcsFile->addError($error, $stackPtr, 'DoubleUnderscore', $errorData);
-
             return;
         }
 
@@ -68,13 +65,16 @@ class ValidFunctionNameSniff extends PEAR_Sniffs_NamingConventions_ValidFunction
             $error = 'Function name "%s" is not in camel caps format';
             $phpcsFile->addError($error, $stackPtr, 'NotCamelCaps', $errorData);
         }
-    }
 
-    /**
-     * {@inheritdoc}
-     */
+    }//end processTokenOutsideScope()
+
     protected function processTokenWithinScope(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $currScope)
     {
         // Disabling.
+        return;
     }
-}
+
+
+}//end class
+
+?>

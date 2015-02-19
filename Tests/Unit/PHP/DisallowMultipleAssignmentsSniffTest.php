@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\Tests\Unit\PHP;
+namespace Ongr\Tests\Unit\PHP;
 
-use ONGR\Tests\AbstractSniffUnitTest;
+use Ongr\Tests\AbstractSniffUnitTest;
 
 /**
  * DisallowMultipleAssignmentsSniffTest class.

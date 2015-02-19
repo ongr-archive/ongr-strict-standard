@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\Tests\Unit\Commenting;
+namespace Ongr\Tests\Unit\Commenting;
 
-use ONGR\Tests\AbstractSniffUnitTest;
+use Ongr\Tests\AbstractSniffUnitTest;
 
 /**
  * VariableCommentSniffTest class.

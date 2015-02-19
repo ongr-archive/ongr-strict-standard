@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Parses and verifies the class doc comment.
  *
@@ -14,13 +13,9 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-namespace ONGR\Sniffs\Commenting;
-
-use PHP_CodeSniffer_CommentParser_ClassCommentParser;
-use PHP_CodeSniffer_CommentParser_CommentElement;
-use PHP_CodeSniffer_CommentParser_ParserException;
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
+if (class_exists('PHP_CodeSniffer_CommentParser_ClassCommentParser', true) === false) {
+    throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_CommentParser_ClassCommentParser not found');
+}
 
 /**
  * Parses and verifies the class doc comment.
@@ -45,17 +40,9 @@ use PHP_CodeSniffer_Sniff;
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ClassCommentSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sniff
 {
-    /**
-     * @var int
-     */
-    private $currentFile;
 
-    /**
-     * @var mixed
-     */
-    private $commentParser;
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -64,12 +51,10 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return [
-            T_CLASS,
-            T_TRAIT,
-            T_INTERFACE,
-        ];
-    }
+        return array(T_CLASS);
+
+    }//end register()
+
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -85,34 +70,30 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
         $this->currentFile = $phpcsFile;
 
         $className = $phpcsFile->getDeclarationName($stackPtr);
-        $isTestClass = preg_match('/Test$/', $className) === 1;
+        if (preg_match('/Test$/', $className) === 1) {
+            return;
+        }
 
         $tokens = $phpcsFile->getTokens();
-        $name = ucfirst($tokens[$stackPtr]['content']);
-
-        $find = [
-            T_ABSTRACT,
-            T_WHITESPACE,
-            T_FINAL,
-        ];
+        $find   = array(
+                   T_ABSTRACT,
+                   T_WHITESPACE,
+                   T_FINAL,
+                  );
 
         // Extract the class comment docblock.
         $commentEnd = $phpcsFile->findPrevious($find, ($stackPtr - 1), null, true);
 
         if ($commentEnd !== false && $tokens[$commentEnd]['code'] === T_COMMENT) {
-            $phpcsFile->addError("You must use \"/**\" style comments for a {$name} comment", $stackPtr, 'WrongStyle');
-
+            $phpcsFile->addError('You must use "/**" style comments for a class comment', $stackPtr, 'WrongStyle');
             return;
-        } elseif ($commentEnd === false || $tokens[$commentEnd]['code'] !== T_DOC_COMMENT) {
-            if (!$isTestClass) {
-                // Test classes can omit doc comment.
-                $phpcsFile->addError("Missing {$name} doc comment", $stackPtr, 'Missing');
-            }
-
+        } else if ($commentEnd === false || $tokens[$commentEnd]['code'] !== T_DOC_COMMENT) {
+            $phpcsFile->addError('Missing class doc comment', $stackPtr, 'Missing');
             return;
         }
 
         $commentStart = ($phpcsFile->findPrevious(T_DOC_COMMENT, ($commentEnd - 1), null, true) + 1);
+        $commentNext  = $phpcsFile->findPrevious(T_WHITESPACE, ($commentEnd + 1), $stackPtr, false, $phpcsFile->eolChar);
 
         // Distinguish file and class comment.
         $prevClassToken = $phpcsFile->findPrevious(T_CLASS, ($stackPtr - 1));
@@ -123,42 +104,26 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
                 $prevComment = $phpcsFile->findPrevious(T_DOC_COMMENT, ($prevNonComment - 1));
                 if ($prevComment === false) {
                     // There is only 1 doc comment between open tag and class token.
-                    $newlineToken = $phpcsFile->findNext(
-                        T_WHITESPACE,
-                        ($commentEnd + 1),
-                        $stackPtr,
-                        false,
-                        $phpcsFile->eolChar
-                    );
+                    $newlineToken = $phpcsFile->findNext(T_WHITESPACE, ($commentEnd + 1), $stackPtr, false, $phpcsFile->eolChar);
                     if ($newlineToken !== false) {
-                        $newlineToken = $phpcsFile->findNext(
-                            T_WHITESPACE,
-                            ($newlineToken + 1),
-                            $stackPtr,
-                            false,
-                            $phpcsFile->eolChar
-                        );
+                        $newlineToken = $phpcsFile->findNext(T_WHITESPACE, ($newlineToken + 1), $stackPtr, false, $phpcsFile->eolChar);
                         if ($newlineToken !== false) {
                             // Blank line between the class and the doc block.
                             // The doc block is most likely a file comment.
-                            if (!$isTestClass) {
-                                // Test classes can omit doc comment.
-                                $phpcsFile->addError("Missing {$name} doc comment", ($stackPtr + 1), 'Missing');
-                            }
-
+                            $phpcsFile->addError('Missing class doc comment', ($stackPtr + 1), 'Missing');
                             return;
                         }
-                    }
-                }
+                    }//end if
+                }//end if
 
                 // Exactly one blank line before the class comment.
                 $prevTokenEnd = $phpcsFile->findPrevious(T_WHITESPACE, ($commentStart - 1), null, true);
                 if ($tokens[$prevTokenEnd]['line'] !== ($tokens[$commentStart]['line'] - 2)) {
-                    $error = "There must be exactly one blank line before the {$name} comment";
+                    $error = 'There must be exactly one blank line before the class comment';
                     $phpcsFile->addError($error, ($commentStart - 1), 'SpacingBefore');
                 }
-            }
-        }
+            }//end if
+        }//end if
 
         $commentString = $phpcsFile->getTokensAsString($commentStart, ($commentEnd - $commentStart + 1));
 
@@ -169,21 +134,18 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
         } catch (PHP_CodeSniffer_CommentParser_ParserException $e) {
             $line = ($e->getLineWithinComment() + $commentStart);
             $phpcsFile->addError($e->getMessage(), $line, 'FailedParse');
-
             return;
         }
 
-        /** @var PHP_CodeSniffer_CommentParser_CommentElement $comment */
         $comment = $this->commentParser->getComment();
-        if ($comment === null) {
-            $error = "{$name} doc comment is empty";
+        if (is_null($comment) === true) {
+            $error = 'Class doc comment is empty';
             $phpcsFile->addError($error, $commentStart, 'Empty');
-
             return;
         }
 
         // The first line of the comment should just be the /** code.
-        $eolPos = strpos($commentString, $phpcsFile->eolChar);
+        $eolPos    = strpos($commentString, $phpcsFile->eolChar);
         $firstLine = substr($commentString, 0, $eolPos);
         if ($firstLine !== '/**') {
             $error = 'The open comment tag must be the only content on the line';
@@ -193,16 +155,16 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
         // Check for a comment description.
         $short = rtrim($comment->getShortComment(), $phpcsFile->eolChar);
         if (trim($short) === '') {
-            $error = "Missing short description in {$name} doc comment";
+            $error = 'Missing short description in class doc comment';
             $phpcsFile->addError($error, $commentStart, 'MissingShort');
-
             return;
         }
 
         // No extra newline before short description.
-        $newlineSpan = strspn($short, $phpcsFile->eolChar);
+        $newlineCount = 0;
+        $newlineSpan  = strspn($short, $phpcsFile->eolChar);
         if ($short !== '' && $newlineSpan > 0) {
-            $error = "Extra newline(s) found before {$name} comment short description";
+            $error = 'Extra newline(s) found before class comment short description';
             $phpcsFile->addError($error, ($commentStart + 1), 'SpacingBeforeShort');
         }
 
@@ -211,10 +173,10 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
         // Exactly one blank line between short and long description.
         $long = $comment->getLongComment();
         if (empty($long) === false) {
-            $between = $comment->getWhiteSpaceBetween();
+            $between        = $comment->getWhiteSpaceBetween();
             $newlineBetween = substr_count($between, $phpcsFile->eolChar);
             if ($newlineBetween !== 2) {
-                $error = "There must be exactly one blank line between descriptions in {$name} comment";
+                $error = 'There must be exactly one blank line between descriptions in class comment';
                 $phpcsFile->addError($error, ($commentStart + $newlineCount + 1), 'SpacingBetween');
             }
 
@@ -222,7 +184,7 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
 
             $testLong = trim($long);
             if (preg_match('|\p{Lu}|u', $testLong[0]) === 0) {
-                $error = "{$name} comment long description must start with a capital letter";
+                $error = 'Class comment long description must start with a capital letter';
                 $phpcsFile->addError($error, ($commentStart + $newlineCount), 'LongNotCapital');
             }
         }
@@ -232,44 +194,62 @@ class ClassCommentSniff implements PHP_CodeSniffer_Sniff
         if (count($tags) > 1) {
             $newlineSpan = $comment->getNewlineAfter();
             if ($newlineSpan !== 2) {
-                $error = "There must be exactly one blank line before the tags in {$name} comment";
+                $error = 'There must be exactly one blank line before the tags in class comment';
                 if ($long !== '') {
                     $newlineCount += (substr_count($long, $phpcsFile->eolChar) - $newlineSpan + 1);
                 }
 
                 $phpcsFile->addError($error, ($commentStart + $newlineCount), 'SpacingBeforeTags');
-                $short = rtrim($short, $phpcsFile->eolChar . ' ');
+                $short = rtrim($short, $phpcsFile->eolChar.' ');
             }
         }
 
         // Short description must be single line and end with a full stop.
         $testShort = trim($short);
-        $lastChar = $testShort[(strlen($testShort) - 1)];
+        $lastChar  = $testShort[(strlen($testShort) - 1)];
         if (substr_count($testShort, $phpcsFile->eolChar) !== 0) {
-            $error = "{$name} comment short description must be on a single line";
+            $error = 'Class comment short description must be on a single line';
             $phpcsFile->addError($error, ($commentStart + 1), 'ShortSingleLine');
         }
         if (preg_match('|\p{Lu}|u', $testShort[0]) === 0) {
-            $error = "{$name} comment short description must start with a capital letter";
+            $error = 'Class comment short description must start with a capital letter';
             $phpcsFile->addError($error, ($commentStart + 1), 'ShortNotCapital');
         }
 
+//        if ($lastChar !== '.') {
+//            $error = 'Class comment short description must end with a full stop';
+//            $phpcsFile->addError($error, ($commentStart + 1), 'ShortFullStop');
+//        }
+
         if ($lastChar !== '.') {
-            $error = "{$name} comment short description must end with a full stop";
+            $error = 'Class comment short description must end with a full stop';
             $phpcsFile->addError($error, ($commentStart + 1), 'ShortFullStop');
         }
+
+
+//        // No tags are allowed in the class comment.
+//        $tags = $this->commentParser->getTags();
+//        foreach ($tags as $errorTag) {
+//            $error = '@%s tag is not allowed in class comment';
+//            $data  = array($errorTag['tag']);
+//            $phpcsFile->addWarning($error, ($commentStart + $errorTag['line']), 'TagNotAllowed', $data);
+//        }
 
         // The last content should be a newline and the content before
         // that should not be blank. If there is more blank space
         // then they have additional blank lines at the end of the comment.
-        $words = $this->commentParser->getWords();
+        $words   = $this->commentParser->getWords();
         $lastPos = (count($words) - 1);
         if (trim($words[($lastPos - 1)]) !== ''
             || strpos($words[($lastPos - 1)], $this->currentFile->eolChar) === false
             || trim($words[($lastPos - 2)]) === ''
         ) {
-            $error = "Additional blank lines found at end of {$name} comment";
+            $error = 'Additional blank lines found at end of class comment';
             $this->currentFile->addError($error, $commentEnd, 'SpacingAfter');
         }
-    }
-}
+
+    }//end process()
+
+
+}//end class
+?>

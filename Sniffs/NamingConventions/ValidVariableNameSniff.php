@@ -1,7 +1,6 @@
 <?php
-
 /**
- * ONGR_Sniffs_NamingConventions_ValidVariableNameSniff.
+ * Ongr_Sniffs_NamingConventions_ValidVariableNameSniff.
  *
  * PHP version 5
  *
@@ -14,14 +13,12 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-namespace ONGR\Sniffs\NamingConventions;
-
-use PHP_CodeSniffer;
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Standards_AbstractVariableSniff;
+if (class_exists('PHP_CodeSniffer_Standards_AbstractVariableSniff', true) === false) {
+    throw new PHP_CodeSniffer_Exception('Class PHP_CodeSniffer_Standards_AbstractVariableSniff not found');
+}
 
 /**
- * ONGR_Sniffs_NamingConventions_ValidVariableNameSniff.
+ * Ongr_Sniffs_NamingConventions_ValidVariableNameSniff.
  *
  * Checks the naming of variables and member variables.
  *
@@ -34,8 +31,20 @@ use PHP_CodeSniffer_Standards_AbstractVariableSniff;
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ValidVariableNameSniff extends PHP_CodeSniffer_Standards_AbstractVariableSniff
+class Ongr_Sniffs_NamingConventions_ValidVariableNameSniff extends PHP_CodeSniffer_Standards_AbstractVariableSniff
 {
+
+    /**
+     * Tokens to ignore so that we can find a DOUBLE_COLON.
+     *
+     * @var array
+     */
+    private $_ignore = array(
+                        T_WHITESPACE,
+                        T_COMMENT,
+                       );
+
+
     /**
      * Processes this test, when one of its tokens is encountered.
      *
@@ -47,7 +56,9 @@ class ValidVariableNameSniff extends PHP_CodeSniffer_Standards_AbstractVariableS
      */
     protected function processVariable(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-    }
+
+    }//end processVariable()
+
 
     /**
      * Processes class member variables.
@@ -62,7 +73,7 @@ class ValidVariableNameSniff extends PHP_CodeSniffer_Standards_AbstractVariableS
     {
         $tokens = $phpcsFile->getTokens();
 
-        $varName = ltrim($tokens[$stackPtr]['content'], '$');
+        $varName     = ltrim($tokens[$stackPtr]['content'], '$');
         $memberProps = $phpcsFile->getMemberProperties($stackPtr);
         if (empty($memberProps) === true) {
             // Couldn't get any info about this variable, which
@@ -72,16 +83,16 @@ class ValidVariableNameSniff extends PHP_CodeSniffer_Standards_AbstractVariableS
             return;
         }
 
-        $errorData = [$varName];
+        $public    = ($memberProps['scope'] !== 'private');
+        $errorData = array($varName);
 
         if (substr($varName, 0, 1) === '_') {
             $error = '%s member variable "%s" must not contain a leading underscore';
-            $data = [
-                ucfirst($memberProps['scope']),
-                $errorData[0],
-            ];
+            $data  = array(
+                      ucfirst($memberProps['scope']),
+                      $errorData[0],
+                     );
             $phpcsFile->addError($error, $stackPtr, 'PublicHasUnderscore', $data);
-
             return;
         }
 
@@ -89,7 +100,9 @@ class ValidVariableNameSniff extends PHP_CodeSniffer_Standards_AbstractVariableS
             $error = 'Member variable "%s" is not in valid camel caps format';
             $phpcsFile->addError($error, $stackPtr, 'MemberNotCamelCaps', $errorData);
         }
-    }
+
+    }//end processMemberVar()
+
 
     /**
      * Processes the variable found within a double quoted string.
@@ -102,5 +115,10 @@ class ValidVariableNameSniff extends PHP_CodeSniffer_Standards_AbstractVariableS
      */
     protected function processVariableInString(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-    }
-}
+
+    }//end processVariableInString()
+
+
+}//end class
+
+?>

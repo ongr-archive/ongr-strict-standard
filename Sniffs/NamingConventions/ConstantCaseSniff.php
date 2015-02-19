@@ -1,7 +1,6 @@
 <?php
-
 /**
- * ONGR_Sniffs_NamingConventions_ValidFunctionNameSniff.
+ * Ongr_Sniffs_NamingConventions_ValidFunctionNameSniff.
  *
  * PHP version 5
  *
@@ -13,13 +12,18 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-namespace ONGR\Sniffs\NamingConventions;
+if (class_exists('Generic_Sniffs_PHP_LowerCaseConstantSniff', true) === false) {
+    $error = 'Class Generic_Sniffs_PHP_LowerCaseConstantSniff not found';
+    throw new PHP_CodeSniffer_Exception($error);
+}
 
-use Generic_Sniffs_PHP_LowerCaseConstantSniff;
-use PHP_CodeSniffer_File;
+if (class_exists('Generic_Sniffs_PHP_UpperCaseConstantSniff', true) === false) {
+    $error = 'Class Generic_Sniffs_PHP_UpperCaseConstantSniff not found';
+    throw new PHP_CodeSniffer_Exception($error);
+}
 
 /**
- * ONGR_Sniffs_NamingConventions_ConstantCaseSniff.
+ * Ongr_Sniffs_NamingConventions_ConstantCaseSniff.
  *
  * Ensures TRUE, FALSE and NULL are uppercase for PHP and lowercase for JS.
  *
@@ -31,8 +35,10 @@ use PHP_CodeSniffer_File;
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ConstantCaseSniff extends Generic_Sniffs_PHP_LowerCaseConstantSniff
+class Ongr_Sniffs_NamingConventions_ConstantCaseSniff extends Generic_Sniffs_PHP_LowerCaseConstantSniff
 {
+
+
     /**
      * Processes this sniff, when one of its tokens is encountered.
      *
@@ -50,5 +56,10 @@ class ConstantCaseSniff extends Generic_Sniffs_PHP_LowerCaseConstantSniff
             $sniff = new Generic_Sniffs_PHP_LowerCaseConstantSniff();
             $sniff->process($phpcsFile, $stackPtr);
         }
-    }
-}
+
+    }//end process()
+
+
+}//end class
+
+?>

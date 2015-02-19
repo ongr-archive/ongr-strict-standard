@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="ONGR">
- <description>The ONGR coding standard.</description>
+<ruleset name="Ongr">
+ <description>The Ongr coding standard.</description>
 
  <!-- Include some specific sniffs -->
  <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
@@ -22,6 +22,54 @@
  <rule ref="Zend.Debug.CodeAnalyzer"/>
  <rule ref="PSR2"/>
 
+ <rule ref="Squiz">
+
+     <!--Exclude Generic rules used by squiz-->
+     <exclude name="Generic.Formatting.MultipleStatementAlignment"/>
+     <exclude name="Generic.Formatting.SpaceAfterCast"/>
+     <exclude name="Generic.Strings.UnnecessaryStringConcat"/>
+
+     <!--We dont use these checks-->
+     <exclude name="Squiz.Commenting.ClosingDeclarationComment"/>
+     <exclude name="Squiz.Commenting.FileComment"/>
+     <exclude name="Squiz.Commenting.LongConditionClosingComment"/>
+     <exclude name="Squiz.ControlStructures.ElseIfDeclaration"/>
+     <exclude name="Squiz.Files.FileExtension"/>
+     <exclude name="Squiz.Formatting.OperatorBracket"/>
+     <exclude name="Squiz.Objects.ObjectInstantiation"/>
+     <exclude name="Squiz.Operators.ComparisonOperatorUsage"/>
+     <exclude name="Squiz.PHP.CommentedOutCode"/>
+     <exclude name="Squiz.PHP.DisallowBooleanStatement"/>
+     <exclude name="Squiz.PHP.DisallowComparisonAssignment"/>
+     <exclude name="Squiz.PHP.DisallowInlineIf"/>
+     <exclude name="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
+     <exclude name="Squiz.PHP.Eval"/>
+     <exclude name="Squiz.PHP.Heredoc"/>
+
+     <!--These rules we override-->
+     <exclude name="Squiz.Classes.ClassDeclaration"/>
+     <exclude name="Squiz.Commenting.DocCommentAlignment"/>
+     <exclude name="Squiz.Commenting.BlockComment"/>
+     <exclude name="Squiz.Commenting.ClassComment"/>
+     <exclude name="Squiz.Commenting.FunctionComment"/>
+     <exclude name="Squiz.Commenting.FunctionCommentThrowTag"/>
+     <exclude name="Squiz.Commenting.InlineComment"/>
+     <exclude name="Squiz.Commenting.VariableComment"/>
+     <exclude name="Squiz.ControlStructures.InlineIfDeclaration"/>
+     <exclude name="Squiz.ControlStructures.SwitchDeclaration"/>
+     <exclude name="Squiz.NamingConventions.ConstantCase"/>
+     <exclude name="Squiz.NamingConventions.ValidFunctionName"/>
+     <exclude name="Squiz.NamingConventions.ValidVariableName"/>
+     <exclude name="Squiz.Strings.ConcatenationSpacing"/>
+     <exclude name="Squiz.Strings.DoubleQuoteUsage"/>
+     <exclude name="Squiz.WhiteSpace.CastSpacing"/>
+     <exclude name="Squiz.WhiteSpace.ControlStructureSpacing"/>
+     <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace"/>
+     <exclude name="Squiz.WhiteSpace.FunctionSpacing"/>
+     <exclude name="Squiz.WhiteSpace.MemberVarSpacing"/>
+     <exclude name="Squiz.WhiteSpace.ObjectOperatorSpacing"/>
+ </rule>
+
  <!-- Lines can be 120 chars long, but never show errors -->
  <rule ref="Generic.Files.LineLength">
   <properties>
@@ -36,15 +84,6 @@
    <property name="eolChar" value="\n"/>
   </properties>
  </rule>
-
- <!-- Have 8 chars padding maximum and always show as errors -->
- <!--<rule ref="Generic.Formatting.MultipleStatementAlignment">-->
-  <!--<properties>-->
-   <!--<property name="maxPadding" value="8"/>-->
-   <!--<property name="ignoreMultiLine" value="true"/>-->
-   <!--<property name="error" value="true"/>-->
-  <!--</properties>-->
- <!--</rule>-->
 
  <!-- We don't want gsjlint throwing errors for things we already check -->
  <rule ref="Generic.Debug.ClosureLinter">

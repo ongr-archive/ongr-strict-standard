@@ -14,7 +14,7 @@
  * @link http://pear.php.net/package/PHP_CodeSniffer
  */
 
-namespace ONGR\Tests;
+namespace Ongr\Tests;
 
 use PHPUnit_Framework_TestResult;
 use PHPUnit_Framework_TestSuite;

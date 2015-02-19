@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\Tests\Unit\WhiteSpace;
+namespace Ongr\Tests\Unit\WhiteSpace;
 
-use ONGR\Tests\AbstractSniffUnitTest;
+use Ongr\Tests\AbstractSniffUnitTest;
 
 class FunctionSpacingSniffTest extends AbstractSniffUnitTest
 {
