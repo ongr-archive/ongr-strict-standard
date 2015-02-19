@@ -1,7 +1,6 @@
 <?php
-
 /**
- * ONGR_Sniffs_Strings_ConcatenationSpacingSniff.
+ * Ongr_Sniffs_Strings_ConcatenationSpacingSniff.
  *
  * PHP version 5
  *
@@ -14,13 +13,8 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-namespace ONGR\Sniffs\Strings;
-
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
-
 /**
- * ONGR_Sniffs_Strings_ConcatenationSpacingSniff.
+ * Ongr_Sniffs_Strings_ConcatenationSpacingSniff.
  *
  * Makes sure there are spaces between the concatenation operator (.) and
  * the strings being concatenated.
@@ -34,8 +28,10 @@ use PHP_CodeSniffer_Sniff;
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ConcatenationSpacingSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_Strings_ConcatenationSpacingSniff implements PHP_CodeSniffer_Sniff
 {
+
+
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -43,8 +39,10 @@ class ConcatenationSpacingSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return [T_STRING_CONCAT];
-    }
+        return array(T_STRING_CONCAT);
+
+    }//end register()
+
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -64,5 +62,10 @@ class ConcatenationSpacingSniff implements PHP_CodeSniffer_Sniff
             $message = 'Concat operator must be surrounded by spaces';
             $phpcsFile->addError($message, $stackPtr, 'MustExist');
         }
-    }
-}
+
+    }//end process()
+
+
+}//end class
+
+?>

@@ -1,14 +1,31 @@
 <?php
-
-namespace ONGR\Sniffs\WhiteSpace;
-
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
+/**
+ * Ongr_Sniffs_WhiteSpace_NamespaceSpacingSniff
+ *
+ * PHP version 5
+ *
+ * @category PHP
+ * @package  Ongr_Strict_Codin_Standard
+ * @author   Ongr Team <info@nfq.com>
+ * @license  http://spdx.org/licenses/MIT MIT License
+ * @link     https://github.com/ongr-io/Ongr
+ */
 
 /**
+ * Ongr_Sniffs_WhiteSpace_NamespaceSpacingSniff
+ *
  * Class to validate right amount of whitespaces after namespace declaration.
+ *
+ * PHP version 5
+ *
+ * @category PHP
+ * @package  Ongr_Strict_Codin_Standard
+ * @author   Ongr Team <info@nfq.com>
+ * @license  http://spdx.org/licenses/MIT MIT License
+ * @version  Release: @package_version@
+ * @link     https://github.com/ongr-io/Ongr
  */
-class NamespaceSpacingSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_WhiteSpace_NamespaceSpacingSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.

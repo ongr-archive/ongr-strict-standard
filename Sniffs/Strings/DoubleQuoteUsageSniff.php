@@ -1,7 +1,6 @@
 <?php
-
 /**
- * ONGR_Sniffs_Strings_DoubleQuoteUsageSniff.
+ * Ongr_Sniffs_Strings_DoubleQuoteUsageSniff.
  *
  * PHP version 5
  *
@@ -14,13 +13,8 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-namespace ONGR\Sniffs\Strings;
-
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
-
 /**
- * ONGR_Sniffs_Strings_DoubleQuoteUsageSniff.
+ * Ongr_Sniffs_Strings_DoubleQuoteUsageSniff.
  *
  * Makes sure that any use of Double Quotes ("") are warranted.
  *
@@ -33,8 +27,10 @@ use PHP_CodeSniffer_Sniff;
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_Strings_DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
 {
+
+
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -42,11 +38,13 @@ class DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return [
-            T_CONSTANT_ENCAPSED_STRING,
-            T_DOUBLE_QUOTED_STRING,
-        ];
-    }
+        return array(
+                T_CONSTANT_ENCAPSED_STRING,
+                T_DOUBLE_QUOTED_STRING,
+               );
+
+    }//end register()
+
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -94,18 +92,18 @@ class DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
             $workingString .= $tokens[$i]['content'];
         }
 
-        $allowedChars = [
-            '\0',
-            '\n',
-            '\r',
-            '\f',
-            '\t',
-            '\v',
-            '\x',
-            '\b',
-            '\'',
-            '$',
-        ];
+        $allowedChars = array(
+                         '\0',
+                         '\n',
+                         '\r',
+                         '\f',
+                         '\t',
+                         '\v',
+                         '\x',
+                         '\b',
+                         '\'',
+                         '$',
+                        );
 
         foreach ($allowedChars as $testChar) {
             if (strpos($workingString, $testChar) !== false) {
@@ -114,7 +112,12 @@ class DoubleQuoteUsageSniff implements PHP_CodeSniffer_Sniff
         }
 
         $error = 'String %s does not require double quotes; use single quotes instead';
-        $data = [$workingString];
+        $data  = array($workingString);
         $phpcsFile->addError($error, $stackPtr, 'NotRequired', $data);
-    }
-}
+
+    }//end process()
+
+
+}//end class
+
+?>

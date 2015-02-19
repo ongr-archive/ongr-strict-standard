@@ -1,7 +1,6 @@
 <?php
-
 /**
- * ONGR_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff.
+ * Ongr_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff.
  *
  * PHP version 5
  *
@@ -14,13 +13,8 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-namespace ONGR\Sniffs\WhiteSpace;
-
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
-
 /**
- * ONGR_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff.
+ * Ongr_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff.
  *
  * Checks that there is one empty line before the closing brace of a function.
  *
@@ -33,15 +27,19 @@ use PHP_CodeSniffer_Sniff;
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class FunctionClosingBraceSpaceSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_WhiteSpace_FunctionClosingBraceSpaceSniff implements PHP_CodeSniffer_Sniff
 {
+
     /**
-     * @var array A list of tokenizers this sniff supports.
+     * A list of tokenizers this sniff supports.
+     *
+     * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                  );
+
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -50,8 +48,10 @@ class FunctionClosingBraceSpaceSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return [T_FUNCTION];
-    }
+        return array(T_FUNCTION);
+
+    }//end register()
+
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -71,16 +71,15 @@ class FunctionClosingBraceSpaceSniff implements PHP_CodeSniffer_Sniff
             return;
         }
 
-        $closeBrace = $tokens[$stackPtr]['scope_closer'];
+        $closeBrace  = $tokens[$stackPtr]['scope_closer'];
         $prevContent = $phpcsFile->findPrevious(T_WHITESPACE, ($closeBrace - 1), null, true);
 
-        // Special case for empty JS functions.
+        // Special case for empty JS functions
         if ($phpcsFile->tokenizerType === 'JS' && $prevContent === $tokens[$stackPtr]['scope_opener']) {
             // In this case, the opening and closing brace must be
             // right next to each other.
             if ($tokens[$stackPtr]['scope_closer'] !== ($tokens[$stackPtr]['scope_opener'] + 1)) {
-                $error = 'The opening and closing braces of empty functions'
-                    . ' must be directly next to each other; e.g., function () {}';
+                $error = 'The opening and closing braces of empty functions must be directly next to each other; e.g., function () {}';
                 $phpcsFile->addError($error, $closeBrace, 'SpacingBetween');
             }
 
@@ -88,27 +87,30 @@ class FunctionClosingBraceSpaceSniff implements PHP_CodeSniffer_Sniff
         }
 
         $braceLine = $tokens[$closeBrace]['line'];
-        $prevLine = $tokens[$prevContent]['line'];
+        $prevLine  = $tokens[$prevContent]['line'];
 
         $found = ($braceLine - $prevLine - 1);
-        if ($phpcsFile->hasCondition($stackPtr, T_FUNCTION) === true
-            || isset($tokens[$stackPtr]['nested_parenthesis']) === true
-        ) {
+        if ($phpcsFile->hasCondition($stackPtr, T_FUNCTION) === true || isset($tokens[$stackPtr]['nested_parenthesis']) === true) {
             // Nested function.
             if ($found < 0) {
                 $error = 'Closing brace of nested function must be on a new line';
                 $phpcsFile->addError($error, $closeBrace, 'ContentBeforeClose');
-            } elseif ($found > 0) {
+            } else if ($found > 0) {
                 $error = 'Expected 0 blank lines before closing brace of nested function; %s found';
-                $data = [$found];
+                $data  = array($found);
                 $phpcsFile->addError($error, $closeBrace, 'SpacingBeforeNestedClose', $data);
             }
         } else {
             if ($found !== 0) {
                 $error = 'Expected 0 blank lines before closing function brace; %s found';
-                $data = [$found];
+                $data  = array($found);
                 $phpcsFile->addError($error, $closeBrace, 'SpacingBeforeClose', $data);
             }
         }
-    }
-}
+
+    }//end process()
+
+
+}//end class
+
+?>

@@ -1,7 +1,6 @@
 <?php
-
 /**
- * ONGR_Sniffs_WhiteSpace_ControlStructureSpacingSniff.
+ * Ongr_Sniffs_WhiteSpace_ControlStructureSpacingSniff.
  *
  * PHP version 5
  *
@@ -14,14 +13,8 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-namespace ONGR\Sniffs\WhiteSpace;
-
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
-use PHP_CodeSniffer_Tokens;
-
 /**
- * ONGR_Sniffs_WhiteSpace_ControlStructureSpacingSniff.
+ * Ongr_Sniffs_WhiteSpace_ControlStructureSpacingSniff.
  *
  * Checks that control structures have the correct spacing around brackets.
  *
@@ -34,15 +27,19 @@ use PHP_CodeSniffer_Tokens;
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_WhiteSpace_ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
 {
+
     /**
-     * @var array A list of tokenizers this sniff supports.
+     * A list of tokenizers this sniff supports.
+     *
+     * @var array
      */
-    public $supportedTokenizers = [
-        'PHP',
-        'JS',
-    ];
+    public $supportedTokenizers = array(
+                                   'PHP',
+                                   'JS',
+                                  );
+
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -51,17 +48,19 @@ class ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return [
-            T_IF,
-            T_WHILE,
-            T_FOREACH,
-            T_FOR,
-            T_SWITCH,
-            T_DO,
-            T_ELSE,
-            T_ELSEIF,
-        ];
-    }
+        return array(
+                T_IF,
+                T_WHILE,
+                T_FOREACH,
+                T_FOR,
+                T_SWITCH,
+                T_DO,
+                T_ELSE,
+                T_ELSEIF,
+               );
+
+    }//end register()
+
 
     /**
      * Processes this test, when one of its tokens is encountered.
@@ -80,21 +79,21 @@ class ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
             $parenOpener = $tokens[$stackPtr]['parenthesis_opener'];
             $parenCloser = $tokens[$stackPtr]['parenthesis_closer'];
             if ($tokens[($parenOpener + 1)]['code'] === T_WHITESPACE) {
-                $gap = strlen($tokens[($parenOpener + 1)]['content']);
+                $gap   = strlen($tokens[($parenOpener + 1)]['content']);
                 $error = 'Expected 0 spaces after opening bracket; %s found';
-                $data = [$gap];
+                $data  = array($gap);
                 $phpcsFile->addError($error, ($parenOpener + 1), 'SpacingAfterOpenBrace', $data);
             }
 
             if ($tokens[$parenOpener]['line'] === $tokens[$parenCloser]['line']
                 && $tokens[($parenCloser - 1)]['code'] === T_WHITESPACE
             ) {
-                $gap = strlen($tokens[($parenCloser - 1)]['content']);
+                $gap   = strlen($tokens[($parenCloser - 1)]['content']);
                 $error = 'Expected 0 spaces before closing bracket; %s found';
-                $data = [$gap];
+                $data  = array($gap);
                 $phpcsFile->addError($error, ($parenCloser - 1), 'SpaceBeforeCloseBrace', $data);
             }
-        }
+        }//end if
 
         if (isset($tokens[$stackPtr]['scope_closer']) === false) {
             return;
@@ -159,7 +158,7 @@ class ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
             ) {
                 $trailingContent = $nextCode;
             }
-        }
+        }//end if
 
         if ($tokens[$trailingContent]['code'] === T_ELSE) {
             if ($tokens[$stackPtr]['code'] === T_IF) {
@@ -192,5 +191,10 @@ class ControlStructureSpacingSniff implements PHP_CodeSniffer_Sniff
                 $phpcsFile->addError($error, $scopeCloser, 'LineAfterClose');
             }
         }
-    }
-}
+
+    }//end process()
+
+
+}//end class
+
+?>

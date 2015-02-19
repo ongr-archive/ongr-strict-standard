@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\Tests\Unit\Arrays;
+namespace Ongr\Tests\Unit\Arrays;
 
-use ONGR\Tests\AbstractSniffUnitTest;
+use Ongr\Tests\AbstractSniffUnitTest;
 
 /**
  * ArrayDeclarationSniffTest class.

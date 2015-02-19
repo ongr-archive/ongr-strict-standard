@@ -1,26 +1,31 @@
 <?php
-
 /**
- * ONGR_Sniffs_WhiteSpace_PHPOpenTagSniff.
+ * Ongr_Sniffs_WhiteSpace_PHPOpenTagSniff
  *
  * PHP version 5
  *
- * @category  PHP
- * @package   PHP_CodeSniffer
- * @author    ONGR Team <info@ongr.io>
- * @copyright 2015 NFQ Technologies UAB
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @category PHP
+ * @package  Ongr_Strict_Codin_Standard
+ * @author   Ongr Team <info@nfq.com>
+ * @license  http://spdx.org/licenses/MIT MIT License
+ * @link     https://github.com/ongr-io/Ongr
  */
-
-namespace ONGR\Sniffs\WhiteSpace;
-
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
 
 /**
+ * Ongr_Sniffs_WhiteSpace_PHPOpenTagSniff
+ *
  * Ensures a blank line after php open tag.
+ *
+ * PHP version 5
+ *
+ * @category PHP
+ * @package  Ongr_Strict_Codin_Standard
+ * @author   Ongr Team <info@nfq.com>
+ * @license  http://spdx.org/licenses/MIT MIT License
+ * @version  Release: @package_version@
+ * @link     https://github.com/ongr-io/Ongr
  */
-class PHPOpenTagSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_WhiteSpace_PHPOpenTagSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
