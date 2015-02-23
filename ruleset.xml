@@ -47,8 +47,8 @@
      <exclude name="Squiz.PHP.Heredoc"/>
 
      <!--These rules we override-->
+     <exclude name="Squiz.Arrays.ArrayDeclaration"/>
      <exclude name="Squiz.Classes.ClassDeclaration"/>
-     <exclude name="Squiz.Commenting.DocCommentAlignment"/>
      <exclude name="Squiz.Commenting.BlockComment"/>
      <exclude name="Squiz.Commenting.ClassComment"/>
      <exclude name="Squiz.Commenting.FunctionComment"/>
@@ -57,20 +57,45 @@
      <exclude name="Squiz.Commenting.VariableComment"/>
      <exclude name="Squiz.ControlStructures.InlineIfDeclaration"/>
      <exclude name="Squiz.ControlStructures.SwitchDeclaration"/>
-     <exclude name="Squiz.NamingConventions.ConstantCase"/>
+     <!--<exclude name="Squiz.NamingConventions.ConstantCase"/>-->
      <exclude name="Squiz.NamingConventions.ValidFunctionName"/>
      <exclude name="Squiz.NamingConventions.ValidVariableName"/>
      <exclude name="Squiz.Strings.ConcatenationSpacing"/>
      <exclude name="Squiz.Strings.DoubleQuoteUsage"/>
-     <exclude name="Squiz.WhiteSpace.CastSpacing"/>
+     <!--<exclude name="Squiz.WhiteSpace.CastSpacing"/>-->
      <exclude name="Squiz.WhiteSpace.ControlStructureSpacing"/>
      <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace"/>
      <exclude name="Squiz.WhiteSpace.FunctionSpacing"/>
      <exclude name="Squiz.WhiteSpace.MemberVarSpacing"/>
      <exclude name="Squiz.WhiteSpace.ObjectOperatorSpacing"/>
+
+
+     <!--Experimenting-->
+     <!--<exclude name="Squiz.WhiteSpace.OperatorSpacing"/>-->
+     <exclude name="Generic.Commenting.DocComment"/>
+     <!--Skip JS files-->
+     <exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket"/>
+     <exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments"/>
+     <!--Excluding EmbeddedPhpSniff-->
+     <exclude name="Squiz.PHP.EmbeddedPhp"/>
+
  </rule>
 
- <!-- Lines can be 120 chars long, but never show errors -->
+<!--Concat operator spacing-->
+<rule ref="Squiz.Strings.ConcatenationSpacing">
+    <properties>
+        <property name="spacing" value="1"/>
+    </properties>
+</rule>
+
+ <!--Allow new line after "=>" -->
+ <rule ref="Squiz.WhiteSpace.OperatorSpacing">
+    <properties>
+        <property name="ignoreNewlines" value="true"/>
+    </properties>
+ </rule>
+
+    <!-- Lines can be 120 chars long, but never show errors -->
  <rule ref="Generic.Files.LineLength">
   <properties>
    <property name="lineLimit" value="120"/>

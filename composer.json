@@ -20,7 +20,7 @@
         "php": "~5.4"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "1.*",
+        "squizlabs/php_codesniffer": "~2.0",
         "phpunit/phpunit": "~4.2"
     },
     "target-dir": "Ongr",

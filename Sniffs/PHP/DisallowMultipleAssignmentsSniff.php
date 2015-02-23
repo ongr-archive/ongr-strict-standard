@@ -58,7 +58,7 @@ class Ongr_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
         $tokens = $phpcsFile->getTokens();
 
         // Ignore default value assignments in function definitions.
-        $function = $phpcsFile->findPrevious(array(T_FUNCTION, T_CLOSURE), ($stackPtr - 1));
+        $function = $phpcsFile->findPrevious(array(T_FUNCTION, T_CLOSURE), ($stackPtr - 1), null, false, null, true);
         if ($function !== false) {
             $opener = $tokens[$function]['parenthesis_opener'];
             $closer = $tokens[$function]['parenthesis_closer'];
@@ -97,7 +97,7 @@ class Ongr_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
                 // We found our variable.
                 break;
             }
-        }
+        }//end for
 
         if ($varToken <= 0) {
             // Didn't find a variable.
@@ -124,7 +124,7 @@ class Ongr_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
 
         // Ignore member var definitions.
         $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($varToken - 1), null, true);
-        if (in_array($tokens[$prev]['code'], PHP_CodeSniffer_Tokens::$scopeModifiers) === true) {
+        if (isset(PHP_CodeSniffer_Tokens::$scopeModifiers[$tokens[$prev]['code']]) === true) {
             return;
         }
 
@@ -151,44 +151,19 @@ class Ongr_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
                 return;
             }
 
-            if (in_array($tokens[$i]['code'], PHP_CodeSniffer_Tokens::$emptyTokens) === false) {
+            if (isset(PHP_CodeSniffer_Tokens::$emptyTokens[$tokens[$i]['code']]) === false) {
                 $prevLine = $tokens[$i]['line'];
                 break;
             }
-        }
+        }//end for
 
         // Ignore the first part of FOR loops as we are allowed to
         // assign variables there even though the variable is not the
-        // first thing on the line.
-        if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS) {
-            if (isset($tokens[$i]['parenthesis_owner']) !== true) {
-                $ownerIndex = $i;
-                // Find owner - there must be one!
-                while (isset($tokens[$ownerIndex]['parenthesis_owner']) === false && $ownerIndex > 0) {
-                    $ownerIndex--;
-                }
-                if ($ownerIndex > 0) {
-                    // Owner index found.
-                    $i = $ownerIndex;
-                }
-            }
-            if (isset($tokens[$i]['parenthesis_owner'])) {
-                $owner = $tokens[$i]['parenthesis_owner'];
-                if ($tokens[$owner]['code'] === T_FOR) {
-                    return;
-                }
-            }
-        }
-
-        // Also ignore WHILE loops and IF conditions.
-        $validTokens = [T_WHILE, T_IF];
-        if (isset($tokens[$stackPtr]['nested_parenthesis'])) {
-            foreach ($tokens[$stackPtr]['nested_parenthesis'] as $start => $end) {
-                if (isset($tokens[$start]['parenthesis_owner'])
-                    && in_array($tokens[$tokens[$start]['parenthesis_owner']]['code'], $validTokens, true)
-                ) {
-                    return;
-                }
+        // first thing on the line. Also ignore WHILE loops.
+        if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS && isset($tokens[$i]['parenthesis_owner']) === true) {
+            $owner = $tokens[$i]['parenthesis_owner'];
+            if ($tokens[$owner]['code'] === T_FOR || $tokens[$owner]['code'] === T_WHILE) {
+                return;
             }
         }
 
@@ -201,5 +176,3 @@ class Ongr_Sniffs_PHP_DisallowMultipleAssignmentsSniff implements PHP_CodeSniffe
 
 
 }//end class
-
-?>
