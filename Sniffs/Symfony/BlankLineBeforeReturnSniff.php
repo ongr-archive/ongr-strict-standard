@@ -13,11 +13,6 @@
  * @link     https://github.com/escapestudios/Symfony2-coding-standard
  */
 
-namespace ONGR\Sniffs\Symfony;
-
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
-
 /**
  * Symfony2_Sniffs_Formatting_BlankLineBeforeReturnSniff.
  *
@@ -31,15 +26,17 @@ use PHP_CodeSniffer_Sniff;
  * @license  http://spdx.org/licenses/MIT MIT License
  * @link     https://github.com/escapestudios/Symfony2-coding-standard
  */
-class BlankLineBeforeReturnSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_Symfony_BlankLineBeforeReturnSniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * @var array A list of tokenizers this sniff supports.
+     * A list of tokenizers this sniff supports.
+     *
+     * @var array
      */
-    public $supportedTokenizers = [
+    public $supportedTokenizers = array(
         'PHP',
         'JS',
-    ];
+    );
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -48,7 +45,7 @@ class BlankLineBeforeReturnSniff implements PHP_CodeSniffer_Sniff
      */
     public function register()
     {
-        return [T_RETURN];
+        return array(T_RETURN);
     }
 
     /**
@@ -62,10 +59,10 @@ class BlankLineBeforeReturnSniff implements PHP_CodeSniffer_Sniff
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
-        $current = $stackPtr;
-        $previousLine = $tokens[$stackPtr]['line'] - 1;
-        $prevLineTokens = [];
+        $tokens          = $phpcsFile->getTokens();
+        $current         = $stackPtr;
+        $previousLine    = $tokens[$stackPtr]['line'] - 1;
+        $prevLineTokens  = array();
 
         while ($current >= 0 && $tokens[$current]['line'] >= $previousLine) {
             if ($tokens[$current]['line'] == $previousLine
@@ -82,11 +79,13 @@ class BlankLineBeforeReturnSniff implements PHP_CodeSniffer_Sniff
             || $prevLineTokens[0] === 'T_COLON')
         ) {
             return;
-        } elseif (count($prevLineTokens) > 0) {
+        } else if (count($prevLineTokens) > 0) {
             $phpcsFile->addError(
                 'Missing blank line before return statement',
                 $stackPtr
             );
         }
+
+        return;
     }
 }

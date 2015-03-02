@@ -1,14 +1,31 @@
 <?php
-
-namespace ONGR\Sniffs\WhiteSpace;
-
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
+/**
+ * Ongr_Sniffs_WhiteSpace_NamespaceSpacingSniff
+ *
+ * PHP version 5
+ *
+ * @category PHP
+ * @package  Ongr_Strict_Codin_Standard
+ * @author   Ongr Team <info@nfq.com>
+ * @license  http://spdx.org/licenses/MIT MIT License
+ * @link     https://github.com/ongr-io/Ongr
+ */
 
 /**
+ * Ongr_Sniffs_WhiteSpace_NamespaceSpacingSniff
+ *
  * Class to validate right amount of whitespaces after namespace declaration.
+ *
+ * PHP version 5
+ *
+ * @category PHP
+ * @package  Ongr_Strict_Codin_Standard
+ * @author   Ongr Team <info@nfq.com>
+ * @license  http://spdx.org/licenses/MIT MIT License
+ * @version  Release: @package_version@
+ * @link     https://github.com/ongr-io/Ongr
  */
-class NamespaceSpacingSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_WhiteSpace_NamespaceSpacingSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -31,6 +48,7 @@ class NamespaceSpacingSniff implements PHP_CodeSniffer_Sniff
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
+        #TODO add an autofix.
         $tokens = $phpcsFile->getTokens();
 
         if (isset($tokens[$stackPtr]['scope_opener'])) {
@@ -38,7 +56,6 @@ class NamespaceSpacingSniff implements PHP_CodeSniffer_Sniff
             return;
         }
         $content = $phpcsFile->findNext(T_SEMICOLON, $stackPtr) + 1;
-
         while ($tokens[$content]['code'] == T_WHITESPACE) {
             ++$content;
         }
@@ -46,6 +63,21 @@ class NamespaceSpacingSniff implements PHP_CodeSniffer_Sniff
             // Case for minimum lines is written somewhere else.
             $phpcsFile->addError(
                 'There must be exactly 1 blank line after namespace declaration',
+                $stackPtr,
+                'NamespaceSpacing'
+            );
+        }
+
+        $content = $phpcsFile->findNext(T_NAMESPACE, $stackPtr) - 1;
+        while ($tokens[$content]['code'] == T_WHITESPACE) {
+            --$content;
+        }
+        $spaces = ($tokens[$content]['line'] - $tokens[$stackPtr]['line']) * -1;
+        $spaces--;
+        if ($spaces > 2) {
+            // Case for minimum lines is written somewhere else.
+            $phpcsFile->addError(
+                'There must be exactly 1 blank line before namespace declaration; Found ' . $spaces,
                 $stackPtr,
                 'NamespaceSpacing'
             );

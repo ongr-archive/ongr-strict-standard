@@ -9,7 +9,7 @@
         "symfony"
     ],
     "type": "library",
-    "license": "BSD-3-Clause",
+    "license": "MIT",
     "authors": [
         {
             "name": "ONGR",
@@ -20,13 +20,11 @@
         "php": "~5.4"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "1.*",
+        "squizlabs/php_codesniffer": "~2.0",
         "phpunit/phpunit": "~4.2"
     },
-    "target-dir": "ONGR",
+    "target-dir": "Ongr",
     "autoload": {
-        "psr-0": {
-            "ONGR\\": ""
-        }
+        "psr-4": {"Ongr\\": ""}
     }
 }

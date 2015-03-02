@@ -1,7 +1,6 @@
 <?php
-
 /**
- * ONGR_Sniffs_Formatting_FunctionSpacingSniff.
+ * Ongr_Sniffs_Formatting_FunctionSpacingSniff.
  *
  * PHP version 5
  *
@@ -14,13 +13,8 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-namespace ONGR\Sniffs\WhiteSpace;
-
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
-
 /**
- * ONGR_Sniffs_WhiteSpace_FunctionSpacingSniff.
+ * Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff.
  *
  * Checks the separation between methods in a class or interface.
  *
@@ -33,8 +27,10 @@ use PHP_CodeSniffer_Sniff;
  * @version   Release: @package_version@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
-class FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
 {
+    //ONGR we are checking blank lines before and after the function
+    #TODO add an autofix
     /**
      * @var int The number of blank lines after the function.
      */
@@ -210,4 +206,6 @@ class FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
             $phpcsFile->addError($error, $stackPtr, 'Before', $data);
         }
     }
-}
+
+
+}//end class

@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\Tests\Unit\WhiteSpace;
+namespace Ongr\Tests\Unit\WhiteSpace;
 
-use ONGR\Tests\AbstractSniffUnitTest;
+use Ongr\Tests\AbstractSniffUnitTest;
 
 class FunctionSpacingSniffTest extends AbstractSniffUnitTest
 {
@@ -21,8 +21,8 @@ class FunctionSpacingSniffTest extends AbstractSniffUnitTest
     protected function getErrorList()
     {
         return [
-            37 => ['Expected 0 blank lines before function; 1 found'],
-            48 => ['Expected 0 blank lines before function; 1 found'],
+            37 => 1,
+            48 => 1,
         ];
     }
 
