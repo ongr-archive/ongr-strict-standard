@@ -25,6 +25,6 @@
     },
     "target-dir": "Ongr",
     "autoload": {
-        "psr-4": {"Ongr\\": ""}
+        "psr-0": {"Ongr\\": ""}
     }
 }
