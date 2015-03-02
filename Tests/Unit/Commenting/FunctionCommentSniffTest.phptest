@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the ONGR package.
+ *   This file is part of the ONGR package.
  *
  * (c) NFQ Technologies UAB <info@nfq.com>
  *
@@ -17,7 +17,7 @@ namespace Test;
 class FunctionCommentSniffTest
 {
     /**
-     * Foo. 
+     * Foo.
      *
      * There is a white space after "Foo."
      * Some editors may remove it
@@ -31,7 +31,7 @@ class FunctionCommentSniffTest
     }
 
     /**
-     *  Bar.
+     *     Bar.
      *
      *  There is a extra white space before "Bar."
      * and this sentence.

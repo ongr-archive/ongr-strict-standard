@@ -61,34 +61,28 @@ class AllSniffs
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite('PHP CodeSniffer Standards');
+        $baseDir = pathinfo(getcwd(), PATHINFO_DIRNAME);
 
-        $standardDir = __DIR__ . DIRECTORY_SEPARATOR . 'Unit';
+        \PHP_CodeSniffer::setConfigData('installed_paths', $baseDir);
+        $path = pathinfo(\PHP_CodeSniffer::getInstalledStandardPath('Ongr'), PATHINFO_DIRNAME);
+        $testsDir = $path . DIRECTORY_SEPARATOR . 'Tests' . DIRECTORY_SEPARATOR . 'Unit';
 
-        // Locate the actual directory that contains the standard's tests.
-        // This is individual to each standard as they could be symlinked in.
-        $baseDir = dirname(dirname(dirname($standardDir)));
+        $directoryIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($testsDir));
 
-        $di = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($standardDir));
-
-        foreach ($di as $file) {
-            // Skip hidden files.
-            if (substr($file->getFilename(), 0, 1) === '.') {
+        /** @var \SplFileInfo $fileinfo */
+        foreach ($directoryIterator as $file) {
+            // Skip hidden and extension must be php.
+            if ($file->getFilename()[0] === '.' || pathinfo($file, PATHINFO_EXTENSION) !== 'php') {
                 continue;
             }
 
-            // Tests must have the extension 'php'.
-            $parts = explode('.', $file);
-            $ext = array_pop($parts);
-            if ($ext !== 'php') {
-                continue;
-            }
+            $className = str_replace(
+                [$baseDir . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR],
+                ['', '\\'],
+                substr($file, 0, -4)
+            );
 
-            $filePath = $file->getPathname();
-            $className = str_replace([$baseDir . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], ['', '\\'], $filePath);
-            $className = substr($className, 0, -4);
-
-            $class = new $className('getErrorList');
-            $suite->addTest($class);
+            $suite->addTest(new $className('getErrorList'));
         }
 
         return $suite;

@@ -97,7 +97,7 @@ class Ongr_Sniffs_WhiteSpace_MemberVarSpacingSniff extends PHP_CodeSniffer_Stand
         $prev       = $phpcsFile->findPrevious(PHP_CodeSniffer_Tokens::$emptyTokens, ($first - 1), null, true);
         $foundLines = ($tokens[$first]['line'] - $tokens[$prev]['line'] - 1);
         //ONGR We do not allow blank line after an opening brace. Skipping. It's checked by ClassDeclarationSniff
-        if ($foundLines === 1 || $tokens[$prevContent]['code'] === T_OPEN_CURLY_BRACKET) {
+        if ($foundLines === 1 || $tokens[$prev]['code'] === T_OPEN_CURLY_BRACKET) {
             return;
         }
 

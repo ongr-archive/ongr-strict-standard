@@ -24,8 +24,8 @@ class PHPOpenTagSniffTest extends AbstractSniffUnitTest
     protected function getErrorList()
     {
         return [
-            1 => ['There must be one blank line after the php open tag and no whitespaces'],
-            3 => ['There must be one blank line after the php open tag and no whitespaces'],
+            1 => 1,
+            3 => 1,
         ];
     }
 

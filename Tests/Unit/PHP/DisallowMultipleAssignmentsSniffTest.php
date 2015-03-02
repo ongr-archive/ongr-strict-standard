@@ -24,9 +24,9 @@ class DisallowMultipleAssignmentsSniffTest extends AbstractSniffUnitTest
     protected function getErrorList()
     {
         return [
-            20 => ['Assignments must be the first block of code on a line'],
-            24 => ['Assignments must be the first block of code on a line'],
-            46 => ['Assignments must be the first block of code on a line'],
+            20 => 1,
+            24 => 1,
+            46 => 1,
         ];
     }
 

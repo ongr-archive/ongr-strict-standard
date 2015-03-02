@@ -30,7 +30,6 @@ if (class_exists('PHP_CodeSniffer_Standards_AbstractVariableSniff', true) === fa
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
-#TODO check variable comment with new strict standard
 class Ongr_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Standards_AbstractVariableSniff
 {
 
@@ -121,6 +120,8 @@ class Ongr_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Standa
         }
 
         $varType       = $tokens[($foundVar + 2)]['content'];
+//
+
         $suggestedType = PHP_CodeSniffer::suggestType($varType);
 
         if ($varType === 'bool') {
@@ -128,13 +129,49 @@ class Ongr_Sniffs_Commenting_VariableCommentSniff extends PHP_CodeSniffer_Standa
         } elseif ($varType === 'int') {
             $varType = 'integer';
         }
-        if ($varType !== $suggestedType) {
+        if ($varType !== $suggestedType && strpos($varType, $suggestedType . ' ') === false) {
             $error = 'Expected "%s" but found "%s" for @var tag in member variable comment';
             $data  = array(
                 $suggestedType,
                 $varType,
             );
             $phpcsFile->addError($error, ($foundVar + 2), 'IncorrectVarType', $data);
+        }
+
+        //Ongr
+
+        $comment = trim(preg_replace('/^array\(\s*([^\s^=^>]*)(\s*=>\s*(.*))?\s*\)/i', '', $varType, 1, $count));
+        if (!$count) {
+            $space = strpos($comment, ' ');
+            if ($space === false) {
+                return;
+            }
+            $comment = substr($comment, $space + 1);
+        }
+        if ($comment === '') {
+            return;
+        }
+        if (substr($comment, 0, 1) == '$') {
+            $this->currentFile->addError(
+                'Class field docs should not contain field name',
+                $foundVar
+            );
+            return;
+        }
+        if (!in_array(substr($comment, -1, 1), ['.', '?', '!'])) {
+            $this->currentFile->addError(
+                'Variable comments must end in full-stops, exclamation marks, or question marks',
+                $foundVar,
+                'VariableComment'
+            );
+        }
+        $firstLetter = substr($comment, 0, 1);
+        if (strtoupper($firstLetter) !== $firstLetter) {
+            $this->currentFile->addError(
+                'Variable comments must must start with a capital letter',
+                $foundVar,
+                'VariableComment'
+            );
         }
 
     }//end processMemberVar()

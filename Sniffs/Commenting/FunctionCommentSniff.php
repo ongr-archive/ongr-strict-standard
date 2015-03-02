@@ -526,14 +526,14 @@ class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting
         }//end foreach
 
         //ONGR Ignore doc tag rules if it contains only {@inheritdoc}.
-        $inheritdocMatches = false;
+        $inheritDocMatches = false;
         for ($i = $commentStart; $i < $tokens[$commentStart]['comment_closer']; $i++) {
             if ($tokens[$i]['content'] === '{@inheritdoc}') {
-                $inheritdocMatches = true;
+                $inheritDocMatches = true;
             }
         }
         // Report missing comments.
-        if (!$inheritdocMatches) {
+        if (!$inheritDocMatches) {
             $realNames = array();
             foreach ($realParams as $realParam) {
                 $realNames[] = $realParam['name'];

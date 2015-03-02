@@ -56,9 +56,9 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-
-        if ($tokens[$stackPtr]['code'] === T_ARRAY) {
-            $phpcsFile->recordMetric($stackPtr, 'Short array syntax used', 'no');
+        //Ongr !== T_OPEN_SHORT_ARRAY
+        if ($tokens[$stackPtr]['code'] !== T_OPEN_SHORT_ARRAY) {
+            $phpcsFile->addError('Must use short array syntax for arrays', $stackPtr, 'LongArray');
 
             // Array keyword should be lower case.
             if ($tokens[$stackPtr]['content'] !== strtolower($tokens[$stackPtr]['content'])) {
@@ -231,12 +231,14 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
         }//end while
 
         if ($valueCount > 0) {
-            $conditionCheck = $phpcsFile->findPrevious(array(T_OPEN_PARENTHESIS, T_SEMICOLON), ($stackPtr - 1), null, false);
 
-            if ($conditionCheck === false
-                || $tokens[$conditionCheck]['line'] !== $tokens[$stackPtr]['line']
-            ) {
-                //ONGR We allow declaring values on a single line
+            //ONGR We allow declaring values on a single line
+//            $conditionCheck = $phpcsFile->findPrevious(array(T_OPEN_PARENTHESIS, T_SEMICOLON), ($stackPtr - 1), null, false);
+//
+//            if ($conditionCheck === false
+//                || $tokens[$conditionCheck]['line'] !== $tokens[$stackPtr]['line']
+//            ) {
+//
 //                $error = 'Array with multiple values cannot be declared on a single line';
 //                $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SingleLineNotAllowed');
 //                if ($fix === true) {
@@ -245,9 +247,9 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
 //                    $phpcsFile->fixer->addNewlineBefore($arrayEnd);
 //                    $phpcsFile->fixer->endChangeset();
 //                }
-
-                return;
-            }
+//
+//                return;
+//            }
 
             // We have a multiple value array that is inside a condition or
             // function. Check its spacing is correct.
@@ -312,7 +314,7 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
     {
         $tokens       = $phpcsFile->getTokens();
         $keywordStart = $tokens[$stackPtr]['column'];
-
+        $statementStart = $this->getStatementStartColumn($phpcsFile, $stackPtr);
         // Check the closing bracket is on a new line.
         $lastContent = $phpcsFile->findPrevious(T_WHITESPACE, ($arrayEnd - 1), $arrayStart, true);
         if ($tokens[$lastContent]['line'] === $tokens[$arrayEnd]['line']) {
@@ -321,16 +323,16 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
             if ($fix === true) {
                 $phpcsFile->fixer->addNewlineBefore($arrayEnd);
             }
-        } else if ($tokens[$arrayEnd]['column'] !== $keywordStart) {
-            //ONGR Check the closing bracket is lined up under the "a" in array.
-//            $expected = ($keywordStart - 1);
-//            $found    = ($tokens[$arrayEnd]['column'] - 1);
-//            $error    = 'Closing parenthesis not aligned correctly; expected %s space(s) but found %s';
-//            $data     = array(
-//                $expected,
-//                $found,
-//            );
-//
+        } else if ($tokens[$arrayEnd]['column'] !== $statementStart) {
+            // Check the closing bracket is lined up under the "a" in array.
+            $expected = $statementStart;
+            $found    = ($tokens[$arrayEnd]['column']);
+            $error    = 'Closing parenthesis not aligned correctly; expected %s space(s) but found %s';
+            $data     = array(
+                $expected,
+                $found,
+            );
+            $phpcsFile->addError($error, $arrayEnd, 'CloseBraceNotAligned', $data);
 //            $fix = $phpcsFile->addFixableError($error, $arrayEnd, 'CloseBraceNotAligned', $data);
 //            if ($fix === true) {
 //                if ($found === 0) {
@@ -379,16 +381,33 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 continue;
             }
 
-            if ($tokens[$nextToken]['code'] === T_OPEN_SHORT_ARRAY) {
-                // Let subsequent calls of this test handle nested arrays.
-                $indices[] = array('value' => $nextToken);
-                $lastToken = $nextToken;
-                $nextToken = $tokens[$nextToken]['bracket_closer'];
-                $nextToken = $phpcsFile->findNext(T_WHITESPACE, ($nextToken + 1), null, true);
-                if ($tokens[$nextToken]['code'] !== T_COMMA) {
-                    $nextToken--;
+            //Ongr
+            if ($tokens[$nextToken]['code'] === T_ARRAY || $tokens[$nextToken]['code'] == T_OPEN_SHORT_ARRAY
+                || $tokens[$nextToken]['code'] === T_OPEN_PARENTHESIS
+            ) {
+                // Skip contents in parenthesis and let subsequent calls of this test handle nested arrays.
+                if ($tokens[$nextToken - 2]['code'] == T_CLOSURE) {
+                    $nextToken -= 2;
+                }
+                $indices[] = ['value' => $nextToken];
+                if ($tokens[$nextToken]['code'] == T_OPEN_SHORT_ARRAY) {
+                    $nextToken = $tokens[$nextToken]['bracket_closer'];
                 } else {
-                    $lastToken = $nextToken;
+                    $nextToken = $tokens[$nextToken]['parenthesis_closer'];
+                }
+                // If array declaration is the only thing on last line other checks
+                // will not have any chance to check for comma so we need to do it now.
+                $multiLine = $tokens[$arrayStart]['line'] !== $tokens[$arrayEnd]['line'];
+                $next = $phpcsFile->findNext(
+                    [T_DOUBLE_ARROW, T_COMMA, T_ARRAY, T_OPEN_SHORT_ARRAY, T_OPEN_PARENTHESIS],
+                    $nextToken,
+                    $arrayEnd
+                );
+                if ($multiLine && !$next) {
+                    // There is no more content which means missing comma.
+                    $error = 'Each line in an array declaration must end with a comma';
+                    $phpcsFile->addError($error, $nextToken, 'NoCommaAfterLast');
+                    return;
                 }
 
                 continue;
@@ -460,11 +479,24 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 continue;
             }//end if
 
+
             if ($tokens[$nextToken]['code'] === T_DOUBLE_ARROW) {
                 if ($singleUsed === true) {
                     $error = 'Key specified for array entry; first entry has no key';
                     $phpcsFile->addError($error, $nextToken, 'KeySpecified');
                     return;
+                }
+                // Ongr we require single whitespace before double arrow
+                if ($tokens[$nextToken - 1]['code'] !== T_WHITESPACE
+                    || strlen($tokens[$nextToken - 1]['content']) != 1
+                ) {
+                    $error = 'Expected single whitespace before double arrow, found %s spaces';
+                    if ($tokens[$nextToken - 1]['code'] !== T_WHITESPACE) {
+                        $data = [0];
+                    } else {
+                        $data = [strlen($tokens[$nextToken - 1]['content'])];
+                    }
+                    $phpcsFile->addError($error, $nextToken - 1, 'DoubleArrowSpacing', $data);
                 }
 
                 $currentEntry['arrow'] = $nextToken;
@@ -495,22 +527,23 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
             }//end if
         }//end for
 
+        //Ongr we allow multi-line arrays, that should be single-line
         // Check for mutli-line arrays that should be single-line.
-        $singleValue = false;
-
-        if (empty($indices) === true) {
-            $singleValue = true;
-        } else if (count($indices) === 1 && $tokens[$lastToken]['code'] === T_COMMA) {
-            // There may be another array value without a comma.
-            $exclude     = PHP_CodeSniffer_Tokens::$emptyTokens;
-            $exclude[]   = T_COMMA;
-            $nextContent = $phpcsFile->findNext($exclude, ($indices[0]['value'] + 1), $arrayEnd, true);
-            if ($nextContent === false) {
-                $singleValue = true;
-            }
-        }
-
-        if ($singleValue === true) {
+//        $singleValue = false;
+//
+//        if (empty($indices) === true) {
+//            $singleValue = true;
+//        } else if (count($indices) === 1 && $tokens[$lastToken]['code'] === T_COMMA) {
+//            // There may be another array value without a comma.
+//            $exclude     = PHP_CodeSniffer_Tokens::$emptyTokens;
+//            $exclude[]   = T_COMMA;
+//            $nextContent = $phpcsFile->findNext($exclude, ($indices[0]['value'] + 1), $arrayEnd, true);
+//            if ($nextContent === false) {
+//                $singleValue = true;
+//            }
+//        }
+//
+//        if ($singleValue === true) {
             // Array cannot be empty, so this is a multi-line array with
             // a single value. It should be defined on single line.
             $error = 'Multi-line array contains a single value; use single-line array instead';
@@ -537,8 +570,8 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
 //                $phpcsFile->fixer->endChangeset();
 //            }
 
-            return;
-        }//end if
+//            return;
+//        }//end if
 
         /*
             This section checks for arrays that don't specify keys.
@@ -550,6 +583,15 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                 'd',
                );
         */
+        //Ongr Multi-line array is not empty and nothing but 1 value was found.
+        if (empty($indices)) {
+            $value = $arrayStart + 1;
+            while ($tokens[$value]['code'] == T_WHITESPACE) {
+                $value++;
+            }
+            $error = 'Each line in an array declaration must end with a comma';
+            $phpcsFile->addError($error, $value, 'NoComma');
+        }
 
         if ($keyUsed === false && empty($indices) === false) {
             $count     = count($indices);
@@ -581,29 +623,31 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                     // Other parts of this sniff will correct the error.
                     continue;
                 }
-
-                if ($lastValueLine !== false && $tokens[$value['value']]['line'] === $lastValueLine) {
-                    $error = 'Each value in a multi-line array must be on a new line';
-                    $fix   = $phpcsFile->addFixableError($error, $value['value'], 'ValueNoNewline');
-                    if ($fix === true) {
-                        if ($tokens[($value['value'] - 1)]['code'] === T_WHITESPACE) {
-                            $phpcsFile->fixer->replaceToken(($value['value'] - 1), '');
-                        }
-
-                        $phpcsFile->fixer->addNewlineBefore($value['value']);
-                    }
-                } else if ($tokens[($value['value'] - 1)]['code'] === T_WHITESPACE) {
-                    $expected = $keywordStart;
-
-//                    $first = $phpcsFile->findFirstOnLine(T_WHITESPACE, $value['value'], true);
-//                    $found = ($tokens[$first]['column'] - 1);
-//                    if ($found !== $expected) {
-//                        $error = 'Array value not aligned correctly; expected %s spaces but found %s';
-//                        $data  = array(
-//                            $expected,
-//                            $found,
-//                        );
+                //Ongr we alowe this.
+//                if ($lastValueLine !== false && $tokens[$value['value']]['line'] === $lastValueLine) {
+//                    $error = 'Each value in a multi-line array must be on a new line';
+//                    $fix   = $phpcsFile->addFixableError($error, $value['value'], 'ValueNoNewline');
+//                    if ($fix === true) {
+//                        if ($tokens[($value['value'] - 1)]['code'] === T_WHITESPACE) {
+//                            $phpcsFile->fixer->replaceToken(($value['value'] - 1), '');
+//                        }
 //
+//                        $phpcsFile->fixer->addNewlineBefore($value['value']);
+//                    }
+//                } else
+                    if ($tokens[($value['value'] - 1)]['code'] === T_WHITESPACE) {
+                    $expected = $statementStart + 4;
+
+                    $first = $phpcsFile->findFirstOnLine(T_WHITESPACE, $value['value'], true);
+                    $found = $tokens[$value['value']]['column'];
+                    if ($found !== $expected) {
+                        $error = 'Array value not aligned correctly; expected %s spaces but found %s';
+                        $data  = array(
+                            $expected,
+                            $found,
+                        );
+
+                        $phpcsFile->addError($error, $value['value'], 'ValueNotAligned', $data);
 //                        $fix = $phpcsFile->addFixableError($error, $value['value'], 'ValueNotAligned', $data);
 //                        if ($fix === true) {
 //                            if ($found === 0) {
@@ -612,7 +656,7 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
 //                                $phpcsFile->fixer->replaceToken(($value['value'] - 1), str_repeat(' ', $expected));
 //                            }
 //                        }
-//                    }
+                    }
                 }//end if
 
                 $lastValueLine = $tokens[$value['value']]['line'];
@@ -647,8 +691,8 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
         */
 
         $numValues = count($indices);
-
-        $indicesStart  = ($keywordStart + 4);
+        //Ongr we use our own method to find statement start comment.
+        $indicesStart  = $statementStart + 4;
         $arrowStart    = ($indicesStart + $maxLength + 1);
         $valueStart    = ($arrowStart + 3);
         $indexLine     = $tokens[$stackPtr]['line'];
@@ -656,7 +700,7 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
         foreach ($indices as $index) {
             if (isset($index['index']) === false) {
                 // Array value only.
-                if ($tokens[$index['value']]['line'] === $tokens[$stackPtr]['line'] && $numValues > 1) {
+                if (($tokens[$index['value']]['line'] === $tokens[$stackPtr]['line'])) {
                     $error = 'The first value in a multi-value array must be on a new line';
                     $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'FirstValueNoNewline');
                     if ($fix === true) {
@@ -693,16 +737,16 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
 
                 continue;
             }
+            if ($tokens[$index['index']]['column'] !== $indicesStart) {
+                $expected = ($indicesStart - 1);
+                $found    = ($tokens[$index['index']]['column'] - 1);
+                $error    = 'Array key not aligned correctly; expected %s spaces but found %s';
+                $data     = array(
+                    $expected,
+                    $found,
+                );
 
-//            if ($tokens[$index['index']]['column'] !== $indicesStart) {
-//                $expected = ($indicesStart - 1);
-//                $found    = ($tokens[$index['index']]['column'] - 1);
-//                $error    = 'Array key not aligned correctly; expected %s spaces but found %s';
-//                $data     = array(
-//                    $expected,
-//                    $found,
-//                );
-//
+                $phpcsFile->addError($error, $index['index'], 'KeyNotAligned', $data);
 //                $fix = $phpcsFile->addFixableError($error, $index['index'], 'KeyNotAligned', $data);
 //                if ($fix === true) {
 //                    if ($found === 0) {
@@ -711,10 +755,10 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
 //                        $phpcsFile->fixer->replaceToken(($index['index'] - 1), str_repeat(' ', $expected));
 //                    }
 //                }
-//
-//                continue;
-//            }
 
+                continue;
+            }
+//Ongr start
 //            if ($tokens[$index['arrow']]['column'] !== $arrowStart) {
 //                $expected = ($arrowStart - (strlen($index['index_content']) + $tokens[$index['index']]['column']));
 //                $found    = ($tokens[$index['arrow']]['column'] - (strlen($index['index_content']) + $tokens[$index['index']]['column']));
@@ -735,7 +779,7 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
 //
 //                continue;
 //            }
-
+//
 //            if ($tokens[$index['value']]['column'] !== $valueStart) {
 //                $expected = ($valueStart - ($tokens[$index['arrow']]['length'] + $tokens[$index['arrow']]['column']));
 //                $found    = ($tokens[$index['value']]['column'] - ($tokens[$index['arrow']]['length'] + $tokens[$index['arrow']]['column']));
@@ -767,11 +811,11 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
 //                    }
 //                }
 //            }//end if
-
+//ongr end
             // Check each line ends in a comma.
-            if ($tokens[$index['value']]['code'] !== T_ARRAY
-                && $tokens[$index['value']]['code'] !== T_OPEN_SHORT_ARRAY
-            ) {
+//            if ($tokens[$index['value']]['code'] !== T_ARRAY
+//                && $tokens[$index['value']]['code'] !== T_OPEN_SHORT_ARRAY
+//            ) {
                 $valueLine = $tokens[$index['value']]['line'];
                 $nextComma = false;
                 for ($i = ($index['value'] + 1); $i < $arrayEnd; $i++) {
@@ -788,7 +832,7 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                     }
                 }
 
-                if (($nextComma === false) || ($tokens[$nextComma]['line'] !== $valueLine)) {
+                if (($nextComma === false) || ($tokens[$nextComma]['line'] !== $valueLine) && $tokens[$index['value']]['code'] !== T_OPEN_SHORT_ARRAY) {
                     $error = 'Each line in an array declaration must end in a comma';
                     $fix   = $phpcsFile->addFixableError($error, $index['value'], 'NoComma');
 
@@ -819,10 +863,27 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                         $phpcsFile->fixer->replaceToken(($nextComma - 1), '');
                     }
                 }
-            }//end if
+//            }//end if
         }//end foreach
 
     }//end processMultiLineArray()
-
+    /**
+     * @param PHP_CodeSniffer_File $phpcsFile
+     * @param int                  $stackPtr
+     *
+     * @return mixed
+     */
+    private function getStatementStartColumn(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    {
+        $tokens = $phpcsFile->getTokens();
+        $line = $tokens[$stackPtr]['line'];
+        do {
+            $stackPtr--;
+        } while ($tokens[$stackPtr]['line'] == $line);
+        do {
+            $stackPtr++;
+        } while ($tokens[$stackPtr]['code'] == T_WHITESPACE);
+        return $tokens[$stackPtr]['column'];
+    }
 
 }//end class

@@ -152,7 +152,7 @@ class Ongr_Sniffs_Commenting_BlockCommentSniff implements PHP_CodeSniffer_Sniff
 
             return;
         }
-// ONGR we use single line block comments generated from IDE
+        // ONGR we use single line block comments generated from IDE
 //        if (count($commentLines) === 1) {
 //            $error = 'Single line block comment not allowed; use inline ("// text") comment instead';
 //            $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SingleLine');
