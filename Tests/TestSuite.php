@@ -45,6 +45,10 @@ class TestSuite extends PHPUnit_Framework_TestSuite
      */
     public function run(PHPUnit_Framework_TestResult $result = null, $filter = false)
     {
+        if (defined('PHP_CODESNIFFER_IN_TESTS') === false) {
+            define('PHP_CODESNIFFER_IN_TESTS', true);
+        }
+
         spl_autoload_register(['PHP_CodeSniffer', 'autoload']);
         $result = parent::run($result, $filter);
         spl_autoload_unregister(['PHP_CodeSniffer', 'autoload']);

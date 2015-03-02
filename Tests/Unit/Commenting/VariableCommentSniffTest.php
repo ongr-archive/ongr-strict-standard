@@ -24,15 +24,16 @@ class VariableCommentSniffTest extends AbstractSniffUnitTest
     protected function getErrorList()
     {
         return [
-            22 => ['Class field docs should not contain field name'],
-            27 => ['Class field docs should not contain field name'],
-            42 => ['Class field docs should not contain field name'],
-            47 => ['Class field docs should not contain field name'],
-            57 => ['Expected "array(string => array)"; found "array(string => array())'],
-            62 => ['Variable comments must end in full-stops, exclamation marks, or question marks'],
-            78 => ['Only 1 @var tag is allowed in variable comment'],
+            22 => 1,
+            27 => 1,
+            42 => 1,
+            47 => 1,
+            57 => 1,
+            62 => 1,
+            77 => 1,
+            78 => 1,
             // Multiple declarations not allowed but doc check for second variable still fires and fails.
-            80 => ['Missing variable doc comment'],
+            80 => 1,
         ];
     }
 

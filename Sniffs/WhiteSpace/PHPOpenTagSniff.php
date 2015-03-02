@@ -48,11 +48,20 @@ class Ongr_Sniffs_WhiteSpace_PHPOpenTagSniff implements PHP_CodeSniffer_Sniff
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
+        #TODO add an autofix.
         $tokens = $phpcsFile->getTokens();
-
         if (isset($tokens[$stackPtr + 1]) && $tokens[$stackPtr + 1]['code'] !== T_WHITESPACE) {
             $error = 'There must be one blank line after the php open tag and no whitespaces';
             $phpcsFile->addError($error, $stackPtr, 'BlankLineAfter');
+        }
+        $content = $phpcsFile->findNext(T_OPEN_TAG, $stackPtr) + 1;
+        while ($tokens[$content]['code'] == T_WHITESPACE) {
+            ++$content;
+        }
+        $spaces = ($tokens[$content]['line'] - $tokens[$stackPtr]['line']) - 1;
+        if ($spaces > 1) {
+            $error = 'There must be only 1 blank line after the php open tag; Found ' . $spaces;
+            $phpcsFile->addError($error, $stackPtr, 'BlankLinesAfter');
         }
     }
 }

@@ -48,6 +48,7 @@ class Ongr_Sniffs_WhiteSpace_NamespaceSpacingSniff implements PHP_CodeSniffer_Sn
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
+        #TODO add an autofix.
         $tokens = $phpcsFile->getTokens();
 
         if (isset($tokens[$stackPtr]['scope_opener'])) {
@@ -55,7 +56,6 @@ class Ongr_Sniffs_WhiteSpace_NamespaceSpacingSniff implements PHP_CodeSniffer_Sn
             return;
         }
         $content = $phpcsFile->findNext(T_SEMICOLON, $stackPtr) + 1;
-
         while ($tokens[$content]['code'] == T_WHITESPACE) {
             ++$content;
         }
@@ -63,6 +63,21 @@ class Ongr_Sniffs_WhiteSpace_NamespaceSpacingSniff implements PHP_CodeSniffer_Sn
             // Case for minimum lines is written somewhere else.
             $phpcsFile->addError(
                 'There must be exactly 1 blank line after namespace declaration',
+                $stackPtr,
+                'NamespaceSpacing'
+            );
+        }
+
+        $content = $phpcsFile->findNext(T_NAMESPACE, $stackPtr) - 1;
+        while ($tokens[$content]['code'] == T_WHITESPACE) {
+            --$content;
+        }
+        $spaces = ($tokens[$content]['line'] - $tokens[$stackPtr]['line']) * -1;
+        $spaces--;
+        if ($spaces > 2) {
+            // Case for minimum lines is written somewhere else.
+            $phpcsFile->addError(
+                'There must be exactly 1 blank line before namespace declaration; Found ' . $spaces,
                 $stackPtr,
                 'NamespaceSpacing'
             );

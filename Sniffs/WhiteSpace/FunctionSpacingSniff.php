@@ -29,6 +29,8 @@
  */
 class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sniff
 {
+    //ONGR we are checking blank lines before and after the function
+    #TODO add an autofix
     /**
      * @var int The number of blank lines after the function.
      */
@@ -39,7 +41,6 @@ class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
      */
     public $spacingBefore = 0;
 
-
     /**
      * Returns an array of tokens this test wants to listen for.
      *
@@ -47,10 +48,8 @@ class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
      */
     public function register()
     {
-        return array(T_FUNCTION);
-
-    }//end register()
-
+        return [T_FUNCTION];
+    }
 
     /**
      * Processes this sniff when one of its tokens is encountered.
@@ -63,7 +62,7 @@ class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens        = $phpcsFile->getTokens();
+        $tokens = $phpcsFile->getTokens();
         $this->spacingAfter = (int)$this->spacingAfter;
 
         /*
@@ -88,12 +87,17 @@ class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
             }
         }
 
-        if (is_null($nextLineToken) === true) {
+        if ($nextLineToken === null) {
             // Never found the next line, which means
             // there are 0 blank lines after the function.
             $foundLines = 0;
         } else {
-            $nextContent = $phpcsFile->findNext(array(T_WHITESPACE, T_CLOSE_CURLY_BRACKET), ($nextLineToken + 1), null, true);
+            $nextContent = $phpcsFile->findNext(
+                [T_WHITESPACE, T_CLOSE_CURLY_BRACKET],
+                ($nextLineToken + 1),
+                null,
+                true
+            );
             if ($nextContent === false) {
                 // We are at the end of the file.
                 $foundLines = 1;
@@ -109,10 +113,10 @@ class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
             }
 
             $error .= ' after function; %s found';
-            $data   = array(
-                $this->spacing,
+            $data = [
+                $this->spacingAfter,
                 $foundLines,
-            );
+            ];
             $phpcsFile->addError($error, $closer, 'After', $data);
         }
 
@@ -131,20 +135,25 @@ class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
             }
         }
 
-        if (is_null($prevLineToken) === true) {
+        if ($prevLineToken === null) {
             // Never found the previous line, which means
             // there are 0 blank lines before the function.
             $foundLines = 0;
         } else {
-            $prevContent = $phpcsFile->findPrevious(array(T_WHITESPACE, T_DOC_COMMENT, T_OPEN_CURLY_BRACKET), $prevLineToken, null, true);
+            $prevContent = $phpcsFile->findPrevious(
+                [T_WHITESPACE, T_DOC_COMMENT, T_OPEN_CURLY_BRACKET],
+                $prevLineToken,
+                null,
+                true
+            );
 
             // Before we throw an error, check that we are not throwing an error
             // for another function. We don't want to error for no blank lines after
             // the previous function and no blank lines before this one as well.
             $currentLine = $tokens[$stackPtr]['line'];
-            $prevLine    = ($tokens[$prevContent]['line'] - 1);
-            $i           = ($stackPtr - 1);
-            $foundLines  = 0;
+            $prevLine = ($tokens[$prevContent]['line'] - 1);
+            $i = ($stackPtr - 1);
+            $foundLines = 0;
             while ($currentLine != $prevLine && $currentLine > 1 && $i > 0) {
                 if ($tokens[$i]['code'] === T_OPEN_CURLY_BRACKET && $tokens[$i + 1]['code'] === T_WHITESPACE) {
                     return;
@@ -162,7 +171,7 @@ class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
                         // Found a previous function.
                         return;
                     }
-                } else if ($tokens[$i]['code'] === T_FUNCTION) {
+                } elseif ($tokens[$i]['code'] === T_FUNCTION) {
                     // Found another interface function.
                     return;
                 }
@@ -180,8 +189,8 @@ class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
                 }
 
                 $i--;
-            }//end while
-        }//end if
+            }
+        }
 
         if ($foundLines !== $this->spacingBefore) {
             $error = 'Expected %s blank line';
@@ -190,16 +199,13 @@ class Ongr_Sniffs_WhiteSpace_FunctionSpacingSniff implements PHP_CodeSniffer_Sni
             }
 
             $error .= ' before function; %s found';
-            $data   = array(
+            $data = [
                 $this->spacingBefore,
-                       $foundLines,
-                      );
+                $foundLines,
+            ];
             $phpcsFile->addError($error, $stackPtr, 'Before', $data);
         }
-
-    }//end process()
+    }
 
 
 }//end class
-
-?>
