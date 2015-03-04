@@ -73,12 +73,12 @@ class Ongr_Sniffs_ControlStructures_InlineIfDeclarationSniff implements PHP_Code
             $statementEnd = $phpcsFile->findPrevious(T_WHITESPACE, ($closeBracket - 1), null, true);
         }
 
-        // Make sure it's all on the same line.
-        if ($tokens[$statementEnd]['line'] !== $tokens[$stackPtr]['line']) {
-            $error = 'Inline shorthand IF statement must be declared on a single line';
-            $phpcsFile->addError($error, $stackPtr, 'NotSingleLine');
-            return;
-        }
+        // Ongr we allow shorthand IF statements on multiple lines.
+//        if ($tokens[$statementEnd]['line'] !== $tokens[$stackPtr]['line']) {
+//            $error = 'Inline shorthand IF statement must be declared on a single line';
+//            $phpcsFile->addError($error, $stackPtr, 'NotSingleLine');
+//            return;
+//        }
 
         // Make sure there are spaces around the question mark.
         $contentBefore = $phpcsFile->findPrevious(T_WHITESPACE, ($stackPtr - 1), null, true);
