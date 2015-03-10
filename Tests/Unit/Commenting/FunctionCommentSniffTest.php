@@ -25,10 +25,13 @@ class FunctionCommentSniffTest extends AbstractSniffUnitTest
     {
         #TODO Should be fixed to disallow white spacing
         return [
-//            20 => 1,
-//            34 => 1,
-//            36 => 1,
-//            68 => 1,
+//             End of line whitespaces are checked by Squiz.WhiteSpace.SuperfluousWhitespace.EndLine sniff.
+//             We do not overwrite this sniff.
+//            20 => ['Whitespace found at end of line'],
+
+            34 => 1,
+            36 => 1,
+            68 => 1,
         ];
     }
 
