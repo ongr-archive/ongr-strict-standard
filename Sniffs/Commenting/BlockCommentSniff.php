@@ -153,16 +153,16 @@ class Ongr_Sniffs_Commenting_BlockCommentSniff implements PHP_CodeSniffer_Sniff
             return;
         }
         // ONGR we use single line block comments generated from IDE
-//        if (count($commentLines) === 1) {
-//            $error = 'Single line block comment not allowed; use inline ("// text") comment instead';
-//            $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SingleLine');
-//            if ($fix === true) {
-//                $comment = '// '.$commentText.$phpcsFile->eolChar;
-//                $phpcsFile->fixer->replaceToken($stackPtr, $comment);
-//            }
-//
-//            return;
-//        }
+        if (count($commentLines) === 1 && substr($tokens[$stackPtr]['content'], 0, 2) !== '/**') {
+            $error = 'Single line block comment must start with "/**"';
+            $fix   = $phpcsFile->addFixableError($error, $stackPtr, 'SingleLine');
+            if ($fix === true) {
+                $comment = '/** '.$commentText. ' */';
+                $phpcsFile->fixer->replaceToken($stackPtr, $comment);
+            }
+
+            return;
+        }
 
         $content = trim($tokens[$stackPtr]['content']);
         if ($content !== '/*' && $content !== '/**') {
@@ -183,43 +183,30 @@ class Ongr_Sniffs_Commenting_BlockCommentSniff implements PHP_CodeSniffer_Sniff
 
         //ONGR Allow '/*' as block comments with no space at the beginning
         $starColumn = ($tokens[$stackPtr]['column']);
-
         // Make sure first line isn't blank.
         if (trim($tokens[$commentLines[1]]['content']) === '') {
             $error = 'Empty line not allowed at start of comment';
-            $fix   = $phpcsFile->addFixableError($error, $commentLines[1], 'HasEmptyLine');
-            if ($fix === true) {
-                $phpcsFile->fixer->replaceToken($commentLines[1], '');
-            }
+            $phpcsFile->addError($error, $commentLines[1], 'HasEmptyLine');
         } else {
             // Check indentation of first line.
-            $content      = $tokens[$commentLines[1]]['content'];
-            $commentText  = ltrim($content);
+            $content = $tokens[$commentLines[1]]['content'];
+            $commentText = ltrim($content);
             $leadingSpace = (strlen($content) - strlen($commentText));
-            if ($leadingSpace !== $starColumn) {
-                $expected = $starColumn.' space';
-                if ($starColumn !== 1) {
-                    $expected .= 's';
-                }
-
-                $data = array(
+            if ($leadingSpace !== $starColumn && trim($content)[0] !== '*') {
+                $expected = $starColumn;
+                $expected .= ($starColumn === 1) ? ' space' : ' spaces';
+                $data = [
                     $expected,
                     $leadingSpace,
-                );
-
+                ];
                 $error = 'First line of comment not aligned correctly; expected %s but found %s';
-                $fix   = $phpcsFile->addFixableError($error, $commentLines[1], 'FirstLineIndent', $data);
-                if ($fix === true) {
-                    $newContent = str_repeat(' ', $starColumn).ltrim($content);
-                    $phpcsFile->fixer->replaceToken($commentLines[1], $newContent);
-                }
+                $phpcsFile->addError($error, $commentLines[1], 'FirstLineIndent', $data);
             }
-
-            if (preg_match('/\p{Lu}|\P{L}/u', $commentText[0]) === 0) {
+            if (preg_match('#\p{Lu}|\*#u', $commentText[0]) === 0) {
                 $error = 'Block comments must start with a capital letter';
                 $phpcsFile->addError($error, $commentLines[1], 'NoCapital');
             }
-        }//end if
+        }
 
         // Check that each line of the comment is indented past the star.
         foreach ($commentLines as $line) {
@@ -251,11 +238,12 @@ class Ongr_Sniffs_Commenting_BlockCommentSniff implements PHP_CodeSniffer_Sniff
                 );
 
                 $error = 'Comment line indented incorrectly; expected at least %s but found %s';
-                $fix   = $phpcsFile->addFixableError($error, $line, 'LineIndent', $data);
-                if ($fix === true) {
-                    $newContent = str_repeat(' ', $starColumn).ltrim($tokens[$line]['content']);
-                    $phpcsFile->fixer->replaceToken($line, $newContent);
-                }
+                //Ongr Disabled autofix.
+                $fix   = $phpcsFile->addError($error, $line, 'LineIndent', $data);
+//                if ($fix === true) {
+//                    $newContent = str_repeat(' ', $starColumn).ltrim($tokens[$line]['content']);
+//                    $phpcsFile->fixer->replaceToken($line, $newContent);
+//                }
             }
         }//end foreach
 
