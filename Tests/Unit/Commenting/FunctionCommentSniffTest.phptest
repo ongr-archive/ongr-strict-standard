@@ -72,4 +72,44 @@ class FunctionCommentSniffTest
     {
         foo($bar);
     }
+
+    /**
+     * Bar.
+     *
+     * @return mixed Correct comment.
+     */
+    protected function fooBar4()
+    {
+        return foo($bar);
+    }
+
+    /**
+     * Bar.
+     *
+     * @return mixed No full stop
+     */
+    protected function fooBar5()
+    {
+        return foo($bar);
+    }
+
+    /**
+     * Bar.
+     *
+     * @return mixed first letter non-capital.
+     */
+    protected function fooBar6()
+    {
+        return foo($bar);
+    }
+
+    /**
+     * Bar.
+     *
+     * @return mixed first letter non-capital, no full stop
+     */
+    protected function fooBar7()
+    {
+        return foo($bar);
+    }
 }

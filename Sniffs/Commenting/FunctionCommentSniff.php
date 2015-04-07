@@ -288,6 +288,30 @@ class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting
                         }
                     }
                 }//end if
+
+                $comment = null;
+                if ($tokens[($tag + 2)]['code'] === T_DOC_COMMENT_STRING) {
+                    $matches = array();
+                    preg_match('/([^\s]+)(?:\s+(.*))?/', $tokens[($tag + 2)]['content'], $matches);
+                    if (isset($matches[2]) === true) {
+                        $comment = $matches[2];
+                    }
+                }
+
+                //ONGR Validate that return comment begins with capital letter and ends with full stop.
+                if ($comment !== null) {
+                    $firstChar = $comment{0};
+                    if (preg_match('|\p{Lu}|u', $firstChar) === 0) {
+                        $error = 'Return comment must start with a capital letter';
+                        $phpcsFile->addError($error, ($tag + 2), 'ReturnCommentNotCapital');
+                    }
+
+                    $lastChar = substr($comment, -1);
+                    if ($lastChar !== '.') {
+                        $error = 'Return comment must end with a full stop';
+                        $phpcsFile->addError($error, ($tag + 2), 'ReturnCommentFullStop');
+                    }
+                }
             }//end if
         } else {
             //ONGR Return is not necessary.
