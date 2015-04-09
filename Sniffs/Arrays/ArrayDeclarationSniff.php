@@ -871,6 +871,30 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                         $phpcsFile->fixer->replaceToken(($nextComma - 1), '');
                     }
                 }
+
+                if ($nextDot !== false) {
+                    $spacesExpected = $this->getStatementStartColumn($phpcsFile, $nextDot) + 3;
+
+                    $indentation = $nextDot;
+                    while($tokens[$nextDot]['line'] == $tokens[$indentation]['line']) {
+                        $indentation++;
+                    }
+
+                    $spacesFound = 0;
+                    if ($tokens[$indentation]['code'] == T_WHITESPACE) {
+                        $spacesFound = $tokens[$indentation]['length'];
+                    }
+
+                    if ($spacesExpected != $spacesFound) {
+                        $error = 'Array value not aligned correctly; expected %s spaces but found %s';
+                        $data  = array(
+                            $spacesExpected,
+                            $spacesFound,
+                        );
+
+                        $phpcsFile->addError($error, $indentation, 'ValueNotAligned', $data);
+                    }
+                }
 //            }//end if
         }//end foreach
 
