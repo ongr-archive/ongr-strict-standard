@@ -13,10 +13,6 @@
  * @link https://github.com/escapestudios/Symfony2-coding-standard
  */
 
-namespace ONGR\Sniffs\NamingConventions;
-
-use PHP_CodeSniffer_File;
-use PHP_CodeSniffer_Sniff;
 
 /**
  * Symfony2_Sniffs_NamingConventions_AbstractClassPrefixSniff.
@@ -30,7 +26,7 @@ use PHP_CodeSniffer_Sniff;
  * @license https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
-class AbstractClassPrefixSniff implements PHP_CodeSniffer_Sniff
+class Ongr_Sniffs_NamingConventions_AbstractClassPrefixSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * @var array A list of tokenizers this sniff supports.

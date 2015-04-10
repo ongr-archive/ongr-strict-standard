@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ONGR\Tests\Unit\NamingConventions;
+namespace Ongr\Tests\Unit\NamingConventions;
 
-use ONGR\Tests\AbstractSniffUnitTest;
+use Ongr\Tests\AbstractSniffUnitTest;
 
 /**
  * AbstractClassPrefixSniffTest class.
