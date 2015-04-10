@@ -303,13 +303,27 @@ class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting
                     $firstChar = $comment{0};
                     if (preg_match('|\p{Lu}|u', $firstChar) === 0) {
                         $error = 'Return comment must start with a capital letter';
-                        $phpcsFile->addError($error, ($tag + 2), 'ReturnCommentNotCapital');
+                        $fix = $phpcsFile->addFixableError($error, ($tag + 2), 'ReturnCommentNotCapital');
+
+                        if ($fix === true) {
+                            $newComment = ucfirst($comment);
+                            $tokenLength = strlen($tokens[($tag + 2)]['content']);
+                            $commentLength = strlen($comment);
+                            $tokenWithoutComment
+                                = substr($tokens[($tag + 2)]['content'], 0, $tokenLength - $commentLength);
+
+                            $phpcsFile->fixer->replaceToken(($tag + 2), $tokenWithoutComment . $newComment);
+                        }
                     }
 
                     $lastChar = substr($comment, -1);
                     if ($lastChar !== '.') {
                         $error = 'Return comment must end with a full stop';
-                        $phpcsFile->addError($error, ($tag + 2), 'ReturnCommentFullStop');
+                        $fix = $phpcsFile->addFixableError($error, ($tag + 2), 'ReturnCommentFullStop');
+
+                        if ($fix === true) {
+                            $phpcsFile->fixer->addContent(($tag + 2), '.');
+                        }
                     }
                 }
             }//end if
