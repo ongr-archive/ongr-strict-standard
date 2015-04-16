@@ -89,6 +89,15 @@ class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting
                     $phpcsFile->addError($error, $tag, 'EmptySees');
                 }
             }
+            // Ongr checks inheritdoc comment.
+            if ($tokens[$tag]['content'] === '@inheritdoc') {
+                $error = 'You must use {@inheritdoc}';
+                $fix = $phpcsFile->addFixableError($error, $tag, 'WrongInheritDocStyle');
+                if ($fix === true) {
+                    $phpcsFile->fixer->replaceToken($tag, '{@inheritdoc}');
+                }
+                return;
+            }
 
         }
         $this->processReturn($phpcsFile, $stackPtr, $commentStart);
