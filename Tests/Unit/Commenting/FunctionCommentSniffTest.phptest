@@ -112,4 +112,12 @@ class FunctionCommentSniffTest
     {
         return foo($bar);
     }
+
+    /**
+     * @inheritdoc
+     */
+    protected function fooBar7()
+    {
+        return foo($bar);
+    }
 }
