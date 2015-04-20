@@ -1,0 +1,29 @@
+<?php
+
+switch   ($operation)   {
+    case 'foo':
+    default:
+        // Do nothing.
+        break;
+}
+
+switch($operation) {
+    case 'bar':
+    default:
+        // Do nothing.
+        break;
+}
+
+switch   ($operation){
+    case 'foobar':
+    default:
+        // Do nothing.
+        break;
+}
+
+switch ($operation) {
+    case 'foobar':
+    default:
+        // Do nothing.
+        break;
+}

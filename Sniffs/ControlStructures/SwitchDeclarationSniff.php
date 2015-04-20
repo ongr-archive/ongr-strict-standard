@@ -81,6 +81,19 @@ class Ongr_Sniffs_ControlStructures_SwitchDeclarationSniff implements PHP_CodeSn
             return;
         }
 
+        // Ongr checks whitespaces around switch condition.
+        $switchBracket = $phpcsFile->findNext([T_OPEN_CURLY_BRACKET], ($stackPtr));
+        $whitespaceLengthBefore = $tokens[$stackPtr + 1]['length'];
+        $whitespaceLengthAfter = $tokens[$switchBracket - 1]['length'];
+        if (
+            ($tokens[$stackPtr + 1]['type'] !== 'T_WHITESPACE' || $whitespaceLengthBefore !== 1) ||
+            ($tokens[$switchBracket - 1]['type'] !== 'T_WHITESPACE' || $whitespaceLengthAfter !== 1))
+        {
+            $phpcsFile->addError(
+                'There should a be single whitespace around the switch condition.', $stackPtr, 'SwitchWhitespace'
+            );
+        }
+
         $switch        = $tokens[$stackPtr];
         $nextCase      = $stackPtr;
         $caseAlignment = ($switch['column'] + $this->indent);

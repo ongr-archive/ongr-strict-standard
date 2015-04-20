@@ -68,6 +68,7 @@
      <exclude name="Squiz.WhiteSpace.FunctionSpacing"/>
      <exclude name="Squiz.WhiteSpace.MemberVarSpacing"/>
      <exclude name="Squiz.WhiteSpace.ObjectOperatorSpacing"/>
+     <exclude name="Squiz.WhiteSpace.OperatorSpacing"/>
 
 
      <!--Experimenting-->

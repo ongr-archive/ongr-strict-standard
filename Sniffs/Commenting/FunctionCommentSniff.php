@@ -31,7 +31,164 @@ if (class_exists('PEAR_Sniffs_Commenting_FunctionCommentSniff', true) === false)
  */
 class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting_FunctionCommentSniff
 {
+    /**
+     * Processes this test, when one of its tokens is encountered.
+     *
+     * @param PHP_CodeSniffer_File $phpcsFile The file being scanned.
+     * @param int                  $stackPtr  The position of the current token
+     *                                        in the stack passed in $tokens.
+     *
+     * @return void
+     */
+    public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
+    {
+        $tokens = $phpcsFile->getTokens();
+        $find   = PHP_CodeSniffer_Tokens::$methodPrefixes;
+        $find[] = T_WHITESPACE;
 
+
+        $commentEnd = $phpcsFile->findPrevious($find, ($stackPtr - 1), null, true);
+        if ($tokens[$commentEnd]['code'] === T_COMMENT) {
+            // Inline comments might just be closing comments for
+            // control structures or functions instead of function comments
+            // using the wrong comment type. If there is other code on the line,
+            // assume they relate to that code.
+            $prev = $phpcsFile->findPrevious($find, ($commentEnd - 1), null, true);
+            if ($prev !== false && $tokens[$prev]['line'] === $tokens[$commentEnd]['line']) {
+                $commentEnd = $prev;
+            }
+        }
+
+        if ($tokens[$commentEnd]['code'] !== T_DOC_COMMENT_CLOSE_TAG
+            && $tokens[$commentEnd]['code'] !== T_COMMENT
+        ) {
+            $phpcsFile->addError('Missing function doc comment', $stackPtr, 'Missing');
+            $phpcsFile->recordMetric($stackPtr, 'Function has doc comment', 'no');
+            return;
+        } else {
+            $phpcsFile->recordMetric($stackPtr, 'Function has doc comment', 'yes');
+        }
+
+        if ($tokens[$commentEnd]['code'] === T_COMMENT) {
+            $phpcsFile->addError('You must use "/**" style comments for a function comment', $stackPtr, 'WrongStyle');
+            return;
+        }
+
+        if ($tokens[$commentEnd]['line'] !== ($tokens[$stackPtr]['line'] - 1)) {
+            $error = 'There must be no blank lines after the function comment';
+            $phpcsFile->addError($error, $commentEnd, 'SpacingAfter');
+        }
+
+        $commentStart = $tokens[$commentEnd]['comment_opener'];
+        foreach ($tokens[$commentStart]['comment_tags'] as $tag) {
+            if ($tokens[$tag]['content'] === '@see') {
+                // Make sure the tag isn't empty.
+                $string = $phpcsFile->findNext(T_DOC_COMMENT_STRING, $tag, $commentEnd);
+                if ($string === false || $tokens[$string]['line'] !== $tokens[$tag]['line']) {
+                    $error = 'Content missing for @see tag in function comment';
+                    $phpcsFile->addError($error, $tag, 'EmptySees');
+                }
+            }
+            // Ongr checks inheritdoc comment.
+            if ($tokens[$tag]['content'] === '@inheritdoc') {
+                $error = 'You must use {@inheritdoc}';
+                $fix = $phpcsFile->addFixableError($error, $tag, 'WrongInheritDocStyle');
+                if ($fix === true) {
+                    $phpcsFile->fixer->replaceToken($tag, '{@inheritdoc}');
+                }
+                return;
+            }
+
+        }
+        $this->processReturn($phpcsFile, $stackPtr, $commentStart);
+        $this->processThrows($phpcsFile, $stackPtr, $commentStart);
+        $this->processParams($phpcsFile, $stackPtr, $commentStart);
+        $this->processComments($phpcsFile, $stackPtr, $commentStart);
+
+    }//end process()
+
+    /**
+     * @param PHP_CodeSniffer_File $phpcsFile
+     * @param                      $stackPtr
+     * @param                      $commentStart
+     *
+     * @throws PHP_CodeSniffer_Exception
+     */
+    protected function processComments(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $commentStart)
+    {
+        $tokens = $phpcsFile->getTokens();
+        $empty = array(
+            T_DOC_COMMENT_WHITESPACE,
+            T_DOC_COMMENT_STAR,
+        );
+
+        $find = [
+            T_DOC_COMMENT_CLOSE_TAG,
+            T_DOC_COMMENT_TAG,
+        ];
+
+        $commentEnd = $phpcsFile->findNext($find, $commentStart);
+
+        $methodName      = $phpcsFile->getDeclarationName($stackPtr);
+        $short = $phpcsFile->findNext($empty, ($commentStart + 1), $commentEnd, true);
+        $shortEnd     = $short;
+        $shortContent = $tokens[$short]['content'];
+        $lastChar = $shortContent[(strlen($shortContent) - 1)];
+
+        // Check for a comment description.
+        if (trim($short) === '') {
+            if (preg_match('/^(set|get|has|add|is)[A-Z]|__construct/', $methodName) !== 1) {
+                $error = 'Missing short description in function doc comment';
+                $phpcsFile->addError($error, $commentStart, 'MissingShort');
+            }
+            return;
+        }
+        if (preg_match('#^(\p{Lu}|{@inheritdoc})#u', $shortContent) === 0) {
+            $error = 'Function comment short description must start with a capital letter';
+            $phpcsFile->addError($error, ($commentStart + 1), 'ShortNotCapital');
+        }
+        if (preg_match('#{@inheritdoc}$#u', $shortContent) === 0 && $lastChar !== '.') {
+            $error = 'Function comment short description must end with a full stop';
+            $phpcsFile->addError($error, ($commentStart + 1), 'ShortFullStop');
+        }
+
+        //Check whitespaces beetween '*' and short comment.
+        $foundShort = strlen($tokens[$short-1]['content']);
+        if ($foundShort > 1) {
+            $phpcsFile->addError(
+                "Expected one whitespace before short description. Found {$foundShort}.",
+                $short,
+                'ExtraWhitespace'
+            );
+        }
+
+        $long = $phpcsFile->findNext($empty, ($shortEnd + 1), ($commentEnd - 1), true);
+        if ($long === false) {
+            return;
+        }
+
+        //Check whitespaces beetween '*' and long comment.
+        $foundLong = strlen($tokens[$long-1]['content']);
+        if ($foundLong > 1) {
+            $phpcsFile->addError(
+                "Expected one whitespace before long description. Found {$foundLong}.",
+                $long,
+                'ExtraWhitespace'
+            );
+        }
+
+        if ($tokens[$long]['code'] === T_DOC_COMMENT_STRING) {
+            if ($tokens[$long]['line'] !== ($tokens[$shortEnd]['line'] + 2)) {
+                $error = 'There must be exactly one blank line between descriptions in a doc comment';
+                $phpcsFile->addError($error, $long, 'SpacingBetween');
+            }
+
+            if (preg_match('/\p{Lu}|\P{L}/u', $tokens[$long]['content'][0]) === 0) {
+                $error = 'Doc comment long description must start with a capital letter';
+                $phpcsFile->addError($error, $long, 'LongNotCapital');
+            }
+        }//end if
+    }
 
     /**
      * Process the return comment of this function comment.
@@ -140,6 +297,44 @@ class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting
                         }
                     }
                 }//end if
+
+                $comment = null;
+                if ($tokens[($tag + 2)]['code'] === T_DOC_COMMENT_STRING) {
+                    $matches = array();
+                    preg_match('/([^\s]+)(?:\s+(.*))?/', $tokens[($tag + 2)]['content'], $matches);
+                    if (isset($matches[2]) === true) {
+                        $comment = $matches[2];
+                    }
+                }
+
+                //ONGR Validate that return comment begins with capital letter and ends with full stop.
+                if ($comment !== null) {
+                    $firstChar = $comment{0};
+                    if (preg_match('|\p{Lu}|u', $firstChar) === 0) {
+                        $error = 'Return comment must start with a capital letter';
+                        $fix = $phpcsFile->addFixableError($error, ($tag + 2), 'ReturnCommentNotCapital');
+
+                        if ($fix === true) {
+                            $newComment = ucfirst($comment);
+                            $tokenLength = strlen($tokens[($tag + 2)]['content']);
+                            $commentLength = strlen($comment);
+                            $tokenWithoutComment
+                                = substr($tokens[($tag + 2)]['content'], 0, $tokenLength - $commentLength);
+
+                            $phpcsFile->fixer->replaceToken(($tag + 2), $tokenWithoutComment . $newComment);
+                        }
+                    }
+
+                    $lastChar = substr($comment, -1);
+                    if ($lastChar !== '.') {
+                        $error = 'Return comment must end with a full stop';
+                        $fix = $phpcsFile->addFixableError($error, ($tag + 2), 'ReturnCommentFullStop');
+
+                        if ($fix === true) {
+                            $phpcsFile->fixer->addContent(($tag + 2), '.');
+                        }
+                    }
+                }
             }//end if
         } else {
             //ONGR Return is not necessary.

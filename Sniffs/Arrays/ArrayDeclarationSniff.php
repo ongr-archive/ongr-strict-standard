@@ -812,12 +812,13 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
 //                }
 //            }//end if
 //ongr end
-            // Check each line ends in a comma.
+            // Check each line ends in a comma or dot (string concat).
 //            if ($tokens[$index['value']]['code'] !== T_ARRAY
 //                && $tokens[$index['value']]['code'] !== T_OPEN_SHORT_ARRAY
 //            ) {
                 $valueLine = $tokens[$index['value']]['line'];
                 $nextComma = false;
+                $nextDot = false;
                 for ($i = ($index['value'] + 1); $i < $arrayEnd; $i++) {
                     // Skip bracketed statements, like function calls.
                     if ($tokens[$i]['code'] === T_OPEN_PARENTHESIS) {
@@ -830,9 +831,16 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                         $nextComma = $i;
                         break;
                     }
+                    else if($tokens[$i]['code'] === T_STRING_CONCAT) {
+                        $nextDot = $i;
+                        break;
+                    }
                 }
 
-                if (($nextComma === false) || ($tokens[$nextComma]['line'] !== $valueLine) && $tokens[$index['value']]['code'] !== T_OPEN_SHORT_ARRAY) {
+                if (($nextComma === false && $nextDot === false)
+                    || ($tokens[$nextComma]['line'] !== $valueLine && $tokens[$nextDot]['line'] !== $valueLine)
+                    && $tokens[$index['value']]['code'] !== T_OPEN_SHORT_ARRAY
+                ) {
                     $error = 'Each line in an array declaration must end in a comma';
                     $fix   = $phpcsFile->addFixableError($error, $index['value'], 'NoComma');
 
@@ -861,6 +869,30 @@ class Ongr_Sniffs_Arrays_ArrayDeclarationSniff implements PHP_CodeSniffer_Sniff
                     $fix = $phpcsFile->addFixableError($error, $nextComma, 'SpaceBeforeComma', $data);
                     if ($fix === true) {
                         $phpcsFile->fixer->replaceToken(($nextComma - 1), '');
+                    }
+                }
+
+                if ($nextDot !== false) {
+                    $spacesExpected = $this->getStatementStartColumn($phpcsFile, $nextDot) + 3;
+
+                    $indentation = $nextDot;
+                    while($tokens[$nextDot]['line'] == $tokens[$indentation]['line']) {
+                        $indentation++;
+                    }
+
+                    $spacesFound = 0;
+                    if ($tokens[$indentation]['code'] == T_WHITESPACE) {
+                        $spacesFound = $tokens[$indentation]['length'];
+                    }
+
+                    if ($spacesExpected != $spacesFound) {
+                        $error = 'Array value not aligned correctly; expected %s spaces but found %s';
+                        $data  = array(
+                            $spacesExpected,
+                            $spacesFound,
+                        );
+
+                        $phpcsFile->addError($error, $indentation, 'ValueNotAligned', $data);
                     }
                 }
 //            }//end if
