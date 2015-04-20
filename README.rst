@@ -46,8 +46,9 @@ Ever wanted to standardize your team's code style? This is a **PSR-2 compliant c
         }
     }
 
-.. warning::
-No more code like this!
+..
+
+**No more code like this!**
 
 After ONGR Strict Standard validation:
 
@@ -97,7 +98,7 @@ Requirements
 Acknowledgement
 ---------------
 
-Our work is based solely on Squiz Labs [Squiz coding standard](https://github.com/squizlabs/PHP_CodeSniffer) and [opensky Symfony2 coding standard](https://github.com/escapestudios/Symfony2-coding-standard).
+Our work is based solely on Squiz Labs `Squiz coding standard <https://github.com/squizlabs/PHP_CodeSniffer>`_ and `opensky Symfony2 coding standard <https://github.com/escapestudios/Symfony2-coding-standard>`_.
 
 Installation
 ------------
@@ -118,14 +119,13 @@ Or optionally you can install globally to all projects at `~/.composer/composer.
 
 Then: `composer global update`.
 
-.. warning::
-    If you are planing on developing, then sources should be located in `ONGR` directory.
+    **Warning:** if you are planing on developing, then sources should be located in `ONGR` directory.
 
-For example, when cloning add target directory:
+    For example, when cloning add target directory:
 
-.. code:: bash
+    .. code:: bash
 
-    git clone git@github.com:<username>/ongr-strict-standard.git ONGR
+        git clone git@github.com:<username>/ongr-strict-standard.git ONGR
 
 
 Running
@@ -134,11 +134,11 @@ Running
 
     vendor/bin/phpcs -p --standard=/home/<user>/.composer/vendor/ongr/ongr-strict-standard/ONGR --ignore=vendor/,Tests/app/,Resources/public/ ./
 
-.. note::
-    Do not use `~` for HOME parameter, as PHPCS will not expand it.
+..
 
-.. note::
-    **IDEs also support running Code Sniffer** and adding error annotations directly on editor's source code (e.g. PHPStorm). Please see your IDE's documentation on how to add standard from custom directory.
+    **Note:** Do not use `~` for HOME parameter, as PHPCS will not expand it.
+
+    **Note:** IDEs also support running Code Sniffer and adding error annotations directly on editor's source code (e.g. PHPStorm). Please see your IDE's documentation on how to add standard from custom directory.
 
 PHPStorm Helper
 ---------------
