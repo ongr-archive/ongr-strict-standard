@@ -90,6 +90,12 @@ class Ongr_Sniffs_WhiteSpace_OperatorSpacingSniff implements PHP_CodeSniffer_Sni
             return;
         }
 
+        //Ongr. If it's correct usage of bool operator skip it.
+        if ($tokens[$stackPtr]['code'] === T_BOOLEAN_NOT) {
+            // Skip for '!' case.
+            return;
+        }
+
         // Skip default values in function declarations.
         if ($tokens[$stackPtr]['code'] === T_EQUAL
             || $tokens[$stackPtr]['code'] === T_MINUS
