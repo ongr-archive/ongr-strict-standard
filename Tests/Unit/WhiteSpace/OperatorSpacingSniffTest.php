@@ -22,6 +22,7 @@ class OperatorSpacingSniffTest extends AbstractSniffUnitTest
     {
         return [
             12 => 1,
+            16 => 1,
         ];
     }
 
