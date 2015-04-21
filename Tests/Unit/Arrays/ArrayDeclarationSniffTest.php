@@ -60,7 +60,6 @@ class ArrayDeclarationSniffTest extends AbstractSniffUnitTest
             135 => 1,
             137 => 1,
             148 => 1,
-            153 => 1,
         ];
     }
 
