@@ -35,7 +35,9 @@ class FunctionCommentSniffTest extends AbstractSniffUnitTest
             89 => 1,
             99 => 1,
             109 => 2,
-            117 => 1
+            117 => 1,
+            129 => 1,
+            153 => 2
         ];
     }
 

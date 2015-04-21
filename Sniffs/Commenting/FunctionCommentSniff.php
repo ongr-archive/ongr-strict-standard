@@ -102,6 +102,7 @@ class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting
         }
         $this->processReturn($phpcsFile, $stackPtr, $commentStart);
         $this->processThrows($phpcsFile, $stackPtr, $commentStart);
+        $this->processDeprecated($phpcsFile, $stackPtr, $commentStart);
         $this->processParams($phpcsFile, $stackPtr, $commentStart);
         $this->processComments($phpcsFile, $stackPtr, $commentStart);
 
@@ -299,9 +300,9 @@ class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting
                 }//end if
 
                 $comment = null;
-                if ($tokens[($tag + 2)]['code'] === T_DOC_COMMENT_STRING) {
+                if ($tokens[($return + 2)]['code'] === T_DOC_COMMENT_STRING) {
                     $matches = array();
-                    preg_match('/([^\s]+)(?:\s+(.*))?/', $tokens[($tag + 2)]['content'], $matches);
+                    preg_match('/([^\s]+)(?:\s+(.*))?/', $tokens[($return + 2)]['content'], $matches);
                     if (isset($matches[2]) === true) {
                         $comment = $matches[2];
                     }
@@ -312,26 +313,26 @@ class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting
                     $firstChar = $comment{0};
                     if (preg_match('|\p{Lu}|u', $firstChar) === 0) {
                         $error = 'Return comment must start with a capital letter';
-                        $fix = $phpcsFile->addFixableError($error, ($tag + 2), 'ReturnCommentNotCapital');
+                        $fix = $phpcsFile->addFixableError($error, ($return + 2), 'ReturnCommentNotCapital');
 
                         if ($fix === true) {
                             $newComment = ucfirst($comment);
-                            $tokenLength = strlen($tokens[($tag + 2)]['content']);
+                            $tokenLength = strlen($tokens[($return + 2)]['content']);
                             $commentLength = strlen($comment);
                             $tokenWithoutComment
-                                = substr($tokens[($tag + 2)]['content'], 0, $tokenLength - $commentLength);
+                                = substr($tokens[($return + 2)]['content'], 0, $tokenLength - $commentLength);
 
-                            $phpcsFile->fixer->replaceToken(($tag + 2), $tokenWithoutComment . $newComment);
+                            $phpcsFile->fixer->replaceToken(($return + 2), $tokenWithoutComment . $newComment);
                         }
                     }
 
                     $lastChar = substr($comment, -1);
                     if ($lastChar !== '.') {
                         $error = 'Return comment must end with a full stop';
-                        $fix = $phpcsFile->addFixableError($error, ($tag + 2), 'ReturnCommentFullStop');
+                        $fix = $phpcsFile->addFixableError($error, ($return + 2), 'ReturnCommentFullStop');
 
                         if ($fix === true) {
-                            $phpcsFile->fixer->addContent(($tag + 2), '.');
+                            $phpcsFile->fixer->addContent(($return + 2), '.');
                         }
                     }
                 }
@@ -414,6 +415,60 @@ class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting
 
     }//end processThrows()
 
+    /**
+     * Process any deprecated tags that this function comment has.
+     *
+     * @param PHP_CodeSniffer_File $phpcsFile    The file being scanned.
+     * @param int                  $stackPtr     The position of the current token
+     *                                           in the stack passed in $tokens.
+     * @param int                  $commentStart The position in the stack where the comment started.
+     *
+     * @return void
+     */
+    protected function processDeprecated(PHP_CodeSniffer_File $phpcsFile, $stackPtr, $commentStart)
+    {
+        $tokens = $phpcsFile->getTokens();
+        foreach ($tokens[$commentStart]['comment_tags'] as $pos => $tag) {
+            if ($tokens[$tag]['content'] !== '@deprecated') {
+                continue;
+            }
+
+            $content = $tokens[($tag + 2)]['content'];
+            if (empty($content) === true || $tokens[($tag + 2)]['code'] !== T_DOC_COMMENT_STRING) {
+                $error = 'Deprecated type missing for @deprecated tag in function comment';
+                $phpcsFile->addError($error, $tag, 'MissingDeprecatedType');
+            } else {
+                //ONGR Validate that return comment begins with capital letter and ends with full stop.
+                if ($content !== null) {
+                    $firstChar = $content{0};
+                    if (preg_match('|\p{Lu}|u', $firstChar) === 0) {
+                        $error = 'Deprecated comment must start with a capital letter';
+                        $fix = $phpcsFile->addFixableError($error, ($tag + 2), 'DeprecatedCommentNotCapital');
+
+                        if ($fix === true) {
+                            $newComment = ucfirst($content);
+                            $tokenLength = strlen($tokens[($tag + 2)]['content']);
+                            $commentLength = strlen($content);
+                            $tokenWithoutComment
+                                = substr($tokens[($tag + 2)]['content'], 0, $tokenLength - $commentLength);
+
+                            $phpcsFile->fixer->replaceToken(($tag + 2), $tokenWithoutComment . $newComment);
+                        }
+                    }
+
+                    $lastChar = substr($content, -1);
+                    if ($lastChar !== '.') {
+                        $error = 'Deprecated comment must end with a full stop';
+                        $fix = $phpcsFile->addFixableError($error, ($tag + 2), 'DeprecatedCommentFullStop');
+
+                        if ($fix === true) {
+                            $phpcsFile->fixer->addContent(($tag + 2), '.');
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Process the function parameter comments.

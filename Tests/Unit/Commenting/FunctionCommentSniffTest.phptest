@@ -120,4 +120,40 @@ class FunctionCommentSniffTest
     {
         return foo($bar);
     }
+
+    /**
+     * Mapping is compared with loaded, if needed updates it and returns true.
+     *
+     * @param array $types Types to update.
+     *
+     * @return bool Foo
+     *
+     * @throws \LogicException
+     *
+     * @deprecated Will be removed in 1.0. Please now use Bar#foo().
+     */
+    public function foo(array $types = [])
+    {
+        return $this->bar($types);
+    }
+
+    /**
+     * Short description.
+     *
+     * @deprecated Will be removed in 1.0. Please now use Bar#foo().
+     */
+    public function updateMapping()
+    {
+        return $this->updateTypes();
+    }
+
+    /**
+     * Short description.
+     *
+     * @deprecated will be removed in 1.0. Please now use Connection#updateTypes()
+     */
+    public function updateMapping()
+    {
+        return $this->updateTypes();
+    }
 }
