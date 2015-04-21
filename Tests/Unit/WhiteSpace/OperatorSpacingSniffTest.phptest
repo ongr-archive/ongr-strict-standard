@@ -12,3 +12,15 @@
 if (! $foo) {
     true;
 }
+
+if (! false) {
+    true;
+}
+
+if (!false) {
+    true;
+}
+
+if (!$foo) {
+    true;
+}
