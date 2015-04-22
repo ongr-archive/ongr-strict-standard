@@ -109,8 +109,8 @@ Composer:
 
     {
        "require-dev": {
-          "ongr/ongr-strict-standard": "~2",
-          "squizlabs/php_codesniffer": "~2"
+          "ongr/ongr-strict-standard": "2.*",
+          "squizlabs/php_codesniffer": "2.*"
        }
     }
 
