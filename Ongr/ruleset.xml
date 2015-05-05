@@ -51,6 +51,7 @@
      <exclude name="Squiz.Classes.ClassDeclaration"/>
      <exclude name="Squiz.Commenting.BlockComment"/>
      <exclude name="Squiz.Commenting.ClassComment"/>
+     <exclude name="Squiz.Commenting.DocCommentAlignment"/>
      <exclude name="Squiz.Commenting.FunctionComment"/>
      <exclude name="Squiz.Commenting.FunctionCommentThrowTag"/>
      <exclude name="Squiz.Commenting.InlineComment"/>
