@@ -1,0 +1,183 @@
+<?php
+
+/*
+ * This file is part of the ONGR package.
+ *
+ * (c) NFQ Technologies UAB <info@nfq.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Test;
+
+/**
+ *
+ */
+class ClassCommentSniffTest1
+{
+}
+
+/** Comment. */
+class ClassCommentSniffTest2
+{
+}
+
+/**
+ * Comment.
+ */
+class ClassCommentSniffTest3
+{
+}
+
+/** Comment.
+ *
+ */
+class ClassCommentSniffTest4
+{
+}
+
+/**
+ *
+ * Comment.
+ */
+class ClassCommentSniffTest5
+{
+}
+
+/**
+ * Comment.
+ * Long description
+ * Long description
+ * Long description.
+ */
+class ClassCommentSniffTest6
+{
+}
+
+/**
+ * Comment.
+ *
+ *
+ * Long description
+ * Long description
+ * Long description.
+ */
+class ClassCommentSniffTest7
+{
+}
+
+/**
+ * Comment.
+ *
+ * Long description
+ * Long description
+ * Long description.
+ */
+class ClassCommentSniffTest8
+{
+}
+
+/**
+ * Comment.
+ *
+ * Long description
+   Long description
+ * Long description.
+ */
+class ClassCommentSniffTest9
+{
+}
+
+/**
+ Comment.
+
+ Long description
+ Long description
+ Long description.
+ */
+class ClassCommentSniffTest10
+{
+}
+
+class ClassCommentSniffTest11
+{
+}
+
+/**
+ * lowercase.
+ */
+class ClassCommentSniffTest12
+{
+}
+
+/**
+ * Missing dot
+ */
+class ClassCommentSniffTest13
+{
+}
+
+/**
+ * lowercase missing dot
+ */
+class ClassCommentSniffTest14
+{
+}
+
+/**
+ * Comment.
+ *
+ * lowercase.
+ */
+class ClassCommentSniffTest15
+{
+}
+
+/**
+ * Comment.
+ *
+ * Missing dot
+ */
+class ClassCommentSniffTest16
+{
+}
+
+/**
+ * Comment.
+ *
+ * lowercase missing dot
+ */
+class ClassCommentSniffTest17
+{
+}
+
+/**
+ * Comment.
+ *
+ * multiline lowercase
+ * missing dot
+ */
+class ClassCommentSniffTest18
+{
+}
+
+/**
+ * Comment.
+ *
+ * multiline lowercase
+ * with dot.
+ */
+class ClassCommentSniffTest19
+{
+}
+
+/**
+ * Comment.
+ *
+ * Multiline
+ * missing dot
+ */
+class ClassCommentSniffTest20
+{
+}

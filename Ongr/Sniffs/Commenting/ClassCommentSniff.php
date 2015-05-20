@@ -12,6 +12,8 @@
  * @link      http://pear.php.net/package/PHP_CodeSniffer
  */
 
+use Ongr\Sniffs\Helper\Comment;
+
 /**
  * Parses and verifies the class doc comment.
  *
@@ -122,6 +124,88 @@ class Ongr_Sniffs_Commenting_ClassCommentSniff implements PHP_CodeSniffer_Sniff
 //            $phpcsFile->addWarning($error, $tag, 'TagNotAllowed', $data);
 //        }
 
+        // ONGR Validate doc comment content.
+        $comment = new Comment($phpcsFile, $commentStart);
+        $punctuation = ['.', '!', '?'];
+
+        $error = 'Text must be after asterisks';
+        foreach ($comment->getJunk() as $ptr) {
+            $phpcsFile->addError($error, $ptr, 'MissingAsterisk');
+        }
+
+        if (!$comment->getShortDescription()) {
+            $error = 'Missing short description in class comment';
+            $phpcsFile->addError($error, $commentStart, 'ShortDescription');
+
+            return;
+        }
+
+        if ($comment->getCommentStartLine() + 1 !== $comment->getShortDescriptionLine()) {
+            $error = 'Short description in class comment should be in second line';
+            $phpcsFile->addError($error, $comment->getShortDescriptionStartPtr(), 'ShortDescriptionLine');
+        }
+
+        if (ucfirst($comment->getShortDescription()) !== $comment->getShortDescription()) {
+            $error = 'Short description must start with capital letter';
+            $fix = $phpcsFile->addFixableError($error, $comment->getShortDescriptionStartPtr(), 'ShortDescriptionCapital');
+            if ($fix) {
+                $ptr = $comment->getShortDescriptionStartPtr();
+                $phpcsFile->fixer->replaceToken(
+                    $ptr,
+                    ucfirst($tokens[$ptr]['content'])
+                );
+            }
+        }
+
+        if (!in_array(substr($comment->getShortDescription(), -1), $punctuation, true)) {
+            $error = 'Short description must end with punctuation';
+            $fix = $phpcsFile->addFixableError($error, $comment->getShortDescriptionEndPtr(), 'ShortDescriptionPunctuation');
+            if ($fix) {
+                $ptr = $comment->getShortDescriptionEndPtr();
+                $phpcsFile->fixer->replaceToken(
+                    $ptr,
+                    $tokens[$ptr]['content'] . '.'
+                );
+            }
+        }
+
+        if (!$comment->getLongDescription()) {
+            return;
+        }
+
+        if ($comment->getLongDescriptionLine() !== $comment->getShortDescriptionLine() + 2) {
+            $error = 'Long description must be separated by 1 blank line from short description';
+            $phpcsFile->addError($error, $comment->getLongDescriptionStartPtr(), 'LongDescriptionLocation');
+        }
+
+        if (!in_array(substr($comment->getLongDescription(), -1), $punctuation, true)) {
+            $error = 'Long description must end with punctuation';
+            $fix = $phpcsFile->addFixableError($error, $comment->getLongDescriptionEndPtr(), 'LongDescriptionPunctuation');
+            if ($fix) {
+                $ptr = $comment->getLongDescriptionEndPtr();
+                $phpcsFile->fixer->replaceToken(
+                    $ptr,
+                    $tokens[$ptr]['content'] . '.'
+                );
+            }
+        }
+
+        if (ucfirst($comment->getLongDescription()) !== $comment->getLongDescription()) {
+            $error = 'Long description must start with capital letter';
+            $fix = $phpcsFile->addFixableError(
+                $error,
+                $comment->getLongDescriptionStartPtr(),
+                'LongDescriptionCapital'
+            );
+
+            if ($fix) {
+                $ptr = $comment->getLongDescriptionStartPtr();
+                $phpcsFile->fixer->replaceToken(
+                    $ptr,
+                    ucfirst($tokens[$ptr]['content'])
+                );
+            }
+        }
     }//end process()
 
 
