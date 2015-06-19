@@ -1,0 +1,57 @@
+<?php
+
+/*
+ * This file is part of the ONGR package.
+ *
+ * (c) NFQ Technologies UAB <info@nfq.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Test;
+
+class DocCommentAlignmentSniffTest
+{
+    /**
+     * @var int
+     *
+     * @ORM\ManyToOne(targetEntity="FooBars")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="BarID", referencedColumnName="Bar")
+     * })
+     */
+    public $foo;
+
+    /**
+     * @var int
+     *
+     * @ORM\ManyToOne(targetEntity="FooBars")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="BarID", referencedColumnName="Bar"),
+     *     @ORM\JoinColumn(name="BarID", referencedColumnName="Bar")
+     * })
+     */
+    public $foo2;
+
+    /**
+     * @var int
+     *
+     * @ORM\ManyToOne(targetEntity="FooBars")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(name="BarID", referencedColumnName="Bar")
+     *     @ORM\JoinColumn(name="BarID", referencedColumnName="Bar")
+     * })
+     */
+    public $foo3;
+
+    /**
+     * @var int
+     *
+     * @ORM\ManyToOne(targetEntity="FooBars")
+     * @ORM\JoinColumns({
+     * })
+     *     @ORM\JoinColumn(name="BarID", referencedColumnName="Bar")
+     */
+    public $foo4;
+}

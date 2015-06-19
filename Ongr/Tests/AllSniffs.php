@@ -61,7 +61,7 @@ class AllSniffs
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite('PHP CodeSniffer Standards');
-        $baseDir = pathinfo(getcwd(), PATHINFO_DIRNAME);
+        $baseDir = pathinfo(getcwd()."/Ongr", PATHINFO_DIRNAME);
 
         \PHP_CodeSniffer::setConfigData('installed_paths', $baseDir);
         $path = pathinfo(\PHP_CodeSniffer::getInstalledStandardPath('Ongr'), PATHINFO_DIRNAME);
