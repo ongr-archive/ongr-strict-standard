@@ -62,7 +62,6 @@
      <!--<exclude name="Squiz.NamingConventions.ConstantCase"/>-->
      <exclude name="Squiz.NamingConventions.ValidFunctionName"/>
      <exclude name="Squiz.NamingConventions.ValidVariableName"/>
-     <exclude name="Squiz.Strings.ConcatenationSpacing"/>
      <exclude name="Squiz.Strings.DoubleQuoteUsage"/>
      <!--<exclude name="Squiz.WhiteSpace.CastSpacing"/>-->
      <exclude name="Squiz.WhiteSpace.ControlStructureSpacing"/>
@@ -88,6 +87,7 @@
 <rule ref="Squiz.Strings.ConcatenationSpacing">
     <properties>
         <property name="spacing" value="1"/>
+        <property name="ignoreNewlines" value="true"/>
     </properties>
 </rule>
 
