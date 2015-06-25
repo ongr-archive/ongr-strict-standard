@@ -156,4 +156,94 @@ class FunctionCommentSniffTest
     {
         return $this->updateTypes();
     }
+
+    /**
+     * @param string $name
+     * @param array  $arguments
+     */
+    public function __call($name, $arguments)
+    {
+    }
+
+    /**
+     * @param string $name
+     * @param array  $arguments
+     */
+    public static function __callStatic($name, $arguments)
+    {
+    }
+
+    /** */
+    public function __clone()
+    {
+    }
+
+    /** */
+    public function __construct()
+    {
+    }
+
+    /** */
+    public function __destruct()
+    {
+    }
+
+    /**
+     * @param string $name
+     */
+    public function __get($name)
+    {
+    }
+
+    /** */
+    public function __invoke()
+    {
+    }
+
+    /**
+     * @param string $name
+     */
+    public function __isset($name)
+    {
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     */
+    public function __set($name, $value)
+    {
+    }
+
+    /**
+     * @param array $an_array
+     */
+    public static function __set_state($an_array)
+    {
+    }
+
+    /** */
+    public function __sleep()
+    {
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return '';
+    }
+
+    /**
+     * @param string $name
+     */
+    public function __unset($name)
+    {
+    }
+
+    /** */
+    public function __wakeup()
+    {
+    }
 }

@@ -138,10 +138,29 @@ class Ongr_Sniffs_Commenting_FunctionCommentSniff extends PEAR_Sniffs_Commenting
 
         // Check for a comment description.
         if (trim($short) === '') {
-            if (preg_match('/^(set|get|has|add|is)[A-Z]|__construct/', $methodName) !== 1) {
+            // ONGR Comments are not necessary for magic methods.
+            $magicMethods = [
+                '__call',
+                '__callStatic',
+                '__clone',
+                '__construct',
+                '__destruct',
+                '__get',
+                '__invoke',
+                '__isset',
+                '__set',
+                '__set_state',
+                '__sleep',
+                '__toString',
+                '__unset',
+                '__wakeup',
+            ];
+            $magicRegExp = implode('|', $magicMethods);
+            if (preg_match('/^(set|get|has|add|is)[A-Z]|' . $magicRegExp . '/', $methodName) !== 1) {
                 $error = 'Missing short description in function doc comment';
                 $phpcsFile->addError($error, $commentStart, 'MissingShort');
             }
+
             return;
         }
         if (preg_match('#^(\p{Lu}|{@inheritdoc})#u', $shortContent) === 0) {
