@@ -246,4 +246,16 @@ class FunctionCommentSniffTest
     public function __wakeup()
     {
     }
+
+    /**
+     * Bar.
+     *
+     * Should report only extra whitespace, and no additional errors about the return comment format.
+     *
+     * @return mixed 
+     */
+    protected function fooBar8()
+    {
+        return foo($bar);
+    }
 }
