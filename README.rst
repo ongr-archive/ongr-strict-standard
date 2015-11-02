@@ -50,7 +50,7 @@ Ever wanted to standardize your team's code style? This is a **PSR-2 compliant c
 
 **No more code like this!**
 
-After ONGR Strict Standard validation:
+After Ongr Strict Standard validation:
 
 .. code:: bash
 
@@ -119,7 +119,7 @@ Or optionally you can install globally to all projects at `~/.composer/composer.
 
 Then: `composer global update`.
 
-    **Warning:** if you are planing on developing, then sources should be located in `ONGR` directory.
+    **Warning:** if you are planing on developing, then sources should be located in `Ongr` directory.
 
     For example, when cloning add target directory:
 
@@ -132,7 +132,7 @@ Running
 -------
 .. code:: bash
 
-    vendor/bin/phpcs -p --standard=/home/<user>/.composer/vendor/ongr/ongr-strict-standard/ONGR --ignore=vendor/,Tests/app/,Resources/public/ ./
+    vendor/bin/phpcs -p --standard=/home/<user>/.composer/vendor/ongr/ongr-strict-standard/Ongr --ignore=vendor/,Tests/app/,Resources/public/ ./
 
 ..
 
@@ -148,9 +148,9 @@ Configure PHPCS: http://www.jetbrains.com/phpstorm/webhelp/using-php-code-sniffe
 Configure this standard:
 
 1. Go to Settings > Inspections > PHP > PHP Code Sniffer Validation.
-1. Mark checkbox ON for "PHP Code Sniffer Validation".
-1. Select Custom standard.
-1. Locate `vendor/ongr/ongr-strict-standard/ONGR` standard directory, press OK.
+2. Mark checkbox ON for "PHP Code Sniffer Validation".
+3. Select Custom standard.
+4. Locate `vendor/ongr/ongr-strict-standard/Ongr` standard directory, press OK.
 
 Code should be validated automatically on each PHP file edit.
 
